@@ -4,6 +4,7 @@ import time
 import select
 import time
 import DSUtils
+import LEDUtils
 
 currentColor = "none"
 serverAddress = "192.168.1.110"
@@ -41,6 +42,12 @@ def runProgram(sock):
             newUpdate = True
         if newUpdate == True:
             print("updating color: "+str(currentColor))
+            if(currentColor=="yellow"):
+                LEDUtils.allYellow()
+            if(currentColor=="green"):
+                LEDUtils.allGreen()
+            if(currentColor=="red"):
+                LEDUtils.allRed()
         gate.keepAlive()
         lastColor = currentColor
 

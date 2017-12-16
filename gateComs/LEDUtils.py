@@ -10,6 +10,8 @@ from neopixel import *
 import argparse
 import signal
 import sys
+strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+strip.begin()
 def signal_handler(signal, frame):
         colorWipe(strip, Color(0,0,0))
         sys.exit(0)
@@ -35,48 +37,48 @@ LED_STRIP      = ws.WS2811_STRIP_GRB   # Strip type and colour ordering
 
 
 # Define functions which animate LEDs in various ways.
-def clearPixels(strip):
+def clearPixels():
     #print ('Clearing')
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
 
-def allRed(strip):
+def allRed():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(255,0,0))
     strip.show()
 
-def allOrange(strip):
+def allOrange():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(255,127,0))
     strip.show()
 
-def allYellow(strip):
+def allYellow():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(125,125,0))
     strip.show()
 
-def allGreen(strip):
+def allGreen():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0,255,0))
     strip.show()
 
-def allBlue(strip):
+def allBlue():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0,0,255))
     strip.show()
 
-def allIndigo(strip):
+def allIndigo():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(127,0,255))
     strip.show()
 
-def allPurple(strip):
+def allPurple():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(50,0,50))
     strip.show()
 
-def flashYellow(strip):
+def flashYellow():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(125,125,0))
     strip.show()
@@ -84,7 +86,7 @@ def flashYellow(strip):
     clearPixels(strip)
     time.sleep(1)
 
-def chasing(strip):
+def chasing():
     #clearPixels(strip)
     #Purple
     for x in range(0,strip.numPixels(), 1):
@@ -112,14 +114,14 @@ def chasing(strip):
         #print ('sleep')
         time.sleep(0.005)
 
-def colorWipe(strip, color, wait_ms=50):
+def colorWipe(color, wait_ms=50):
 	"""Wipe color across display a pixel at a time."""
 	for i in range(strip.numPixels()):
 		strip.setPixelColor(i, color)
 		strip.show()
 		time.sleep(wait_ms/1000.0)
 
-def theaterChase(strip, color, wait_ms=50, iterations=1):
+def theaterChase(color, wait_ms=50, iterations=1):
 	"""Movie theater light style chaser animation."""
 	for j in range(iterations):
 		for q in range(3):
@@ -141,7 +143,7 @@ def wheel(pos):
 		pos -= 170
 		return Color(0, pos * 3, 255 - pos * 3)
 
-def rainbow(strip, wait_ms=20, iterations=1):
+def rainbow(wait_ms=20, iterations=1):
 	"""Draw rainbow that fades across all pixels at once."""
 	for j in range(256*iterations):
 		for i in range(strip.numPixels()):
@@ -149,7 +151,7 @@ def rainbow(strip, wait_ms=20, iterations=1):
 		strip.show()
 		time.sleep(wait_ms/1000.0)
 
-def rainbowCycle(strip, wait_ms=20, iterations=1):
+def rainbowCycle(wait_ms=20, iterations=1):
 	"""Draw rainbow that uniformly distributes itself across all pixels."""
 	for j in range(256*iterations):
 		for i in range(strip.numPixels()):
@@ -157,7 +159,7 @@ def rainbowCycle(strip, wait_ms=20, iterations=1):
 		strip.show()
 		time.sleep(wait_ms/1000.0)
 
-def theaterChaseRainbow(strip, wait_ms=50):
+def theaterChaseRainbow(wait_ms=50):
 	"""Rainbow movie theater light style chaser animation."""
 	for j in range(256):
 		for q in range(3):
