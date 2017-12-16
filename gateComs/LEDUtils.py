@@ -52,7 +52,7 @@ def allOrange():
         strip.setPixelColor(i, Color(255,127,0))
     strip.show()
 
-def allYellow(strip):
+def allYellow():
     global strip
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(125,125,0))
