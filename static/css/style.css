@@ -1,0 +1,56 @@
+* {
+  font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+  font-weight: 900;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+.btn-green {
+  background-color: green;
+}
+
+.btn-red {
+  background-color: red;
+}
+
+.btn-white {
+  background-color: #e0e2e5;
+}
+
+.btn-yellow {
+  background-color: yellow;
+}
+
+.btn-block {
+  padding: 50px;
+}
+
+button {
+  margin-top: 10px;
+}
+
+.col-sm-6 {
+  margin 20px;
+}
+
+.module {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.jumbotron {
+  background-color: #edfcab;
+}
+
+.dropdown-item {
+  font-weight: 700;
+}
+
+.dropdown-toggle {
+  font-weight: 700;
+}
