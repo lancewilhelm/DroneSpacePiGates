@@ -29,7 +29,7 @@ def sendData(sock,address,data):
     sock.sendto(str(data).encode('utf-8'),address)
 
 
-def runProgram(sock):
+def runProgram(sock,LED):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
     connectToServer(sock,(serverAddress,port))
     lastColor = ""
@@ -43,11 +43,11 @@ def runProgram(sock):
         if newUpdate == True:
             print("updating color: "+str(currentColor))
             if(currentColor=="yellow"):
-                LEDUtils.allYellow()
+                LED.allYellow()
             if(currentColor=="green"):
-                LEDUtils.allGreen()
+                LED.allGreen()
             if(currentColor=="red"):
-                LEDUtils.allRed()
+                LED.allRed()
         gate.keepAlive()
         lastColor = currentColor
 
@@ -56,7 +56,7 @@ def main():
     sock = createSocket(13246)
     while(True):
         try:
-            runProgram(sock)
+            runProgram(sock, LED)
         except Exception as e:
             print(e)
             time.sleep(3)
