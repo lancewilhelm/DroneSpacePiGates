@@ -42,48 +42,48 @@ class LEDStrip:
         # Process arguments
         opt_parse()
     # Define functions which animate LEDs in various ways.
-    def clearPixels():
+    def clearPixels(self):
         #print ('Clearing')
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(0,0,0))
         self.strip.show()
 
-    def allRed():
+    def allRed(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(255,0,0))
         self.strip.show()
 
-    def allOrange():
+    def allOrange(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(255,127,0))
         self.strip.show()
 
-    def allYellow():
+    def allYellow(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(125,125,0))
         self.strip.show()
 
-    def allGreen():
+    def allGreen(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(0,255,0))
         self.strip.show()
 
-    def allBlue():
+    def allBlue(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(0,0,255))
         self.strip.show()
 
-    def allIndigo():
+    def allIndigo(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(127,0,255))
         self.strip.show()
 
-    def allPurple():
+    def allPurple(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(50,0,50))
         self.strip.show()
 
-    def flashYellow():
+    def flashYellow(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(125,125,0))
         self.strip.show()
@@ -91,7 +91,7 @@ class LEDStrip:
         clearPixels(self.strip)
         time.sleep(1)
 
-    def chasing():
+    def chasing(self):
         #clearPixels(strip)
         #Purple
         for x in range(0,self.strip.numPixels(), 1):
@@ -119,14 +119,14 @@ class LEDStrip:
             #print ('sleep')
             time.sleep(0.005)
 
-    def colorWipe(color, wait_ms=50):
+    def colorWipe(self,color, wait_ms=50):
     	"""Wipe color across display a pixel at a time."""
     	for i in range(self.strip.numPixels()):
     		self.strip.setPixelColor(i, color)
     		self.strip.show()
     		time.sleep(wait_ms/1000.0)
 
-    def theaterChase(color, wait_ms=50, iterations=1):
+    def theaterChase(self,color, wait_ms=50, iterations=1):
     	"""Movie theater light style chaser animation."""
     	for j in range(iterations):
     		for q in range(3):
@@ -137,7 +137,7 @@ class LEDStrip:
     			for i in range(0, self.strip.numPixels(), 3):
     				self.strip.setPixelColor(i+q, 0)
 
-    def wheel(pos):
+    def wheel(self,pos):
     	"""Generate rainbow colors across 0-255 positions."""
     	if pos < 85:
     		return Color(pos * 3, 255 - pos * 3, 0)
@@ -148,7 +148,7 @@ class LEDStrip:
     		pos -= 170
     		return Color(0, pos * 3, 255 - pos * 3)
 
-    def rainbow(wait_ms=20, iterations=1):
+    def rainbow(self,wait_ms=20, iterations=1):
     	"""Draw rainbow that fades across all pixels at once."""
     	for j in range(256*iterations):
     		for i in range(self.strip.numPixels()):
@@ -156,7 +156,7 @@ class LEDStrip:
     		self.strip.show()
     		time.sleep(wait_ms/1000.0)
 
-    def rainbowCycle(wait_ms=20, iterations=1):
+    def rainbowCycle(self,wait_ms=20, iterations=1):
     	"""Draw rainbow that uniformly distributes itself across all pixels."""
     	for j in range(256*iterations):
     		for i in range(self.strip.numPixels()):
@@ -164,7 +164,7 @@ class LEDStrip:
     		self.strip.show()
     		time.sleep(wait_ms/1000.0)
 
-    def theaterChaseRainbow(wait_ms=50):
+    def theaterChaseRainbow(self,wait_ms=50):
     	"""Rainbow movie theater light style chaser animation."""
     	for j in range(256):
     		for q in range(3):
