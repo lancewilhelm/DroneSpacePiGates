@@ -7,7 +7,7 @@ import DSUtils
 import LEDUtils
 
 currentColor = "none"
-serverAddress = "192.168.1.110"
+serverAddress = "gatemaster"
 port = 13246
 
 def createSocket(port):
