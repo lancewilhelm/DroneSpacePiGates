@@ -14,7 +14,7 @@ def index():
         return 'rainbow'
       elif color == 'red':
         #allRed(strip)
-        DSClient.sendGateUpdate("localhost",13246,[255,0,0])
+        DSClient.sendGateUpdate("localhost",13246,"red")
         return 'red'
       elif color == 'chasing':
         #chasing(strip)
@@ -22,7 +22,7 @@ def index():
         return 'chasing'
       elif color == 'green':
         #allGreen(strip)
-        DSClient.sendGateUpdate("localhost",13246,[0,255,0])
+        DSClient.sendGateUpdate("localhost",13246,"green")
         return 'green'
       elif color == 'yellow':
         DSClient.sendGateUpdate("localhost",13246,"yellow")

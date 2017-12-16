@@ -21,16 +21,16 @@
       <div class="row">
 
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-green" onclick="changeGate('green')"></button>
+          <button type="button" class="btn btn-block btn-green" onclick="changeAllGate('green')"></button>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-red" onclick="changeGate('red')"></button>
+          <button type="button" class="btn btn-block btn-red" onclick="changeAllGate('red')"></button>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-yellow" onclick="changeGate('yellow')"></button>
+          <button type="button" class="btn btn-block btn-yellow" onclick="changeAllGate('yellow')"></button>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-white" onclick="changeGate('white')"></button>
+          <button type="button" class="btn btn-block btn-white" onclick="changeAllGate('white')"></button>
         </div>
       </div>
 
@@ -41,9 +41,9 @@
               PROGRAMS
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <button class="dropdown-item text-center" type="button" onclick="changeGate('rainbow')">RAINBOW</button>
-            <button class="dropdown-item text-center" type="button" onclick="changeGate('pacman')">PACMAN</button>
-            <button class="dropdown-item text-center" type="button" onclick="changeGate('chasing')">CHASING</button>
+            <button class="dropdown-item text-center" type="button" onclick="changeAllGate('rainbow')">RAINBOW</button>
+            <button class="dropdown-item text-center" type="button" onclick="changeAllGate('pacman')">PACMAN</button>
+            <button class="dropdown-item text-center" type="button" onclick="changeAllGate('chasing')">CHASING</button>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
 
     <script>
 
-    function changeGate(color){
+    function changeAllGate(color){
       origin = window.location.origin
       // gateColorURL = "{{ url_for('index') }}?color="+color
       // alert("sending POST call to "+gateColorUrl);
@@ -63,7 +63,7 @@
       // event.preventDefault();
       xhttp.open("POST", "{{ url_for('index')}}", true);
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("color="+color);
+      xhttp.send("color="+color&"gateID=all");
     }
     </script>
 
