@@ -52,6 +52,7 @@ def runProgram(sock):
         lastColor = currentColor
 
 def main():
+    LED = LEDUtils.LEDStrip()
     sock = createSocket(13246)
     while(True):
         try:
