@@ -15,9 +15,9 @@ port = 13246
 gates = []
 gateStates = {}
 
-currentAnimation = ["[50,50,50]"]
+currentColor = "[50,50,50]"
 animationSpeed = 10
-fps = 60
+fps = 30
 
 
 def createSocket(port):
@@ -44,7 +44,7 @@ def connectNewGate(sock,address):
     newGate.updateColor(initialGateColor)
 
 def recvData(sock):
-    global currentAnimation
+    global currentColor
     data = None
     try:
         data, address = sock.recvfrom(4096)
@@ -67,9 +67,9 @@ def recvData(sock):
                 print("----------------")
                 data = pickle.loads(str(data))
                 print(data)
-                newAnimation = data['animation']
+                newColor = data['color']
                 for gate in gates:
-                    currentAnimation = newAnimation
+                    currentColor = str(newColor)
 
 
 def getGateByAddress(address):
@@ -84,34 +84,34 @@ def recvGateState(sock):
     data = sock.recvfrom(4096).decode(encoding='utf-8')
 
 def runProgram(sock):
-    global currentAnimation
-    print(currentAnimation)
+    global currentColor
+    lastColor = ""
     while(True):
-        for color in currentAnimation:
-            frameStart = getTime()
-            disconnectedGates = []
-            for gate in gates:
-                if(gate.isAlive()):
-                    gate.updateColor(color)
-                else:
-                    disconnectedGates.append(gate)
-            recvData(sock) #lets listen for data (new gates, lap times etc...)
+        color = currentColor
+        disconnectedGates = []
+        frameStart = getTime()
+        for gate in gates:
+            if(gate.isAlive()):
+                gate.updateColor(color)
+            else:
+                disconnectedGates.append(gate)
+        recvData(sock) #lets listen for data (new gates, lap times etc...)
 
-            #lets disconnect gates that didn't send us a keepAlive in time
-            for gate in disconnectedGates:
-                print("gate "+str(gate.address)+" disconnected")
-                gates.remove(gate)
-            frameEnd = getTime()
+        #lets disconnect gates that didn't send us a keepAlive in time
+        for gate in disconnectedGates:
+            print("gate "+str(gate.address)+" disconnected")
+            gates.remove(gate)
+        frameEnd = getTime()
 
-            #lets sleep until it's time to refresh the gates
-            frameDuration = float(frameEnd)-float(frameStart)
+        #lets sleep until it's time to refresh the gates
+        frameDuration = float(frameEnd)-float(frameStart)
 
-            time.sleep(1.0/fps)
-            loopEnd = getTime()
-            loopDuration = loopEnd-frameStart
-            actualFPS = round((1.0/loopDuration)*1000,0)
-            print("fps: "+str(actualFPS))
-
+        time.sleep(1.0/fps)
+        loopEnd = getTime()
+        loopDuration = loopEnd-frameStart
+        actualFPS = round((1.0/loopDuration)*1000,0)
+        print("fps: "+str(actualFPS))
+        lastColor = color
 
 def main():
     global Gate

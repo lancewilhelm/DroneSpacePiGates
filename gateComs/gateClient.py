@@ -21,7 +21,7 @@ def connectToServer(sock,address):
 
 def recvData(sock):
     data, address = sock.recvfrom(4096)
-    print("recv: "+str(data.decode('utf-8')))
+    #print("recv: "+str(data.decode('utf-8')))
     return data,address
 
 def sendData(sock,address,data):
@@ -31,9 +31,18 @@ def sendData(sock,address,data):
 def runProgram(sock):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
     connectToServer(sock,(serverAddress,port))
+    lastColor = ""
     while(True):
+        newUpdate = False
+
         currentColor = recvData(sock)[0]
+        if(lastColor != currentColor):
+            print(str(lastColor)+str(currentColor))
+            newUpdate = True
+        if newUpdate == True:
+            print("updating color: "+str(currentColor))
         gate.keepAlive()
+        lastColor = currentColor
 
 def main():
     sock = createSocket(13246)
