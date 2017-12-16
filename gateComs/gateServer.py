@@ -115,8 +115,12 @@ def runProgram(sock):
 
 def main():
     global Gate
-    sock = createSocket(port)
+    while(True):
+        try:
+            sock = createSocket(port)
 
-    runProgram(sock)
+            runProgram(sock)
+        except Exception as e:
+            print(e)
 
 main()
