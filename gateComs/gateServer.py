@@ -55,15 +55,15 @@ def recvData(sock):
     except: #there was no message
         pass #let's move on
     if(data):
-        if(data == "connect"):
+        if(data == "connect"): #we've got a new gate trying to connect
             print("incoming connection...")
             connectNewGate(sock,address)
         else:
             gate = getGateByAddress(address)
-            if(data == "keepalive"):
+            if(data == "keepalive"): #we've got a keep alive message from a gate
                 gate.lastUpdate = getTime()
                 print("keep gate "+str(address)+ "alive")
-            else:
+            else: # we have a message from the browser
                 print("----------------")
                 data = pickle.loads(str(data))
                 print(data)
@@ -77,8 +77,10 @@ def getGateByAddress(address):
         if(gate.address == address):
             return gate
 
-def sendData(sock,address,data):
+def sendData(sock,address,subject,message):
+    data = pickle.dumps({"subject":subject,"message":message})
     sock.sendto(str(data).encode(encoding='utf-8'),address)
+    sock.sendto(message,(controllerAddress,controllerPort))
 
 def recvGateState(sock):
     data = sock.recvfrom(4096).decode(encoding='utf-8')

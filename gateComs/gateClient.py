@@ -22,12 +22,29 @@ def connectToServer(sock,address):
 
 def recvData(sock):
     data, address = sock.recvfrom(4096)
+    try:
+        data = str(data.decode(encoding='utf-8')) #lets convert from bytes to utf-8 string
+        data = pickle.loads(data) #let's unpack our data
+    except:
+        pass
     #print("recv: "+str(data.decode('utf-8')))
     return data,address
 
 def sendData(sock,address,data):
     sock.sendto(str(data).encode('utf-8'),address)
 
+def handleLEDUpdate(currentColor,lastColor):
+    if(lastColor != currentColor):
+        print(str(lastColor)+str(currentColor))
+        newUpdate = True
+    if newUpdate == True:
+        print("updating color: "+str(currentColor))
+        if(currentColor=="yellow"):
+            LED.allYellow()
+        if(currentColor=="green"):
+            LED.allGreen()
+        if(currentColor=="red"):
+            LED.allRed()
 
 def runProgram(sock,LED):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
@@ -36,20 +53,11 @@ def runProgram(sock,LED):
     while(True):
         newUpdate = False
 
-        currentColor = recvData(sock)[0]
-        if(lastColor != currentColor):
-            print(str(lastColor)+str(currentColor))
-            newUpdate = True
-        if newUpdate == True:
-            print("updating color: "+str(currentColor))
-            if(currentColor=="yellow"):
-                LED.allYellow()
-            if(currentColor=="green"):
-                LED.allGreen()
-            if(currentColor=="red"):
-                LED.allRed()
+        data = recvData(sock)[0]
+        if(data['subject'] == "LED"):
+            lastColor = handleLEDUpdate(data['message'],lastColor)
+
         gate.keepAlive()
-        lastColor = currentColor
 
 def main():
     LED = LEDUtils.LEDStrip()
