@@ -51,10 +51,15 @@
           Test
         </div>
       </div>
+
+      <div class="row">
+        <div class="col module">
+            <button type="button" class="btn btn-red" onclick="updateGateCode">UPDATE GATES</button>
+        </div>
+      </div>
     </div>
 
     <script>
-
     function changeAllGate(color){
       origin = window.location.origin
       // gateColorURL = "{{ url_for('index') }}?color="+color
@@ -63,7 +68,18 @@
       // event.preventDefault();
       xhttp.open("POST", "{{ url_for('index')}}", true);
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("color="+color+"&gateID=all");
+      xhttp.send("color="+color+"&gateID=all&update=false");
+    }
+
+    function updateGateCode(){
+      origin = window.location.origin
+      // gateColorURL = "{{ url_for('index') }}?color="+color
+      // alert("sending POST call to "+gateColorUrl);
+      var xhttp = new XMLHttpRequest();
+      // event.preventDefault();
+      xhttp.open("POST", "{{ url_for('index')}}", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("update=true&gateID=all");
     }
     </script>
 

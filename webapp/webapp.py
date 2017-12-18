@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import DSClient
+import subprocess
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
@@ -9,6 +10,13 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
       color = request.form['color']
+      gateID = request.form['gateID']
+      update = request.form['update']
+      ]
+      if update == 'true':
+        subprocess.call('cd', '~/dronespacepigates')
+        subprocess.call('git', 'pull')
+
       if color == 'rainbow':
         rainbow(strip)
         return 'rainbow'
