@@ -12,12 +12,11 @@ def index():
       color = request.form['color']
       gateID = request.form['gateID']
       update = request.form['update']
-      
-      if update == 'true':
+
+      if color == 'update':
         subprocess.call('cd', '~/dronespacepigates')
         subprocess.call('git', 'pull')
-
-      if color == 'rainbow':
+      elif color == 'rainbow':
         rainbow(strip)
         return 'rainbow'
       elif color == 'red':
