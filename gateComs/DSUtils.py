@@ -18,7 +18,7 @@ class Gate:
         if((currentTime-self.lastUpdate) > 1000):
             self.sendData("keepalive")
             self.lastUpdate = currentTime
-            print("sending keepalive")
+            # print("sending keepalive")
 
     def isAlive(self):
         alive = True
