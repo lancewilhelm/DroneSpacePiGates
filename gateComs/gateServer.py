@@ -9,6 +9,9 @@ try:
 except:
     import pickle
 
+printFPS = False
+printKeepAlive = False
+
 serverAddress = ""
 port = 13246
 
@@ -17,7 +20,7 @@ gateStates = {}
 
 currentColor = "[50,50,50]"
 animationSpeed = 10
-fps = 30
+fps = 60
 
 
 def createSocket(port):
@@ -62,7 +65,8 @@ def recvData(sock):
             gate = getGateByAddress(address)
             if(data == "keepalive"):
                 gate.lastUpdate = getTime()
-                print("keep gate "+str(address)+ "alive")
+                if(printKeepAlive):
+                    print("keep gate "+str(address)+ "alive")
             else:
                 print("----------------")
                 data = pickle.loads(str(data))
@@ -110,7 +114,8 @@ def runProgram(sock):
         loopEnd = getTime()
         loopDuration = loopEnd-frameStart
         actualFPS = round((1.0/loopDuration)*1000,0)
-        print("fps: "+str(actualFPS))
+        if(printFPS):
+            print("fps: "+str(actualFPS))
         lastColor = color
 
 def main():
