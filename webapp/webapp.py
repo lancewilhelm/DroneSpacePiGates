@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import DSClient
 import git
 import os
+import time
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
@@ -16,9 +17,8 @@ def index():
       update = request.form['update']
 
       if color == 'update':
-        os.system("git reset --hard")
-        os.system("git fetch origin master")
-        os.system("git pull origin master")
+        os.system("git reset --hard && git fetch origin master && git pull origin master && git checkout master")
+        time.sleep(10)
         #g.pull()
       elif color == 'rainbow':
         rainbow(strip)
@@ -48,4 +48,4 @@ if __name__ == "__main__":
   # Intialize the library (must be called once before other functions).
   #strip.begin()
 
-  app.run(host='0.0.0.0', port=80, debug=True)
+  app.run(host='0.0.0.0', port=8080, debug=True)
