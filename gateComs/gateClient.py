@@ -1,4 +1,5 @@
-devMode = True
+devMode = False
+
 import socket
 import sys
 import time

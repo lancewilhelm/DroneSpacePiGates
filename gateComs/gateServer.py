@@ -1,3 +1,6 @@
+printFPS = False
+printKeepAlive = False
+
 import socket
 import sys
 import time
@@ -8,9 +11,6 @@ try:
     import cPickle as pickle
 except:
     import pickle
-
-printFPS = False
-printKeepAlive = False
 
 serverAddress = ""
 port = 13246
