@@ -17,9 +17,8 @@ def index():
       update = request.form['update']
 
       if color == 'update':
-        os.system("git reset --hard && git fetch origin master && git pull origin master && git checkout master")
-        time.sleep(10)
-        #g.pull()
+        DSClient.sendGateUpdate("localhost",13246,"update")
+        return 'update'
       elif color == 'rainbow':
         rainbow(strip)
         return 'rainbow'
