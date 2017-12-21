@@ -1,6 +1,3 @@
-printFPS = False
-printKeepAlive = False
-
 import socket
 import sys
 import time
@@ -20,7 +17,7 @@ gateStates = {}
 
 currentColor = "[50,50,50]"
 animationSpeed = 10
-fps = 60
+fps = 30
 
 
 def createSocket(port):
@@ -65,8 +62,7 @@ def recvData(sock):
             gate = getGateByAddress(address)
             if(data == "keepalive"):
                 gate.lastUpdate = getTime()
-                if(printKeepAlive):
-                    print("keep gate "+str(address)+ "alive")
+                print("keep gate "+str(address)+ "alive")
             else:
                 print("----------------")
                 data = pickle.loads(str(data))
@@ -114,18 +110,13 @@ def runProgram(sock):
         loopEnd = getTime()
         loopDuration = loopEnd-frameStart
         actualFPS = round((1.0/loopDuration)*1000,0)
-        if(printFPS):
-            print("fps: "+str(actualFPS))
+        print("fps: "+str(actualFPS))
         lastColor = color
 
 def main():
     global Gate
-    while(True):
-        try:
-            sock = createSocket(port)
+    sock = createSocket(port)
 
-            runProgram(sock)
-        except Exception as e:
-            print(e)
+    runProgram(sock)
 
 main()

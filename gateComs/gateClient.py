@@ -1,17 +1,14 @@
-devMode = False
-
 import socket
+import sys
 import time
 import select
 import time
 import DSUtils
-if(not devMode):
-    import LEDUtils
+import LEDUtils
 
-#lets get gateServer address and port from command line, or use defaults
-serverAddress = "gatemaster"
-port = 13246
 currentColor = "none"
+serverAddress = "192.168.1.110"
+port = 13246
 
 def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -46,30 +43,16 @@ def runProgram(sock,LED):
         if newUpdate == True:
             print("updating color: "+str(currentColor))
             if(currentColor=="yellow"):
-                if(not devMode):
-                    LED.allYellow()
-                else:
-                    print("yellow")
+                LED.allYellow()
             if(currentColor=="green"):
-                if(not devMode):
-                    LED.allGreen()
-                else:
-                    print("green")
+                LED.allGreen()
             if(currentColor=="red"):
-                if(not devMode):
-                    LED.allRed()
-                else:
-                    print("red")
+                LED.allRed()
         gate.keepAlive()
         lastColor = currentColor
 
 def main():
-    print("using server address "+str(serverAddress))
-    print("using port "+str(port))
-    if(not devMode):
-        LED = LEDUtils.LEDStrip()
-    else:
-        LED = 0
+    LED = LEDUtils.LEDStrip()
     sock = createSocket(13246)
     while(True):
         try:

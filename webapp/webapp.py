@@ -1,22 +1,15 @@
 from flask import Flask, request, render_template
 import DSClient
-import git
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
 app = Flask(__name__)
-g = git.cmd.Git('/home/pi/dronespacepigates')
 
 @app.route("/", methods=['POST','GET'])
 def index():
     if request.method == 'POST':
       color = request.form['color']
-      gateID = request.form['gateID']
-      update = request.form['update']
-
-      if color == 'update':
-        g.pull()
-      elif color == 'rainbow':
+      if color == 'rainbow':
         rainbow(strip)
         return 'rainbow'
       elif color == 'red':
