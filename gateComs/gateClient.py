@@ -19,6 +19,11 @@ try:
 except:
     port = 13246
 currentColor = "none"
+<<<<<<< HEAD
+=======
+serverAddress = "gatemaster"
+port = 13246
+>>>>>>> 83ef4823f04300d5925e1ce46fe95314a992948f
 
 def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
