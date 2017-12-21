@@ -1,7 +1,6 @@
 devMode = False
 
 import socket
-import sys
 import time
 import select
 import time
@@ -9,9 +8,10 @@ import DSUtils
 if(not devMode):
     import LEDUtils
 
-currentColor = "none"
+#lets get gateServer address and port from command line, or use defaults
 serverAddress = "gatemaster"
 port = 13246
+currentColor = "none"
 
 def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -64,6 +64,8 @@ def runProgram(sock,LED):
         lastColor = currentColor
 
 def main():
+    print("using server address "+str(serverAddress))
+    print("using port "+str(port))
     if(not devMode):
         LED = LEDUtils.LEDStrip()
     else:
