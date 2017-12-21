@@ -1,7 +1,6 @@
 devMode = False
 
 import socket
-import sys
 import time
 import select
 import time
@@ -10,14 +9,8 @@ if(not devMode):
     import LEDUtils
 
 #lets get gateServer address and port from command line, or use defaults
-try:
-    serverAddress = sys.argv[1]
-except:
-    serverAddress = "gatemaster"
-try:
-    port = int(sys.argv[2])
-except:
-    port = 13246
+serverAddress = "gatemaster"
+port = 13246
 currentColor = "none"
 
 def createSocket(port):
