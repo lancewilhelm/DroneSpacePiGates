@@ -10,7 +10,7 @@ if(not devMode):
     import LEDUtils
 
 currentColor = "none"
-serverAddress = ""#"gatemaster"
+serverAddress = "gatemaster"
 port = 13246
 
 def createSocket(port):
