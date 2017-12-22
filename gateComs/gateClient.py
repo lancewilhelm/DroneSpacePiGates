@@ -13,7 +13,7 @@ if(not devMode):
     import LEDUtils
 
 #lets get gateServer address and port from command line, or use defaults
-serverAddress = "gatemaster"
+serverAddress = "192.168.0.100"
 port = 13246
 currentColor = "none"
 
