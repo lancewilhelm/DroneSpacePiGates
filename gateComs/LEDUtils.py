@@ -160,13 +160,13 @@ class LEDStrip:
             return Color(0, pos * 3, 255 - pos * 3)
 
     def rainbow(self,wait_ms=20, iterations=1):
-    	"""Draw rainbow that fades across all pixels at once."""
+        """Draw rainbow that fades across all pixels at once."""
         j = updateFrame(self.strip.numPixels())
-        #for j in range(256*iterations):
-		for i in range(self.strip.numPixels()):
-			self.strip.setPixelColor(i, wheel((i+j) & 255))
-		self.strip.show()
-		time.sleep(wait_ms/1000.0)
+        #for j in range(256*iterations)
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColor(i, wheel((i+j) & 255))
+        self.strip.show()
+        time.sleep(wait_ms/1000.0)
 
     def rainbowCycle(self,wait_ms=20, iterations=1):
         """Draw rainbow that uniformly distributes itself across all pixels."""
