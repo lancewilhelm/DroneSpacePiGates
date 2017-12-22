@@ -7,6 +7,7 @@ import time
 import DSUtils
 import os
 import sys
+import logging
 if(not devMode):
     import LEDUtils
 
@@ -43,7 +44,7 @@ def restartProcess(sock):
         p = psutil.Process(os.getpid())
         for handler in p.get_open_files() + p.connections():
             os.close(handler.fd)
-    except Exception, e:
+    except Exception as e:
         logging.error(e)
 
     python = sys.executable
@@ -61,7 +62,7 @@ def pullDevelop(sock):
     #let's call the linux commands to pull the repo down
     #we assume you have an ssh key setup
     print("pulling latest repo changes")
-    os.system("runuser -l  pi -c 'git reset --hard && git pull origin develop && exit'")
+    os.system("git reset --hard && git pull origin develop && exit")
     #we need to restart this python script to see the changes
     restartProcess(sock)
 
