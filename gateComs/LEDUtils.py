@@ -60,7 +60,7 @@ class LEDStrip:
 
     def allRed(self):
         for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(255,0,0))
+            self.strip.setPixelColor(i, Color(0,0,255))
         self.strip.show()
 
     def allOrange(self):
