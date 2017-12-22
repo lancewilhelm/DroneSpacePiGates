@@ -1,4 +1,4 @@
-devMode = True
+devMode = False
 
 import socket
 import time
@@ -11,7 +11,7 @@ if(not devMode):
     import LEDUtils
 
 #lets get gateServer address and port from command line, or use defaults
-serverAddress = ""
+serverAddress = "gatemaster"
 port = 13246
 currentColor = "none"
 
@@ -33,20 +33,37 @@ def recvData(sock):
 def sendData(sock,address,data):
     sock.sendto(str(data).encode('utf-8'),address)
 
-def pullMaster():
-    pid = os.getpid()
-    currentScript = str(sys.argv[0])
-    os.system("git reset --hard && git pull origin master && kill "+str(pid)+" && sudo python "+str(currentScript))
+def restartProcess(sock):
+    #lets close the datagram socket
+    print("closing socket...")
+    sock.close()
+    #Restarts the current program, with file objects and descriptors cleanup
+    try:
+        print("restarting process...")
+        p = psutil.Process(os.getpid())
+        for handler in p.get_open_files() + p.connections():
+            os.close(handler.fd)
+    except Exception, e:
+        logging.error(e)
 
-def pullDevelop():
-    pid = os.getpid()
-    currentScript = str(sys.argv[0])
-    print("git reset --hard")
-    print("git pull origin develop")
-    print("kill "+str(pid))
-    print("sudo python "+str(currentScript))
-    os.system("git reset --hard && git pull origin develop && kill "+str(pid)+" && sudo python "+str(currentScript))
-    print("git pull")
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+
+def pullMaster(sock):
+    #let's call the linux commands to pull the repo down
+    #we assume you have an ssh key setup
+    print("pulling latest repo changes")
+    os.system("su pi $$ git reset --hard && git pull origin develop && exit")
+    #we need to restart this python script to see the changes
+    restartProcess(sock)
+
+def pullDevelop(sock):
+    #let's call the linux commands to pull the repo down
+    #we assume you have an ssh key setup
+    print("pulling latest repo changes")
+    os.system("su pi $$ git reset --hard && git pull origin develop && exit")
+    #we need to restart this python script to see the changes
+    restartProcess(sock)
 
 def runProgram(sock,LED):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
@@ -69,10 +86,10 @@ def runProgram(sock,LED):
                 if(currentColor=="red"):
                     LED.allRed()
                 if(currentColor=="update"):
-                    pullMaster()
+                    pullDevelop(sock)
             else:
                 if(currentColor=="update"):
-                    pullDevelop()
+                    pullDevelop(sock)
                 print(currentColor)
         gate.keepAlive()
         lastColor = currentColor
