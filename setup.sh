@@ -8,6 +8,9 @@ scons
 cd python
 sudo python setup.py install
 
+#let's install screen
+sudo apt-get install screen
+
 #let's get flask installed
 sudo apt-get install python-pip
 sudo pip install Flask
