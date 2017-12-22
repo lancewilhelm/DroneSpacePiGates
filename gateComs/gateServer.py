@@ -64,7 +64,10 @@ def recvData(sock):
         else:
             gate = getGateByAddress(address)
             if(data == "keepalive"):
-                gate.lastUpdate = getTime()
+                try:
+                    gate.lastUpdate = getTime()
+                except:
+                    print("gate tried to send keepalive but was already disconnected")
                 if(printKeepAlive):
                     print("keep gate "+str(address)+ "alive")
             else:
