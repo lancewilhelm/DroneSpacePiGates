@@ -64,7 +64,7 @@ def pullMaster(sock):
 def pullDevelop(sock):
     #let's call the linux commands to pull the repo down
     #we assume you have an ssh key setup
-    branch = "animations"
+    branch = "develop"
     print("pulling latest repo changes")
     os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
     #we need to restart this python script to see the changes
