@@ -8,6 +8,7 @@ import DSUtils
 import os
 import sys
 import logging
+import psutil
 if(not devMode):
     import LEDUtils
 
