@@ -14,3 +14,6 @@ sudo pip install Flask
 
 #let's give python permission to alter gpio pins without sudo
 sudo chown pi /dev/mem
+
+#lets install psutil so that we can restart our python process on update
+sudo pip install psutil
