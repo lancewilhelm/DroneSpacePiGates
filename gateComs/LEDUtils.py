@@ -104,7 +104,7 @@ class LEDStrip:
     def chasing(self):
         #clearPixels(strip)
         #Purple
-        x = updateFrame(self.strip.numPixels())
+        x = self.updateFrame(self.strip.numPixels())
         #print x
         endPixel = x + 50
         #purple
@@ -132,7 +132,7 @@ class LEDStrip:
 
     def colorWipe(self,color, wait_ms=50):
         """Wipe color across display a pixel at a time."""
-        i = updateFrame(self.strip.numPixels())
+        i = self.updateFrame(self.strip.numPixels())
         self.strip.setPixelColor(i, color)
         self.strip.show()
         time.sleep(wait_ms/1000.0)
@@ -161,7 +161,7 @@ class LEDStrip:
 
     def rainbow(self,wait_ms=20, iterations=1):
         """Draw rainbow that fades across all pixels at once."""
-        j = updateFrame(self.strip.numPixels())
+        j = self.updateFrame(self.strip.numPixels())
         #for j in range(256*iterations)
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, wheel((i+j) & 255))
@@ -170,7 +170,7 @@ class LEDStrip:
 
     def rainbowCycle(self,wait_ms=20, iterations=1):
         """Draw rainbow that uniformly distributes itself across all pixels."""
-        j = updateFrame(self.strip.numPixels())
+        j = self.updateFrame(self.strip.numPixels())
         #for j in range(256*iterations):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, wheel((int(i * 256 / self.strip.numPixels()) + j) & 255))

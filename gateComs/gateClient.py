@@ -64,7 +64,7 @@ def pullDevelop(sock):
     #let's call the linux commands to pull the repo down
     #we assume you have an ssh key setup
     print("pulling latest repo changes")
-    os.system("git reset --hard && git pull origin develop && exit")
+    os.system("git reset --hard && git pull origin animations && exit")
     #we need to restart this python script to see the changes
     restartProcess(sock)
 
@@ -96,18 +96,9 @@ def runProgram(sock,LED):
                 LED.chasing()
             if(currentColor=="rainbowCycle"):
                 LED.rainbowCycle()
-                animation = False
         else:
             if(currentColor=="update"):
                 pullDevelop(sock)
-        #we are playing an animation lets update this frame
-        if animation:
-
-            LED
-            if(animationFrame>=animationEnd):
-                animationFrame = 0
-            animationEnd = LED.chasing(animationFrame)
-
         gate.keepAlive() #let's let the server know we're still there
         lastColor = currentColor
 
