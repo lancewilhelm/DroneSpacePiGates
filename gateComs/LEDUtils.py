@@ -91,33 +91,33 @@ class LEDStrip:
         clearPixels(self.strip)
         time.sleep(1)
 
-    def chasing(self):
+    def chasing(self,frame):
         #clearPixels(strip)
         #Purple
-        for x in range(0,self.strip.numPixels(), 1):
-            #print x
-            endPixel = x + 50
-            #purple
-            for i in range(x,endPixel):
-                self.strip.setPixelColor(i % self.strip.numPixels(), Color(255,0,255))
-                #Serial.println("setting pixel colors for 50");
+        x = frame
+        #print x
+        endPixel = x + 50
+        #purple
+        for i in range(x,endPixel):
+            self.strip.setPixelColor(i % self.strip.numPixels(), Color(255,0,255))
+            #Serial.println("setting pixel colors for 50");
 
-            #green
-            for i in (x+(self.strip.numPixels()/2),endPixel+(self.strip.numPixels()/2)):
-                self.strip.setPixelColor(i % self.strip.numPixels(), Color(100,255,0))
-                #Serial.println("setting pixel colors for 50");
+        #green
+        for i in (x+(self.strip.numPixels()/2),endPixel+(self.strip.numPixels()/2)):
+            self.strip.setPixelColor(i % self.strip.numPixels(), Color(100,255,0))
+            #Serial.println("setting pixel colors for 50");
 
-            #clear purple
-            for i in range(1,5):
-                self.strip.setPixelColor(x - i, Color(0,0,0))
+        #clear purple
+        for i in range(1,5):
+            self.strip.setPixelColor(x - i, Color(0,0,0))
 
-            #clear green
-            for i in range(1,5):
-                self.strip.setPixelColor((x+(self.strip.numPixels()/2) - i) % self.strip.numPixels(), Color(0,0,0))
+        #clear green
+        for i in range(1,5):
+            self.strip.setPixelColor((x+(self.strip.numPixels()/2) - i) % self.strip.numPixels(), Color(0,0,0))
 
-            self.strip.show()
-            #print ('sleep')
-            time.sleep(0.005)
+        self.strip.show()
+        #print ('sleep')
+        #time.sleep(0.005)
 
     def colorWipe(self,color, wait_ms=50):
     	"""Wipe color across display a pixel at a time."""

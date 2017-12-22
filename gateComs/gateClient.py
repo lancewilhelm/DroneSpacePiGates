@@ -17,6 +17,7 @@ serverAddress = "192.168.0.100"
 port = 13246
 currentColor = "none"
 
+
 def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.settimeout(5)
@@ -71,6 +72,8 @@ def runProgram(sock,LED):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
     connectToServer(sock,(serverAddress,port))
     lastColor = ""
+    animation = False
+    animationFrame = 0
     while(True):
         newUpdate = False
 
@@ -89,11 +92,23 @@ def runProgram(sock,LED):
                     LED.allRed()
                 if(currentColor=="update"):
                     pullDevelop(sock)
+                if(currentColor=="chasing"):
+                    animation = True
+                else:
+                    animation = False
             else:
                 if(currentColor=="update"):
                     pullDevelop(sock)
                 print(currentColor)
-        gate.keepAlive()
+        #we are playing an animation lets update this frame
+        if animation:
+            animationFrame += 1
+            animationEnd = LED.strip.numPixels()
+            if(animationFrame>=animationEnd):
+                animationFrame = 0
+            LED.chasing(animationFrame)
+
+        gate.keepAlive() #let's let the server know we're still there
         lastColor = currentColor
 
 def main():
