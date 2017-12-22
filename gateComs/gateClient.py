@@ -83,30 +83,30 @@ def runProgram(sock,LED):
             newUpdate = True
         if newUpdate == True:
             print("updating color: "+str(currentColor))
-            if(not devMode):
-                if(currentColor=="yellow"):
-                    LED.allYellow()
-                if(currentColor=="green"):
-                    LED.allGreen()
-                if(currentColor=="red"):
-                    LED.allRed()
-                if(currentColor=="update"):
-                    pullDevelop(sock)
-                if(currentColor=="chasing"):
-                    animation = True
-                else:
-                    animation = False
-            else:
-                if(currentColor=="update"):
-                    pullDevelop(sock)
-                print(currentColor)
+        if(not devMode):
+            if(currentColor=="yellow"):
+                LED.allYellow()
+            if(currentColor=="green"):
+                LED.allGreen()
+            if(currentColor=="red"):
+                LED.allRed()
+            if(currentColor=="update"):
+                pullDevelop(sock)
+            if(currentColor=="chasing"):
+                LED.chasing()
+            if(currentColor=="rainbowCycle"):
+                LED.rainbowCycle()
+                animation = False
+        else:
+            if(currentColor=="update"):
+                pullDevelop(sock)
         #we are playing an animation lets update this frame
         if animation:
-            animationFrame += 1
-            animationEnd = LED.strip.numPixels()
+
+            LED
             if(animationFrame>=animationEnd):
                 animationFrame = 0
-            LED.chasing(animationFrame)
+            animationEnd = LED.chasing(animationFrame)
 
         gate.keepAlive() #let's let the server know we're still there
         lastColor = currentColor

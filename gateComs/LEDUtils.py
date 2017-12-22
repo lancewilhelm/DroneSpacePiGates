@@ -39,9 +39,19 @@ class LEDStrip:
         self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
         # Intialize the library (must be called once before other functions).
         self.strip.begin()
+        self.animationFrame = 0
+        self.animationEnd = 1
         # Process arguments
         opt_parse()
     # Define functions which animate LEDs in various ways.
+
+    def updateFrame(self, animationEnd):
+        self.animationFrame += 1
+        self.animationEnd = animationEnd
+        if(self.animationFrame>=self.animationEnd):
+            self.animationFrame = 0
+        return self.animationFrame
+
     def clearPixels(self):
         #print ('Clearing')
         for i in range(self.strip.numPixels()):
@@ -91,10 +101,10 @@ class LEDStrip:
         clearPixels(self.strip)
         time.sleep(1)
 
-    def chasing(self,frame):
+    def chasing(self):
         #clearPixels(strip)
         #Purple
-        x = frame
+        x = updateFrame(self.strip.numPixels())
         #print x
         endPixel = x + 50
         #purple
@@ -118,13 +128,14 @@ class LEDStrip:
         self.strip.show()
         #print ('sleep')
         #time.sleep(0.005)
+        return self.strip.numPixels()
 
     def colorWipe(self,color, wait_ms=50):
     	"""Wipe color across display a pixel at a time."""
-    	for i in range(self.strip.numPixels()):
-    		self.strip.setPixelColor(i, color)
-    		self.strip.show()
-    		time.sleep(wait_ms/1000.0)
+        i = updateFrame(self.strip.numPixels())
+		self.strip.setPixelColor(i, color)
+		self.strip.show()
+		time.sleep(wait_ms/1000.0)
 
     def theaterChase(self,color, wait_ms=50, iterations=1):
     	"""Movie theater light style chaser animation."""
@@ -150,19 +161,21 @@ class LEDStrip:
 
     def rainbow(self,wait_ms=20, iterations=1):
     	"""Draw rainbow that fades across all pixels at once."""
-    	for j in range(256*iterations):
-    		for i in range(self.strip.numPixels()):
-    			self.strip.setPixelColor(i, wheel((i+j) & 255))
-    		self.strip.show()
-    		time.sleep(wait_ms/1000.0)
+        j = updateFrame(self.strip.numPixels())
+        #for j in range(256*iterations):
+		for i in range(self.strip.numPixels()):
+			self.strip.setPixelColor(i, wheel((i+j) & 255))
+		self.strip.show()
+		time.sleep(wait_ms/1000.0)
 
     def rainbowCycle(self,wait_ms=20, iterations=1):
     	"""Draw rainbow that uniformly distributes itself across all pixels."""
-    	for j in range(256*iterations):
-    		for i in range(self.strip.numPixels()):
-    			self.strip.setPixelColor(i, wheel((int(i * 256 / self.strip.numPixels()) + j) & 255))
-    		self.strip.show()
-    		time.sleep(wait_ms/1000.0)
+        j = updateFrame(self.strip.numPixels())
+        #for j in range(256*iterations):
+		for i in range(self.strip.numPixels()):
+			self.strip.setPixelColor(i, wheel((int(i * 256 / self.strip.numPixels()) + j) & 255))
+		self.strip.show()
+		time.sleep(wait_ms/1000.0)
 
     def theaterChaseRainbow(self,wait_ms=50):
     	"""Rainbow movie theater light style chaser animation."""
