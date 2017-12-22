@@ -1,15 +1,17 @@
-devMode = False
+devMode = True
 
 import socket
 import time
 import select
 import time
 import DSUtils
+import os
+import sys
 if(not devMode):
     import LEDUtils
 
 #lets get gateServer address and port from command line, or use defaults
-serverAddress = "gatemaster"
+serverAddress = ""
 port = 13246
 currentColor = "none"
 
@@ -31,6 +33,20 @@ def recvData(sock):
 def sendData(sock,address,data):
     sock.sendto(str(data).encode('utf-8'),address)
 
+def pullMaster():
+    pid = os.getpid()
+    currentScript = str(sys.argv[0])
+    os.system("git reset --hard && git pull origin master && kill "+str(pid)+" && sudo python "+str(currentScript))
+
+def pullDevelop():
+    pid = os.getpid()
+    currentScript = str(sys.argv[0])
+    print("git reset --hard")
+    print("git pull origin develop")
+    print("kill "+str(pid))
+    print("sudo python "+str(currentScript))
+    os.system("git reset --hard && git pull origin develop && kill "+str(pid)+" && sudo python "+str(currentScript))
+    print("git pull")
 
 def runProgram(sock,LED):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
@@ -45,21 +61,19 @@ def runProgram(sock,LED):
             newUpdate = True
         if newUpdate == True:
             print("updating color: "+str(currentColor))
-            if(currentColor=="yellow"):
-                if(not devMode):
+            if(not devMode):
+                if(currentColor=="yellow"):
                     LED.allYellow()
-                else:
-                    print("yellow")
-            if(currentColor=="green"):
-                if(not devMode):
+                if(currentColor=="green"):
                     LED.allGreen()
-                else:
-                    print("green")
-            if(currentColor=="red"):
-                if(not devMode):
+                if(currentColor=="red"):
                     LED.allRed()
-                else:
-                    print("red")
+                if(currentColor=="update"):
+                    pullMaster()
+            else:
+                if(currentColor=="update"):
+                    pullDevelop()
+                print(currentColor)
         gate.keepAlive()
         lastColor = currentColor
 
