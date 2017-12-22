@@ -20,7 +20,7 @@ def index():
         time.sleep(1)
         DSClient.sendGateUpdate("localhost",13246,"green")
       elif color == 'rainbow':
-        rainbow(strip)
+        DSClient.sendGateUpdate("localhost",13246,"rainbow")
         return 'rainbow'
       elif color == 'red':
         #allRed(strip)
@@ -28,7 +28,7 @@ def index():
         return 'red'
       elif color == 'chasing':
         #chasing(strip)
-
+        DSClient.sendGateUpdate("localhost",13246,"chasing")
         return 'chasing'
       elif color == 'green':
         #allGreen(strip)

@@ -13,9 +13,10 @@ if(not devMode):
     import LEDUtils
 
 #lets get gateServer address and port from command line, or use defaults
-serverAddress = "192.168.0.100"
+serverAddress = "gatemaster"
 port = 13246
 currentColor = "none"
+
 
 def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -54,16 +55,18 @@ def restartProcess(sock):
 def pullMaster(sock):
     #let's call the linux commands to pull the repo down
     #we assume you have an ssh key setup
+    branch = "master"
     print("pulling latest repo changes")
-    os.system("su pi && git reset --hard && git pull origin develop && exit")
+    os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
     #we need to restart this python script to see the changes
     restartProcess(sock)
 
 def pullDevelop(sock):
     #let's call the linux commands to pull the repo down
     #we assume you have an ssh key setup
+    branch = "animations"
     print("pulling latest repo changes")
-    os.system("git reset --hard && git pull origin develop && exit")
+    os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
     #we need to restart this python script to see the changes
     restartProcess(sock)
 
@@ -71,6 +74,8 @@ def runProgram(sock,LED):
     gate = DSUtils.Gate(sock,(serverAddress,port),"white")
     connectToServer(sock,(serverAddress,port))
     lastColor = ""
+    animation = False
+    animationFrame = 0
     while(True):
         newUpdate = False
 
@@ -80,20 +85,23 @@ def runProgram(sock,LED):
             newUpdate = True
         if newUpdate == True:
             print("updating color: "+str(currentColor))
-            if(not devMode):
-                if(currentColor=="yellow"):
-                    LED.allYellow()
-                if(currentColor=="green"):
-                    LED.allGreen()
-                if(currentColor=="red"):
-                    LED.allRed()
-                if(currentColor=="update"):
-                    pullDevelop(sock)
-            else:
-                if(currentColor=="update"):
-                    pullDevelop(sock)
-                print(currentColor)
-        gate.keepAlive()
+        if(not devMode):
+            if(currentColor=="yellow"):
+                LED.allYellow()
+            if(currentColor=="green"):
+                LED.allGreen()
+            if(currentColor=="red"):
+                LED.allRed()
+            if(currentColor=="update"):
+                pullDevelop(sock)
+            if(currentColor=="chasing"):
+                LED.rainbowCycle()
+            if(currentColor=="rainbow"):
+                LED.rainbow()
+        else:
+            if(currentColor=="update"):
+                pullDevelop(sock)
+        gate.keepAlive() #let's let the server know we're still there
         lastColor = currentColor
 
 def main():
