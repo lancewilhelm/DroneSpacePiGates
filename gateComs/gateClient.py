@@ -61,7 +61,7 @@ def pullDevelop(sock):
     #let's call the linux commands to pull the repo down
     #we assume you have an ssh key setup
     print("pulling latest repo changes")
-    os.system("su pi && git reset --hard && git pull origin develop && exit")
+    os.system("runuser -l  pi -c 'git reset --hard && git pull origin develop && exit'")
     #we need to restart this python script to see the changes
     restartProcess(sock)
 
