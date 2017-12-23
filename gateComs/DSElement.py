@@ -1,4 +1,4 @@
-devMode = True
+devMode = False
 
 import socket
 import time
