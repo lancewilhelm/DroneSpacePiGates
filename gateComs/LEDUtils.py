@@ -132,17 +132,16 @@ class LEDStrip:
 
     def pacman(self):
       self.clearPixels()
-      startPixel = 0;
 
       x = self.updateFrame(self.strip.numPixels())
       endPixel = x + (self.strip.numPixels() - 40)
 
       for y in range(x,endPixel):
         if y < (x + 5): #make pacman
-          self.strip.setPixelColor((x % self.strip.numPixels()), Color(255,255,0))
+          self.strip.setPixelColor((y % self.strip.numPixels()), Color(255,255,0))
         else:
           if x % 5 == 0:  #make blues
-            self.strip.setPixelColor((x % self.strip.numPixels()), Color(0,0,255))
+            self.strip.setPixelColor((y % self.strip.numPixels()), Color(0,0,255))
 
       self.strip.show()
 
