@@ -133,21 +133,17 @@ class LEDStrip:
     def pacman(self):
       startPixel = 0;
 
-      for x in range(startpixel, self.strip.numPixels()-40):
-        if x % 5 == 0:
-          self.strip.setPixelColor(x,Color(0,0,255))
-      for y in range(startPixel, self.strip.numPixels):
-        endPixel = y + 5
-        for i in range(y,endPixel):
-          self.strip.setPixelColor(i,Color(255,255,0))
+      x = self.updateFrame(self.strip.numPixels())
+      endPixel = x + (self.strip.numPixels() - 40)
 
-        self.strip.setPixelColor(y-1,Color(0,0,0))
-        if (y - 4) < 0 and (y - 40) % 5 == 0:
-          self.strip.setPixelColor(self.strip.numPixels() + (y - 40),Color(0,0,255))
-        elif (y - 40) % 5 == 0:
-          self.strip.setPixelColor(self.strip.numPixels() + (y - 40), Color(0,0,255))
+      for y in range(x,endPixel):
+        if y < (x + 5): #make pacman
+          self.strip.setPixelColor((x % self.numPixels), Color(255,255,0))
+        else:
+          if x % 5 == 0:  #make blues
+            self.strip.setPixelColor((x % self.numPixels), Color(0,0,255))
 
-        self.strip.show()
+      self.strip.show()
 
 
     def colorWipe(self,color, wait_ms=50):
