@@ -17,7 +17,7 @@ gateStates = {}
 
 currentColor = "[50,50,50]"
 animationSpeed = 10
-fps = 30
+fps = 10
 
 
 def createSocket(port):
@@ -61,8 +61,12 @@ def recvData(sock):
         else:
             gate = getGateByAddress(address)
             if(data == "keepalive"):
-                gate.lastUpdate = getTime()
-                print("keep gate "+str(address)+ "alive")
+                try:
+                    gate.lastUpdate = getTime()
+                except:
+                    print("gate tried to send keepalive but was already disconnected")
+                if(printKeepAlive):
+                    print("keep gate "+str(address)+ "alive")
             else:
                 print("----------------")
                 data = pickle.loads(str(data))

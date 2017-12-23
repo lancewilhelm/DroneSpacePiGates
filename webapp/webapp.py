@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import DSClient
+import time
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
@@ -9,8 +10,33 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
       color = request.form['color']
-      if color == 'rainbow':
-        rainbow(strip)
+      gateID = request.form['gateID']
+      update = request.form['update']
+
+      if color == 'reboot':
+        DSClient.sendGateUpdate("localhost",13246,"red")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"green")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"reboot")
+      elif color == 'shutdown':
+        DSClient.sendGateUpdate("localhost",13246,"red")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"green")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"red")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"green")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"shutdown")
+      elif color == 'update':
+        DSClient.sendGateUpdate("localhost",13246,"red")
+        time.sleep(1)
+        DSClient.sendGateUpdate("localhost",13246,"update")
+        time.sleep(1)
+        DSClient.sendGateUpdate("localhost",13246,"green")
+      elif color == 'rainbow':
+        DSClient.sendGateUpdate("localhost",13246,"rainbow")
         return 'rainbow'
       elif color == 'red':
         #allRed(strip)
@@ -18,8 +44,12 @@ def index():
         return 'red'
       elif color == 'chasing':
         #chasing(strip)
-
+        DSClient.sendGateUpdate("localhost",13246,"chasing")
         return 'chasing'
+      elif color == 'pacman':
+        #chasing(strip)
+        DSClient.sendGateUpdate("localhost",13246,"pacman")
+        return 'pacman'
       elif color == 'green':
         #allGreen(strip)
         DSClient.sendGateUpdate("localhost",13246,"green")
