@@ -13,7 +13,18 @@ def index():
       gateID = request.form['gateID']
       update = request.form['update']
 
-      if color == 'update':
+
+      if color == 'shutdown':
+        DSClient.sendGateUpdate("localhost",13246,"red")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"green")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"red")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"green")
+        time.sleep(0.1)
+        DSClient.sendGateUpdate("localhost",13246,"shutdown")
+      elif color == 'update':
         DSClient.sendGateUpdate("localhost",13246,"red")
         time.sleep(1)
         DSClient.sendGateUpdate("localhost",13246,"update")
