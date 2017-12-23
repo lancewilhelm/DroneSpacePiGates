@@ -108,7 +108,7 @@ def main():
     print("using server address "+str(serverAddress))
     print("using port "+str(port))
     if(not devMode):
-        LED = LEDUtils.LEDStrip(337)
+        LED = LEDUtils.LEDStrip(520)
     else:
         LED = 0
     sock = createSocket(13246)
