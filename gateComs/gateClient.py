@@ -98,6 +98,8 @@ def runProgram(sock,LED):
                 LED.chasing()
             if(currentColor=="rainbow"):
                 LED.rainbow()
+            if(currentColor=="pacman")
+                LED.pacman()
         else:
             if(currentColor=="update"):
                 pullDevelop(sock)
