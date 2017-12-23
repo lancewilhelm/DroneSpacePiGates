@@ -110,7 +110,7 @@ class element:
                 if(self.currentColor=="update"):
                     self.pullDevelop(sock)
                 if(self.currentColor=="chasing"):
-                    LED.rainbowCycle()
+                    LED.chasing()
                 if(self.currentColor=="rainbow"):
                     LED.rainbow()
                 if(self.currentColor=="pacman"):
