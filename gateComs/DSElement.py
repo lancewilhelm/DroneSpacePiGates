@@ -92,6 +92,12 @@ class element:
         sock.close()
         os.system("sudo shutdown now")
 
+    def shutdown(self,sock):
+        #let's call the linux commands to shutdown the pis
+        print("rebooting Pis...")
+        sock.close()
+        os.system("sudo reboot now")
+
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"white")
         self.connectToServer(sock,(self.serverAddress,self.port))
@@ -123,6 +129,8 @@ class element:
                     LED.pacman()
                 if(self.currentColor=="shutdown"):
                     LED.shutdown()
+                if(self.currentColor=="reboot"):
+                    LED.reboot()
             else:
                 if(self.currentColor=="update"):
                     self.pullDevelop(sock)
