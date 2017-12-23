@@ -76,6 +76,7 @@ def runProgram(sock,LED):
     lastColor = ""
     animation = False
     animationFrame = 0
+    sock.setblocking(0)
     while(True):
         newUpdate = False
 
