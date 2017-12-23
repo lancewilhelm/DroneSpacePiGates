@@ -30,6 +30,10 @@ def index():
         #chasing(strip)
         DSClient.sendGateUpdate("localhost",13246,"chasing")
         return 'chasing'
+      elif color == 'pacman':
+        #chasing(strip)
+        DSClient.sendGateUpdate("localhost",13246,"pacman")
+        return 'pacman'
       elif color == 'green':
         #allGreen(strip)
         DSClient.sendGateUpdate("localhost",13246,"green")

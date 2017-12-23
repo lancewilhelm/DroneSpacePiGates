@@ -88,7 +88,7 @@ class LEDStrip:
             self.strip.setPixelColor(i, Color(125,125,0))
         self.strip.show()
         time.sleep(1)
-        clearPixels(self.strip)
+        self.clearPixels()
         time.sleep(1)
 
     def chasing(self):
@@ -118,6 +118,22 @@ class LEDStrip:
             self.strip.show()
             #print ('sleep')
             time.sleep(0.005)
+
+    def pacman(self):
+      self.clearPixels()
+
+      x = self.updateFrame(self.strip.numPixels())
+      endPixel = x + (self.strip.numPixels() - 40)
+
+      for y in range(x,endPixel):
+        if y < (x + 5): #make pacman
+          self.strip.setPixelColor((y % self.strip.numPixels()), Color(255,255,0))
+        else:
+          if x % 5 == 0:  #make blues
+            self.strip.setPixelColor((y % self.strip.numPixels()), Color(0,0,255))
+
+      self.strip.show()
+
 
     def colorWipe(self,color, wait_ms=50):
     	"""Wipe color across display a pixel at a time."""
