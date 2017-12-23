@@ -28,7 +28,6 @@ sudo cp ~/.ssh/id_rsa.pub /root/.ssh/
 
 #setup cron for @reboot
 sudo su
-echo "@reboot sudo python ~/dronespacepigates/gateComs/gateClient.py" >> /var/spool/cron/crontabs/pi
 cd
 chmod 400 ~/.ssh/id_rsa
 exit
