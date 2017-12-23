@@ -20,7 +20,7 @@ currentColor = "none"
 
 def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.settimeout(5)
+    #sock.settimeout(5)
     return sock
 
 def connectToServer(sock,address):
@@ -29,7 +29,10 @@ def connectToServer(sock,address):
     currentColor = recvData(sock)[0]
 
 def recvData(sock):
-    data, address = sock.recvfrom(4096)
+    try:
+        data, address = sock.recvfrom(4096)
+    except:
+        data = ""
     #print("recv: "+str(data.decode('utf-8')))
     return data,address
 
