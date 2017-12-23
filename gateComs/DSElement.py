@@ -36,7 +36,7 @@ class element:
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(5)
+        sock.settimeout(10)
         return sock
 
     def connectToServer(self,sock,address):
