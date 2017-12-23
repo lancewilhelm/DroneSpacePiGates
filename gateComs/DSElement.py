@@ -108,7 +108,7 @@ class element:
                 if(self.currentColor=="red"):
                     LED.allRed()
                 if(self.currentColor=="update"):
-                    pullDevelop(sock)
+                    self.pullDevelop(sock)
                 if(self.currentColor=="chasing"):
                     LED.rainbowCycle()
                 if(self.currentColor=="rainbow"):
@@ -117,7 +117,7 @@ class element:
                     LED.pacman()
             else:
                 if(self.currentColor=="update"):
-                    pullDevelop(sock)
+                    self.pullDevelop(sock)
             gate.keepAlive() #let's let the server know we're still there
             lastColor = self.currentColor
 
