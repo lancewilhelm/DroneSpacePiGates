@@ -20,3 +20,14 @@ sudo chown pi /dev/mem
 
 #lets install psutil so that we can restart our python process on update
 sudo pip install psutil
+
+#copy keys to root
+sudo cp ~/.ssh/id_rsa /root/.ssh/
+sudo cp ~/.ssh/id_rsa.pub /root/.ssh/
+
+#setup cron for @reboot
+sudo su
+echo "@reboot sudo python ~/dronespacepigates/gateComs/gateClient.py" >> /var/spool/cron/crontabs/pi
+cd
+chmod 400 ~/.ssh/id_rsa
+exit
