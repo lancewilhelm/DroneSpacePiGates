@@ -29,10 +29,7 @@ def connectToServer(sock,address):
     currentColor = recvData(sock)[0]
 
 def recvData(sock):
-    try:
-        data, address = sock.recvfrom(4096)
-    except:
-        data = ""
+    data, address = sock.recvfrom(4096)
     #print("recv: "+str(data.decode('utf-8')))
     return data,address
 
@@ -79,7 +76,7 @@ def runProgram(sock,LED):
     lastColor = ""
     animation = False
     animationFrame = 0
-    sock.setblocking(0)
+    #sock.setblocking(0)
     while(True):
         newUpdate = False
 
