@@ -120,7 +120,7 @@ class element:
                 if(self.currentColor=="red"):
                     LED.allRed()
                 if(self.currentColor=="update"):
-                    self.pullDevelop(sock)
+                    self.pullMaster(sock)
                 if(self.currentColor=="chasing"):
                     LED.chasing()
                 if(self.currentColor=="rainbow"):
