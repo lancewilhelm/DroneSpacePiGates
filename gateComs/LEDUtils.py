@@ -131,7 +131,7 @@ class LEDStrip:
         return self.strip.numPixels()
 
     def pacman(self):
-      self.clearPixels(strip)
+      self.clearPixels(self.strip)
       startPixel = 0;
 
       x = self.updateFrame(self.strip.numPixels())
