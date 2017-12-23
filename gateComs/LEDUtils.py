@@ -213,7 +213,7 @@ class LEDStrip:
         if y < (x + 5): #make pacman
           self.strip.setPixelColor((y % self.strip.numPixels()), Color(255,255,0))
         else:
-          if x % 5 == 0:  #make blues
+          if y % 5 == 0:  #make blues
             self.strip.setPixelColor((y % self.strip.numPixels()), Color(0,0,255))
 
       self.strip.show()
