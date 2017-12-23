@@ -22,8 +22,9 @@ sudo chown pi /dev/mem
 sudo pip install psutil
 
 #copy keys to root
-sudo cp ~/dronespacepigates/.ssh/id_rsa /root/.ssh/
-sudo cp ~/dronespacepigates/.ssh/id_rsa.pub /root/.ssh/
+sudo cp -r ~/dronespacepigates/.ssh/ ~/
+sudo cp ~/.ssh/id_rsa /root/.ssh/
+sudo cp ~/.ssh/id_rsa.pub /root/.ssh/
 
 #setup cron for @reboot
 sudo su
