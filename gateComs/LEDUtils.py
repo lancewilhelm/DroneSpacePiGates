@@ -98,7 +98,7 @@ class LEDStrip:
             self.strip.setPixelColor(i, Color(125,125,0))
         self.strip.show()
         time.sleep(1)
-        clearPixels(self.strip)
+        self.clearPixels()
         time.sleep(1)
 
     def chasing(self):
@@ -131,7 +131,7 @@ class LEDStrip:
         return self.strip.numPixels()
 
     def pacman(self):
-      self.clearPixels(self.strip)
+      self.clearPixels()
       startPixel = 0;
 
       x = self.updateFrame(self.strip.numPixels())
