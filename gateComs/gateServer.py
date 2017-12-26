@@ -49,6 +49,7 @@ def connectNewGate(sock,address):
 def recvData(sock): #this is where we handle all recieved data
     global currentColor
     data = None
+    address = None
     try:
         data, address = sock.recvfrom(4096)
         print("----------------")
