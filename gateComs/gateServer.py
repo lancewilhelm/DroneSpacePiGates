@@ -55,7 +55,6 @@ def recvData(sock): #this is where we handle all recieved data
     except:
         pass
     if(data):
-        print(data)
         data = pickle.loads(data)
         print("----------------")
         print(data)
@@ -111,7 +110,7 @@ def runProgram(sock):
                     print(e)
             if(subject == "keepalive"):
                 try:
-                    getGateByAddress(address).keepAlive()
+                    getGateByAddress(address).setLastKeepalive()
                 except Exception as e:
                     print(e)
 

@@ -25,6 +25,9 @@ class Gate: #this is our representation of a gate
             self.sendData("keepalive","","")
             self.lastUpdate = currentTime
             # print("sending keepalive")
+    def setLastKeepalive(self):
+        currentTime = self.getTime()
+        self.lastUpdate = currentTime
 
     def isAlive(self):
         alive = True
