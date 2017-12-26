@@ -61,7 +61,7 @@ class element:
     def sendData(self,sock,address,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}
         #sock.sendto(str(data).encode('utf-8'),address)
-        sock.sendto(pickle.dumps(message))
+        sock.sendto(pickle.dumps(message),address)
 
     def restartProcess(self,sock):
         #lets close the datagram socket
