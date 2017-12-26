@@ -51,7 +51,11 @@ def recvData(sock): #this is where we handle all recieved data
     data = None
     address = None
     try:
-        data, address = pickle.loads(sock.recvfrom(4096))
+        data, address = sock.recvfrom(4096)
+        try:
+            data = pickle.loads(data)
+        except Exception as e:
+            print(e)
         print("----------------")
         print(data)
         subject = data['subject'] #the subject of the message
@@ -91,7 +95,6 @@ def runProgram(sock):
             else:
                 disconnectedGates.append(gate)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
-        print(data)
         if(data): #if we got some usable data from the buffer
             subject = data['subject'] #the subject of the message ()
             body = data['body'] #the body of the message
