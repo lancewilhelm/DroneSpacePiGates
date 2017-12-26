@@ -46,7 +46,7 @@ def sendGateUpdate(ip,port, animation):
     sendDataToServer(sock,(ip,port),"updateAllGateColors",animation,"")
 
 def getGateList(ip,port):
-    sock = createSocket(controllerPort)
+    sock = createSocket(port)
     message = pickle.dumps({"subject":"getGateList","body":"","recipient":""})
     print(message)
     sendDataToServer(sock,(ip,port),"updateAllGateColors","","")
