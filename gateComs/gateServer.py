@@ -96,7 +96,7 @@ def runProgram(sock):
                 pass
             else:
                 print("gate "+str(gate)+ " is no longer responsive")
-                disconnectedGates.append(gate)
+                disconnectedGates.append(sock,gate)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
         if(data): #if we got some usable data from the buffer
             subject = data['subject'] #the subject of the message ()
@@ -132,7 +132,7 @@ def runProgram(sock):
         #lets disconnect gates that didn't send us a keepAlive in time
         for gate in disconnectedGates:
             print("gate "+str(gate.address)+" disconnected")
-            sendDisconnect(gate.address)
+            sendDisconnect(sock,gate.address)
             gates.remove(gate)
         frameEnd = getTime()
 
