@@ -14,7 +14,7 @@ except:
     import pickle
 
 if(not devMode):
-    #import psutil
+    import psutil
     import LEDUtils
 
 class gate:

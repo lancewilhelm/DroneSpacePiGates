@@ -85,7 +85,7 @@ def sendData(self,subject,body,recipient):
     self.socket.sendto(pickle.dumps(message),self.address)
 
 def sendDisconnect(sock,address):
-    sock.sendData(sock,"disconnect","","")
+    sendData(sock,"disconnect","","")
 
 def runProgram(sock):
     while(True):
