@@ -18,7 +18,6 @@ port = 13246
 gates = []
 gateStates = {}
 
-currentColor = "green"
 animationSpeed = 10
 fps = 1
 
@@ -47,7 +46,6 @@ def connectNewGate(sock,address):
     newGate.updateColor(initialGateColor)
 
 def recvData(sock): #this is where we handle all recieved data
-    global currentColor
     data = None
     address = None
     try:
@@ -90,15 +88,12 @@ def sendDisconnect(sock,address):
     sock.sendData(sock,"disconnect","","")
 
 def runProgram(sock):
-    global currentColor
-    lastColor = ""
     while(True):
-        color = currentColor
         disconnectedGates = []
         frameStart = getTime()
         for gate in gates:
             if(gate.isAlive()):
-                gate.updateColor(color)
+                pass
             else:
                 print("gate "+str(gate)+ " is no longer responsive")
                 disconnectedGates.append(gate)
@@ -150,7 +145,6 @@ def runProgram(sock):
         actualFPS = round((1.0/loopDuration)*1000,0)
         if(printFPS):
             print("fps: "+str(actualFPS))
-        lastColor = color
 
 def main():
     global Gate

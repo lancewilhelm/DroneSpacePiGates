@@ -155,6 +155,8 @@ class element:
                             LED.allGreen()
                         if(self.currentColor=="red"):
                             LED.allRed()
+                        if(self.currentColor=="white"):
+                            LED.allWhite()
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
                         if(self.currentColor=="chasing"):
