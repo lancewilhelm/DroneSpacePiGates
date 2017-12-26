@@ -20,7 +20,7 @@ gateStates = {}
 
 currentColor = "green"
 animationSpeed = 10
-fps = 30
+fps = 1
 
 
 def createSocket(port):
