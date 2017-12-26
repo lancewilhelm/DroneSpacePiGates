@@ -117,6 +117,8 @@ def runProgram(sock):
                 try:
                     for gate in gates:
                         gate.updateColor(body)
+                    print("updated all gate colors")
+                    print(str(gates))
                 except Exception as e:
                     print(e)
             if(subject == "keepalive"):
