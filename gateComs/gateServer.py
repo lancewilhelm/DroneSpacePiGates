@@ -55,6 +55,7 @@ def recvData(sock): #this is where we handle all recieved data
     except:
         pass
     if(data):
+        print(data)
         data = pickle.loads(data)
         print("----------------")
         print(data)
