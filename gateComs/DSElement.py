@@ -112,7 +112,7 @@ class element:
         while(True):
             newUpdate = False
             data = self.recvData(sock)[0]
-            if(data != "")
+            if(data != ""):
                 self.currentColor = data
                 if(lastColor != self.currentColor):
                     print(str(lastColor)+str(self.currentColor))
