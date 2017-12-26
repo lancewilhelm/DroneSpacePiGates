@@ -82,7 +82,7 @@ def getGateByAddress(address):
 def getGateAddresses():
     result = []
     for gate in gates:
-        results.append(str(gate.address))
+        result.append(str(gate.address))
     return result
 
 def sendDataTo(sock,address,subject,body,recipient):
