@@ -46,42 +46,25 @@ def connectNewGate(sock,address):
         print("gate "+str(address)+" reconnected")
     newGate.updateColor(initialGateColor)
 
-def recvData(sock):
+def recvData(sock): #this is where we handle all recieved data
     global currentColor
     data = None
     try:
         data, address = sock.recvfrom(4096)
-        try:
-            data = data.decode(encoding='utf-8')
-        except:
-            pass
-    except: #there was no message
-        pass #let's move on
-    if(data):
-        #a gate is trying to connect
-        print("data = "+str(data))
-        gate = getGateByAddress(address)
-        try:
-            gate.lastUpdate = getTime()
-        except:
-            #it's likely that gate was None
-            #someone is sending a keepalive who we have either never connected before
-            #or whome we have previously disconnected. for now, lets just connect them
-            print("a new gate is communicating. Let's add them to our list")
-            connectNewGate(sock,address)
-            gate = getGateByAddress(address)
-            gate.lastUpdate = getTime()
-            data = "keepalive" #lets just consider this keepalive data
-        if(data == "keepalive"):
-            if(printKeepAlive):
-                print("keep gate "+str(address)+ "alive")
-        else:
-            print("----------------")
-            data = pickle.loads(str(data))
-            print(data)
-            newColor = data['color']
-            for gate in gates:
-                currentColor = str(newColor)
+        print("----------------")
+        data = pickle.loads(str(data))
+        print(data)
+        subject = data['subject'] #the subject of the message
+        body = data['body'] #the body of the message
+        recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
+        #try:
+        #    data = data.decode(encoding='utf-8')
+        #except:
+        #    pass
+    except Exception as e: #there was no message
+        if(data): #if we got something but there was still an error
+            print(e) #let's print the error
+    return data, address
 
 
 def getGateByAddress(address):
@@ -107,7 +90,29 @@ def runProgram(sock):
                 gate.updateColor(color)
             else:
                 disconnectedGates.append(gate)
-        recvData(sock) #lets listen for data (new gates, lap times etc...)
+        data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
+        if(data): #if we got some usable data from the buffer
+            subject = data['subject'] #the subject of the message ()
+            body = data['body'] #the body of the message
+            recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+
+            if(subject == "connect"):
+                try:
+                    connectNewGate(sock,address)
+                except Exception as e:
+                    print(e)
+            if(subject == "updateColor"):
+                try:
+                    for gate in gates:
+                        gate.updateColor(body)
+                except Exception as e:
+                    print(e)
+            if(subject == "keepalive"):
+                try:
+                    getGateByAddress(address).keepAlive()
+                except Exception as e:
+                    print(e)
+
 
         #lets disconnect gates that didn't send us a keepAlive in time
         for gate in disconnectedGates:

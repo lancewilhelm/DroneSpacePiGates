@@ -41,7 +41,7 @@ class element:
 
     def connectToServer(self,sock,address):
         print("connecting to server")
-        self.sendData(sock,address,"connect")
+        self.sendData(sock,address,"connect","","")
         self.currentColor = self.recvData(sock)[0]
 
     def recvData(self,sock):
@@ -54,8 +54,10 @@ class element:
         #print("recv: "+str(data.decode('utf-8')))
         return data,address
 
-    def sendData(self,sock,address,data):
-        sock.sendto(str(data).encode('utf-8'),address)
+    def sendData(self,sock,address,subject,body,recipient):
+        message = {"subject":subject,"body":body,"recipient":recipient}
+        #sock.sendto(str(data).encode('utf-8'),address)
+        sock.sendData(pickle.dumps(message))
 
     def restartProcess(self,sock):
         #lets close the datagram socket

@@ -1,5 +1,5 @@
 import time
-class Gate:
+class Gate: #this is our server side representation of a gate
     def __init__(self,sock,address,color):
         self.address = address
         self.color = color
