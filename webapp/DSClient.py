@@ -45,11 +45,11 @@ def sendGateUpdate(ip,port, animation):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),"updateAllGateColors",animation,"")
 
-def getGateList(controllerAddress,controllerPort):
+def getGateList(ip,port):
     sock = createSocket(controllerPort)
     message = pickle.dumps({"subject":"getGateList","body":"","recipient":""})
     print(message)
-    sendDataToServer(sock,"updateAllGateColors","","")
+    sendDataToServer(sock,(ip,port),"updateAllGateColors","","")
     sock.settimeout(10)
     data,address = recvData(sock)
     if(data): #if we got something back
