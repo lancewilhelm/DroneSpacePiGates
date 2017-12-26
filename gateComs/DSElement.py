@@ -179,7 +179,6 @@ class element:
                     LED.rainbow()
                 if(self.currentColor=="pacman"):
                     LED.pacman()
-        sock.close()
         print("disconnected")
 
 
