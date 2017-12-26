@@ -130,7 +130,7 @@ class element:
 
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"white")
-        LED.flashWite()
+        LED.flashWhite()
         self.connectToServer(sock,(self.serverAddress,self.port))
         lastColor = ""
         while(True):
