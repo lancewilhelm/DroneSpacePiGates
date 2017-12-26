@@ -15,6 +15,6 @@ def createSocket(port):
     return sock
 def sendGateUpdate(controllerAddress,controllerPort, animation):
     sock = createSocket(controllerPort)
-    message = pickle.dumps({"subject":"updateColor","body":animation,"recipient":""})
+    message = pickle.dumps({"subject":"updateAllGateColors","body":animation,"recipient":""})
     print(message)
     sock.sendto(message,(controllerAddress,controllerPort))

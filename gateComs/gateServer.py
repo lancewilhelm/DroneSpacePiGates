@@ -113,7 +113,7 @@ def runProgram(sock):
                     connectNewGate(sock,address)
                 except Exception as e:
                     print(e)
-            if(subject == "updateColor"):
+            if(subject == "updateAllGateColors"):
                 try:
                     for gate in gates:
                         gate.updateColor(body)
