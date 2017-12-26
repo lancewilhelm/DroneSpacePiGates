@@ -1,4 +1,8 @@
 import time
+try:
+    import cPickle as pickle
+except:
+    import pickle
 class Gate: #this is our representation of a gate
     def __init__(self,sock,address,color):
         self.address = address
