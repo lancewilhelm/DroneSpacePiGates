@@ -149,22 +149,6 @@ class element:
                     if newUpdate == True:
                         print("updating color: "+str(self.currentColor))
                     if(not devMode):
-                        if(self.currentColor=="yellow"):
-                            LED.allYellow()
-                        if(self.currentColor=="green"):
-                            LED.allGreen()
-                        if(self.currentColor=="red"):
-                            LED.allRed()
-                        if(self.currentColor=="white"):
-                            LED.allWhite()
-                        if(self.currentColor=="update"):
-                            self.pullDevelop(sock)
-                        if(self.currentColor=="chasing"):
-                            LED.chasing()
-                        if(self.currentColor=="rainbow"):
-                            LED.rainbow()
-                        if(self.currentColor=="pacman"):
-                            LED.pacman()
                         if(self.currentColor=="shutdown"):
                             LED.shutdown()
                         if(self.currentColor=="reboot"):
@@ -173,6 +157,23 @@ class element:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
                     lastColor = self.currentColor
+            if(not devMode):
+                if(self.currentColor=="yellow"):
+                    LED.allYellow()
+                if(self.currentColor=="green"):
+                    LED.allGreen()
+                if(self.currentColor=="red"):
+                    LED.allRed()
+                if(self.currentColor=="white"):
+                    LED.allWhite()
+                if(self.currentColor=="update"):
+                    self.pullDevelop(sock)
+                if(self.currentColor=="chasing"):
+                    LED.chasing()
+                if(self.currentColor=="rainbow"):
+                    LED.rainbow()
+                if(self.currentColor=="pacman"):
+                    LED.pacman()
         sock.close()
         print("disconnected")
 
