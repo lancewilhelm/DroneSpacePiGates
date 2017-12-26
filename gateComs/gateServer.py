@@ -96,7 +96,8 @@ def runProgram(sock):
                 pass
             else:
                 print("gate "+str(gate)+ " is no longer responsive")
-                disconnectedGates.append(sock,gate)
+                disconnectedGates.append(gate)
+                sendDisconnect(sock,gate.address)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
         if(data): #if we got some usable data from the buffer
             subject = data['subject'] #the subject of the message ()
