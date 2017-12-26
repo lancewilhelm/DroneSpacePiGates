@@ -49,7 +49,7 @@ class element:
         print("sent connection request to server")
         print("waiting for server to respond")
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
-        sock.settimout(5)
+        sock.settimeout(5)
         data,address = self.recvData(sock)
         self.currentColor = data['body']
         print(self.currentColor)
