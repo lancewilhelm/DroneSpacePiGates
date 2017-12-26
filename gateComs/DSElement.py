@@ -46,13 +46,19 @@ class element:
     def connectToServer(self,sock,address):
         print("connecting to server")
         self.sendData(sock,address,"connect","","")
-        self.currentColor = self.recvData(sock)[0]
+        print("sent connection request to server")
+        print("waiting for server to respond")
+        while(True):
+            print(self.currentColor = self.recvData(sock)[0])
+            break
+        print("got server response")
 
     def recvData(self,sock):
         try:
             data, address = sock.recvfrom(4096)
             print(data)
-        except:
+        except Exception as e:
+            print(e)
             data = ""
             address = ""
             time.sleep(0.01)
