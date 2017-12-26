@@ -203,7 +203,7 @@ class LEDStrip:
         for i in range(self.strip.numPixels()):
             if(j == 0):
                 self.strip.setPixelColor(i, Color(255,255,255))
-            if(j == 25):
+            if(j == 29):
                 self.clearPixels()
         self.strip.show()
 
