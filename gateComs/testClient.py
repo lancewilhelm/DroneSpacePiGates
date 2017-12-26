@@ -1,4 +1,4 @@
 import DSElement
 
 print("Starting test client")
-DSElement.pillar(100).start()
+DSElement.pillar(200).start()
