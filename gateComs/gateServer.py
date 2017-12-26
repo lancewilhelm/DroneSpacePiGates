@@ -79,6 +79,12 @@ def getGateByAddress(address):
         print("could not find gate by address "+str(address)+" in list of gates "+str(gates))
     return g
 
+def getGateAddresses():
+    result = []
+    for gate in gates:
+        results.append(str(gate.address))
+    return result
+
 def sendDataTo(sock,address,subject,body,recipient):
     message = {"subject":subject,"body":body,"recipient":recipient}
     #sock.sendto(str(data).encode('utf-8'),address)
@@ -119,7 +125,7 @@ def runProgram(sock):
                     print(e)
             if(subject == "getGateList"):
 
-                sendDataTo(sock,address,"gateList",str(gates),"")
+                sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):
                 print(gates)
                 try:
