@@ -8,54 +8,55 @@ app = Flask(__name__)
 
 @app.route("/", methods=['POST','GET'])
 def index():
+    gateServerAddr = "raspberrpi.local"
     if request.method == 'POST':
       color = request.form['color']
       gateID = request.form['gateID']
       update = request.form['update']
 
       if color == 'reboot':
-        DSClient.sendGateUpdate("localhost",13246,"red")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"red")
         time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"green")
         time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"reboot")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"reboot")
       elif color == 'shutdown':
-        DSClient.sendGateUpdate("localhost",13246,"red")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"red")
         time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"green")
         time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"red")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"red")
         time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"green")
         time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"shutdown")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"shutdown")
       elif color == 'update':
-        DSClient.sendGateUpdate("localhost",13246,"red")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"red")
         time.sleep(1)
-        DSClient.sendGateUpdate("localhost",13246,"update")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"update")
         time.sleep(1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"green")
       elif color == 'rainbow':
-        DSClient.sendGateUpdate("localhost",13246,"rainbow")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"rainbow")
         return 'rainbow'
       elif color == 'red':
         #allRed(strip)
-        DSClient.sendGateUpdate("localhost",13246,"red")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"red")
         return 'red'
       elif color == 'chasing':
         #chasing(strip)
-        DSClient.sendGateUpdate("localhost",13246,"chasing")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"chasing")
         return 'chasing'
       elif color == 'pacman':
         #chasing(strip)
-        DSClient.sendGateUpdate("localhost",13246,"pacman")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"pacman")
         return 'pacman'
       elif color == 'green':
         #allGreen(strip)
-        DSClient.sendGateUpdate("localhost",13246,"green")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"green")
         return 'green'
       elif color == 'yellow':
-        DSClient.sendGateUpdate("localhost",13246,"chasing")
+        DSClient.sendGateUpdate(gateServerAddr,13246,"chasing")
         #flashYellow(strip)
         return 'yellow'
     else:
