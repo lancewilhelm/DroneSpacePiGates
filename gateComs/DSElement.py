@@ -50,7 +50,7 @@ class element:
         print("sent connection request to server")
         print("waiting for server to respond")
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
-        sock.settimeout(5)
+        sock.settimeout(2)
         data,address = self.recvData(sock)
         self.currentColor = data['body']
         print(self.currentColor)
@@ -196,7 +196,7 @@ class element:
                 self.runProgram(sock, LED)
             except Exception as e:
                 print(e)
-                for i in range(0,80):
-                    LED.flashWhite()
+                for i in range(0,20):
+                    LED.allWhite()
                 LED.clearPixels()
                 print("no connection to server. Retrying...")
