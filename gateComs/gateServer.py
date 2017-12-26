@@ -51,9 +51,8 @@ def recvData(sock): #this is where we handle all recieved data
     data = None
     address = None
     try:
-        data, address = sock.recvfrom(4096)
+        data, address = pickle.loads(sock.recvfrom(4096))
         print("----------------")
-        data = pickle.loads(str(data))
         print(data)
         subject = data['subject'] #the subject of the message
         body = data['body'] #the body of the message
