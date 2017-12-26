@@ -104,7 +104,7 @@ class element:
         print("pulling latest repo changes")
         os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
-        self.reboot(sock)
+        self.restartProcess(sock)
 
     def pullDevelop(self,sock):
         #let's call the linux commands to pull the repo down
@@ -113,7 +113,7 @@ class element:
         print("pulling latest repo changes")
         os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
-        self.reboot(sock)
+        self.restartProcess(sock)
 
     def shutdown(self,sock):
         #let's call the linux commands to shutdown the pis
