@@ -57,6 +57,7 @@ def recvData(sock): #this is where we handle all recieved data
     if(data):
         data = pickle.loads(data)
         print("----------------")
+        print(address)
         print(data)
         subject = data['subject'] #the subject of the message
         body = data['body'] #the body of the message
