@@ -67,7 +67,7 @@ def index():
         DSClient.sendGateUpdate(gateServerAddr,13246,"white")
         #flashYellow(strip)
         return 'white'
-    elif color == 'listGates':
+      elif color == 'listGates':
         gates = DSClient.getGateList(gateServerAddr,13246)
         print(gates)
         #flashYellow(strip)
