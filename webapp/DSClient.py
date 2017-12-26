@@ -35,15 +35,15 @@ def recvData(sock): #this is where we handle all recieved data
         #    pass
     return data, address
 
-def sendDataToServer(sock,subject,body,recipient):
+def sendDataToServer(sock,address,subject,body,recipient):
     message = {"subject":subject,"body":body,"recipient":recipient}
     #sock.sendto(str(data).encode('utf-8'),address)
     print(message)
-    sock.sendto(pickle.dumps(message),(controllerAddress,controllerPort))
+    sock.sendto(pickle.dumps(message),address)
 
 def sendGateUpdate(ip,port, animation):
     sock = createSocket(controllerPort)
-    sendDataToServer(sock,(ip,port)"updateAllGateColors",animation,"")
+    sendDataToServer(sock,(ip,port),"updateAllGateColors",animation,"")
 
 def getGateList(controllerAddress,controllerPort):
     sock = createSocket(controllerPort)
