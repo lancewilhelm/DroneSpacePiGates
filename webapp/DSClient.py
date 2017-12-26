@@ -52,6 +52,7 @@ def getGateList(ip,port):
     sendDataToServer(sock,(ip,port),"updateAllGateColors","","")
     sock.settimeout(10)
     data,address = recvData(sock)
+    result = None
     if(data): #if we got something back
         result = data['body'] #set the result to the body of the message
 
