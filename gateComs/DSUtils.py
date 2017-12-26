@@ -1,5 +1,5 @@
 import time
-class Gate: #this is our server side representation of a gate
+class Gate: #this is our representation of a gate
     def __init__(self,sock,address,color):
         self.address = address
         self.color = color
@@ -10,14 +10,15 @@ class Gate: #this is our server side representation of a gate
         self.color = color
         self.sendData(color)
 
-    def sendData(self,data):
-        print("sending gate update "+str(data))
-        self.socket.sendto(data.encode('utf-8'),self.address)
+    def sendData(self,subject,body,recipient):
+        message = {"subject":subject,"body":body,"recipient":recipient}
+        #sock.sendto(str(data).encode('utf-8'),address)
+        self.socket.sendto(pickle.dumps(message),self.address)
 
     def keepAlive(self):
         currentTime = self.getTime()
         if((currentTime-self.lastUpdate) > 1000):
-            self.sendData("keepalive")
+            self.sendData("keepalive","","")
             self.lastUpdate = currentTime
             # print("sending keepalive")
 
