@@ -128,7 +128,7 @@ def runProgram(sock):
                     except:
                         print("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
                         print("sending reconnect request")
-                        disconnectGate(address)
+                        sendDisconnect(address)
                 except Exception as e:
                     print(e)
 
