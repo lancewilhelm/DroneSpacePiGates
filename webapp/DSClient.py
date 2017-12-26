@@ -49,7 +49,7 @@ def getGateList(ip,port):
     sock = createSocket(port)
     message = pickle.dumps({"subject":"getGateList","body":"","recipient":""})
     print(message)
-    sendDataToServer(sock,(ip,port),"updateAllGateColors","","")
+    sendDataToServer(sock,(ip,port),"getGateList","","")
     sock.settimeout(10)
     data,address = recvData(sock)
     result = None

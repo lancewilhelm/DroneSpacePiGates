@@ -119,7 +119,7 @@ def runProgram(sock):
                     print(e)
             if(subject == "getGateList"):
 
-                sendDataTo(sock,address,"gateList",gates,"")
+                sendDataTo(sock,address,"gateList",str(gates),"")
             if(subject == "keepalive"):
                 print(gates)
                 try:
