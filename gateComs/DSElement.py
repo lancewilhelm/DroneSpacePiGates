@@ -10,7 +10,7 @@ import sys
 import logging
 
 if(not devMode):
-    import psutil
+    #import psutil
     import LEDUtils
 
 class gate:
@@ -80,7 +80,7 @@ class element:
         print("pulling latest repo changes")
         os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
-        self.restartProcess(sock)
+        self.reboot(sock)
 
     def pullDevelop(self,sock):
         #let's call the linux commands to pull the repo down
@@ -89,7 +89,7 @@ class element:
         print("pulling latest repo changes")
         os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
-        self.restartProcess(sock)
+        self.reboot(sock)
 
     def shutdown(self,sock):
         #let's call the linux commands to shutdown the pis
@@ -97,7 +97,7 @@ class element:
         sock.close()
         os.system("sudo shutdown now")
 
-    def shutdown(self,sock):
+    def reboot(self,sock):
         #let's call the linux commands to shutdown the pis
         print("rebooting Pis...")
         sock.close()

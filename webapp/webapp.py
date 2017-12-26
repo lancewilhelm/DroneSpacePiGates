@@ -55,7 +55,7 @@ def index():
         DSClient.sendGateUpdate("localhost",13246,"green")
         return 'green'
       elif color == 'yellow':
-        DSClient.sendGateUpdate("localhost",13246,"yellow")
+        DSClient.sendGateUpdate("localhost",13246,"chasing")
         #flashYellow(strip)
         return 'yellow'
     else:
