@@ -26,6 +26,10 @@ h3 {
   background-color: yellow;
 }
 
+.btn-blue {
+  background-color: blue;
+}
+
 .btn-block {
   padding: 50px;
 }

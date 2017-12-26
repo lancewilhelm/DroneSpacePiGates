@@ -59,6 +59,14 @@ def index():
         DSClient.sendGateUpdate(gateServerAddr,13246,"yellow")
         #flashYellow(strip)
         return 'yellow'
+      elif color == 'blue':
+        DSClient.sendGateUpdate(gateServerAddr,13246,"blue")
+        #flashYellow(strip)
+        return 'blue'
+      elif color == 'white':
+        DSClient.sendGateUpdate(gateServerAddr,13246,"white")
+        #flashYellow(strip)
+        return 'white'
     else:
         return render_template('index.html')
 
