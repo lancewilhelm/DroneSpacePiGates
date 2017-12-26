@@ -11,6 +11,7 @@ class Gate: #this is our server side representation of a gate
         self.sendData(color)
 
     def sendData(self,data):
+        print("sending gate update "+str(data))
         self.socket.sendto(data.encode('utf-8'),self.address)
 
     def keepAlive(self):
