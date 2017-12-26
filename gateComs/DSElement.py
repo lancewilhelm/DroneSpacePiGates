@@ -184,7 +184,7 @@ class element:
         print("using server address "+str(self.serverAddress))
         print("using port "+str(self.port))
         if(not devMode):
-            LED = LEDUtils.LEDStrip(520)
+            LED = LEDUtils.LEDStrip(self.ledCount)
         else:
             LED = 0
         sock = self.createSocket(13246)
