@@ -196,6 +196,6 @@ class element:
                 self.runProgram(sock, LED)
             except Exception as e:
                 print(e)
-                for i in range(0,1000):
+                for i in range(0,80):
                     LED.flashWhite()
                 print("no connection to server. Retrying...")
