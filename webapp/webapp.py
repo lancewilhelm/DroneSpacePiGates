@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=['POST','GET'])
 def index():
-    gateServerAddr = "raspberrpi.local"
+    gateServerAddr = "192.168.0.100"
     if request.method == 'POST':
       color = request.form['color']
       gateID = request.form['gateID']
