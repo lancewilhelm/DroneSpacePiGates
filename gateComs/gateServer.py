@@ -70,9 +70,16 @@ def recvData(sock): #this is where we handle all recieved data
 
 
 def getGateByAddress(address):
+    g = None
     for gate in gates:
         if(gate.address == address):
-            return gate
+            g = gate
+
+    if(g):
+        pass
+    else:
+        print("could not find gate by address "+str(address)+" in list of gates "+str(gates))
+    return g
 
 def sendData(sock,address,data):
     sock.sendto(str(data).encode(encoding='utf-8'),address)

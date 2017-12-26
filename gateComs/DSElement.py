@@ -65,10 +65,8 @@ class element:
         except:
             pass
         if(data):
-            print(data)
             data = pickle.loads(data)
             print("----------------")
-            print(data)
             subject = data['subject'] #the subject of the message
             body = data['body'] #the body of the message
             recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
