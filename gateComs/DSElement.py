@@ -130,7 +130,6 @@ class element:
 
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"white")
-        LED.flashWhite()
         self.connectToServer(sock,(self.serverAddress,self.port))
         lastColor = ""
         while(True):
@@ -197,5 +196,6 @@ class element:
                 self.runProgram(sock, LED)
             except Exception as e:
                 print(e)
-                time.sleep(3)
+                for i in range(0,1000):
+                    LED.flashWhite()
                 print("no connection to server. Retrying...")
