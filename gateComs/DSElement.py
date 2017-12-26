@@ -132,6 +132,7 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"white")
         self.connectToServer(sock,(self.serverAddress,self.port))
+        lastColor = ""
         while(True):
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
@@ -168,6 +169,7 @@ class element:
                     else:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
+                    lastColor = self.currentColor
 
 
     def start(self):
