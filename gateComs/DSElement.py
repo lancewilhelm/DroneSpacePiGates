@@ -49,7 +49,8 @@ class element:
         print("sent connection request to server")
         print("waiting for server to respond")
         while(True):
-            print(self.currentColor = self.recvData(sock)[0])
+            self.currentColor = self.recvData(sock)[0]
+            print(self.currentColor)
             break
         print("got server response")
 
