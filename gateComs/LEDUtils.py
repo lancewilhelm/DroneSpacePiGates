@@ -199,11 +199,11 @@ class LEDStrip:
         time.sleep(wait_ms/1000.0)
 
     def flashWhite(self):
-        j = self.updateFrame(40)
+        j = self.updateFrame(30)
         for i in range(self.strip.numPixels()):
             if(j == 0):
                 self.strip.setPixelColor(i, Color(255,255,255))
-            if(j == 20):
+            if(j == 25):
                 self.clearPixels()
         self.strip.show()
 
