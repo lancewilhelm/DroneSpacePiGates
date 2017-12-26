@@ -48,13 +48,13 @@ class element:
         self.sendData(sock,address,"connect","","")
         print("sent connection request to server")
         print("waiting for server to respond")
-        while(True):
-            data,address = self.recvData(sock)
-            if(data):
-                self.currentColor = data['body']
-                break
+        sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
+        sock.settimout(5)
+        data,address = self.recvData(sock)
+        self.currentColor = data['body']
         print(self.currentColor)
         print("got server response")
+        sock.setblocking(0) #allow the program to return with no data once again
 
     def recvData(self,sock): #this is where we handle all recieved data
         global currentColor
@@ -132,43 +132,42 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"white")
         self.connectToServer(sock,(self.serverAddress,self.port))
-        lastColor = ""
-        animation = False
-        animationFrame = 0
         while(True):
-            newUpdate = False
+            gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
             if(data):
-                self.currentColor = data
-                if(lastColor != self.currentColor):
-                    print(str(lastColor)+str(self.currentColor))
-                    newUpdate = True
-                if newUpdate == True:
-                    print("updating color: "+str(self.currentColor))
-                if(not devMode):
-                    if(self.currentColor=="yellow"):
-                        LED.allYellow()
-                    if(self.currentColor=="green"):
-                        LED.allGreen()
-                    if(self.currentColor=="red"):
-                        LED.allRed()
-                    if(self.currentColor=="update"):
-                        self.pullDevelop(sock)
-                    if(self.currentColor=="chasing"):
-                        LED.chasing()
-                    if(self.currentColor=="rainbow"):
-                        LED.rainbow()
-                    if(self.currentColor=="pacman"):
-                        LED.pacman()
-                    if(self.currentColor=="shutdown"):
-                        LED.shutdown()
-                    if(self.currentColor=="reboot"):
-                        LED.reboot()
-                else:
-                    if(self.currentColor=="update"):
-                        self.pullDevelop(sock)
-                lastColor = self.currentColor
-            gate.keepAlive() #let's let the server know we're still there
+                subject = data['subject'] #the subject of the message ()
+                body = data['body'] #the body of the message
+                recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+                if(subject == "updateColor")
+                    self.currentColor = body
+                    if(lastColor != self.currentColor):
+                        print(str(lastColor)+str(self.currentColor))
+                        newUpdate = True
+                    if newUpdate == True:
+                        print("updating color: "+str(self.currentColor))
+                    if(not devMode):
+                        if(self.currentColor=="yellow"):
+                            LED.allYellow()
+                        if(self.currentColor=="green"):
+                            LED.allGreen()
+                        if(self.currentColor=="red"):
+                            LED.allRed()
+                        if(self.currentColor=="update"):
+                            self.pullDevelop(sock)
+                        if(self.currentColor=="chasing"):
+                            LED.chasing()
+                        if(self.currentColor=="rainbow"):
+                            LED.rainbow()
+                        if(self.currentColor=="pacman"):
+                            LED.pacman()
+                        if(self.currentColor=="shutdown"):
+                            LED.shutdown()
+                        if(self.currentColor=="reboot"):
+                            LED.reboot()
+                    else:
+                        if(self.currentColor=="update"):
+                            self.pullDevelop(sock)
 
 
     def start(self):
