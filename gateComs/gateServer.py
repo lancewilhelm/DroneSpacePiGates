@@ -79,10 +79,10 @@ def getGateByAddress(address):
         print("could not find gate by address "+str(address)+" in list of gates "+str(gates))
     return g
 
-def sendData(self,subject,body,recipient):
+def sendData(sock,subject,body,recipient):
     message = {"subject":subject,"body":body,"recipient":recipient}
     #sock.sendto(str(data).encode('utf-8'),address)
-    self.socket.sendto(pickle.dumps(message),self.address)
+    sock.sendto(pickle.dumps(message),self.address)
 
 def sendDisconnect(sock,address):
     sendData(sock,"disconnect","","")
