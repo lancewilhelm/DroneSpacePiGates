@@ -198,6 +198,15 @@ class LEDStrip:
         self.strip.show()
         time.sleep(wait_ms/1000.0)
 
+    def flashWhite(self):
+        j = self.updateFrame(100)
+        for i in range(self.strip.numPixels()):
+            if(j == 0):
+                self.strip.setPixelColor(i, Color(255,255,255))
+            if(j == 50):
+                self.clearPixels()
+        self.strip.show()
+
     def theaterChaseRainbow(self,wait_ms=50):
         """Rainbow movie theater light style chaser animation."""
         for j in range(256):

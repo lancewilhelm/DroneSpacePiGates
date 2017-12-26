@@ -117,6 +117,9 @@ def runProgram(sock):
                     print(str(gates))
                 except Exception as e:
                     print(e)
+            if(subject == "getGateList"):
+
+                sendDataTo(sock,address,"gateList",gates,"")
             if(subject == "keepalive"):
                 print(gates)
                 try:
