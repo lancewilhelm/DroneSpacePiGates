@@ -22,21 +22,22 @@ class gate:
         self.ledCount = ledCount
 
     def start(self):
-        element().start()
+        element(self.ledCount).start()
 
 class pillar:
     def __init__(self,ledCount):
         self.ledCount = ledCount
 
     def start(self):
-        element().start()
+        element(self.ledCount).start()
 
 class element:
-    def __init__(self):
+    def __init__(self,ledCount):
         #lets get gateServer address and port from command line, or use defaults
         self.serverAddress = "localhost"
         self.port = 13246
         self.currentColor = "none"
+        self.ledCount = ledCount
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
