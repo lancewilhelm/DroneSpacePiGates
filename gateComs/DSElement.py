@@ -8,6 +8,10 @@ import DSUtils
 import os
 import sys
 import logging
+try:
+    import cPickle as pickle
+except:
+    import pickle
 
 if(not devMode):
     #import psutil
