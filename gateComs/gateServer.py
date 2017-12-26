@@ -18,7 +18,7 @@ port = 13246
 gates = []
 gateStates = {}
 
-currentColor = "[50,50,50]"
+currentColor = "green"
 animationSpeed = 10
 fps = 30
 
@@ -58,25 +58,29 @@ def recvData(sock):
     except: #there was no message
         pass #let's move on
     if(data):
-        if(data == "connect"):
-            print("incoming connection...")
+        #a gate is trying to connect
+
+        gate = getGateByAddress(address)
+        try:
+            gate.lastUpdate = getTime()
+        except:
+            #it's likely that gate was None
+            #someone is sending a keepalive who we have either never connected before
+            #or whome we have previously disconnected. for now, lets just connect them
+            print("a new gate is communicating. Let's add them to our list")
             connectNewGate(sock,address)
-        else:
             gate = getGateByAddress(address)
-            if(data == "keepalive"):
-                try:
-                    gate.lastUpdate = getTime()
-                except:
-                    print("gate tried to send keepalive but was already disconnected")
-                if(printKeepAlive):
-                    print("keep gate "+str(address)+ "alive")
-            else:
-                print("----------------")
-                data = pickle.loads(str(data))
-                print(data)
-                newColor = data['color']
-                for gate in gates:
-                    currentColor = str(newColor)
+            gate.lastUpdate = getTime()
+        if(data == "keepalive"):
+            if(printKeepAlive):
+                print("keep gate "+str(address)+ "alive")
+        else:
+            print("----------------")
+            data = pickle.loads(str(data))
+            print(data)
+            newColor = data['color']
+            for gate in gates:
+                currentColor = str(newColor)
 
 
 def getGateByAddress(address):

@@ -36,7 +36,7 @@ class element:
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(5)
+        sock.setblocking(0)
         return sock
 
     def connectToServer(self,sock,address):
@@ -45,7 +45,12 @@ class element:
         self.currentColor = self.recvData(sock)[0]
 
     def recvData(self,sock):
-        data, address = sock.recvfrom(4096)
+        try:
+            data, address = sock.recvfrom(4096)
+        except:
+            data = ""
+            address = ""
+            time.sleep(0.01)
         #print("recv: "+str(data.decode('utf-8')))
         return data,address
 
