@@ -71,6 +71,7 @@ def recvData(sock):
             connectNewGate(sock,address)
             gate = getGateByAddress(address)
             gate.lastUpdate = getTime()
+            data = "" #lets make sure no one else tries to handle this data
         if(data == "keepalive"):
             if(printKeepAlive):
                 print("keep gate "+str(address)+ "alive")
