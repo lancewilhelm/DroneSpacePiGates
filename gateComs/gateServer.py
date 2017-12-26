@@ -81,11 +81,13 @@ def getGateByAddress(address):
         print("could not find gate by address "+str(address)+" in list of gates "+str(gates))
     return g
 
-def sendData(sock,address,data):
-    sock.sendto(str(data).encode(encoding='utf-8'),address)
+def sendData(self,subject,body,recipient):
+    message = {"subject":subject,"body":body,"recipient":recipient}
+    #sock.sendto(str(data).encode('utf-8'),address)
+    self.socket.sendto(pickle.dumps(message),self.address)
 
-def recvGateState(sock):
-    data = sock.recvfrom(4096).decode(encoding='utf-8')
+def sendDisconnect(sock,address):
+    sock.sendData(sock,"disconnect","","")
 
 def runProgram(sock):
     global currentColor
@@ -117,8 +119,14 @@ def runProgram(sock):
                 except Exception as e:
                     print(e)
             if(subject == "keepalive"):
+                print(gates)
                 try:
-                    getGateByAddress(address).setLastKeepalive()
+                    try:
+                        getGateByAddress(address).setLastKeepalive()
+                    except:
+                        print("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
+                        print("sending reconnect request")
+                        disconnectGate(address)
                 except Exception as e:
                     print(e)
 
@@ -126,6 +134,7 @@ def runProgram(sock):
         #lets disconnect gates that didn't send us a keepAlive in time
         for gate in disconnectedGates:
             print("gate "+str(gate.address)+" disconnected")
+            sendDisconnect(gate.address)
             gates.remove(gate)
         frameEnd = getTime()
 

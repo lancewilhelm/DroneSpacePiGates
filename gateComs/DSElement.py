@@ -138,6 +138,9 @@ class element:
                 subject = data['subject'] #the subject of the message ()
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+                if(subject == "disconnect"):
+                    print("we recieved a disconnect request")
+                    break;
                 if(subject == "updateColor"):
                     self.currentColor = body
                     if(lastColor != self.currentColor):
@@ -168,6 +171,8 @@ class element:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
                     lastColor = self.currentColor
+        sock.close()
+        print("disconnected")
 
 
     def start(self):
