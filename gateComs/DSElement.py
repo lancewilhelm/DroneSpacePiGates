@@ -54,17 +54,27 @@ class element:
             break
         print("got server response")
 
-    def recvData(self,sock):
+    def recvData(self,sock): #this is where we handle all recieved data
+        global currentColor
+        data = None
+        address = None
         try:
             data, address = sock.recvfrom(4096)
+        except:
+            pass
+        if(data):
             print(data)
-        except Exception as e:
-            print(e)
-            data = ""
-            address = ""
-            time.sleep(0.01)
-        #print("recv: "+str(data.decode('utf-8')))
-        return data,address
+            data = pickle.loads(data)
+            print("----------------")
+            print(data)
+            subject = data['subject'] #the subject of the message
+            body = data['body'] #the body of the message
+            recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
+            #try:
+            #    data = data.decode(encoding='utf-8')
+            #except:
+            #    pass
+        return data, address
 
     def sendData(self,sock,address,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}
@@ -125,8 +135,8 @@ class element:
         animationFrame = 0
         while(True):
             newUpdate = False
-            data = self.recvData(sock)[0]
-            if(data != ""):
+            data,address = self.recvData(sock)
+            if(data):
                 self.currentColor = data
                 if(lastColor != self.currentColor):
                     print(str(lastColor)+str(self.currentColor))

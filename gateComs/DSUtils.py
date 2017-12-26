@@ -8,7 +8,7 @@ class Gate: #this is our representation of a gate
 
     def updateColor(self,color):
         self.color = color
-        self.sendData(color)
+        self.sendData("updateColor",color,"")
 
     def sendData(self,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}
