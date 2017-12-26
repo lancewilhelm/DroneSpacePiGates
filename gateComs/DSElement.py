@@ -29,6 +29,7 @@ class pillar:
         self.ledCount = ledCount
 
     def start(self):
+        element().start()
 
 class element:
     def __init__(self):
@@ -47,9 +48,11 @@ class element:
         self.sendData(sock,address,"connect","","")
         print("sent connection request to server")
         print("waiting for server to respond")
-        sock.setblocking(1)
-        self.currentColor = self.recvData(sock)[0]
-        sock.setblocking(0)
+        while(True):
+            data,address = self.recvData(sock)
+            if(data):
+                self.currentColor = data['body']
+                break
         print(self.currentColor)
         print("got server response")
 
