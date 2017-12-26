@@ -51,6 +51,7 @@ class element:
     def recvData(self,sock):
         try:
             data, address = sock.recvfrom(4096)
+            print(data)
         except:
             data = ""
             address = ""
