@@ -59,7 +59,7 @@ def recvData(sock):
         pass #let's move on
     if(data):
         #a gate is trying to connect
-        print(data)
+        print("data = "+str(data))
         gate = getGateByAddress(address)
         try:
             gate.lastUpdate = getTime()
