@@ -198,4 +198,5 @@ class element:
                 print(e)
                 for i in range(0,80):
                     LED.flashWhite()
+                LED.clearPixels()
                 print("no connection to server. Retrying...")
