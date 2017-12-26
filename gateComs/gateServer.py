@@ -100,6 +100,7 @@ def runProgram(sock):
             if(gate.isAlive()):
                 gate.updateColor(color)
             else:
+                print("gate "+str(gate)+ " is no longer responsive")
                 disconnectedGates.append(gate)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
         if(data): #if we got some usable data from the buffer
