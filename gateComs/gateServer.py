@@ -52,22 +52,18 @@ def recvData(sock): #this is where we handle all recieved data
     address = None
     try:
         data, address = sock.recvfrom(4096)
-        try:
-            data = pickle.loads(data)
-        except Exception as e:
-            print(e)
-        print("----------------")
-        print(data)
-        subject = data['subject'] #the subject of the message
-        body = data['body'] #the body of the message
-        recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
-        #try:
-        #    data = data.decode(encoding='utf-8')
-        #except:
-        #    pass
-    except Exception as e: #there was no message
-        if(data): #if we got something but there was still an error
-            print(e) #let's print the error
+    except:
+        pass
+    data = pickle.loads(data)
+    print("----------------")
+    print(data)
+    subject = data['subject'] #the subject of the message
+    body = data['body'] #the body of the message
+    recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
+    #try:
+    #    data = data.decode(encoding='utf-8')
+    #except:
+    #    pass
     return data, address
 
 
