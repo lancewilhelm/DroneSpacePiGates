@@ -91,6 +91,7 @@ def runProgram(sock):
             else:
                 disconnectedGates.append(gate)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
+        print(data)
         if(data): #if we got some usable data from the buffer
             subject = data['subject'] #the subject of the message ()
             body = data['body'] #the body of the message
