@@ -42,6 +42,7 @@ def sendDataToServer(sock,subject,body,recipient):
     sock.sendto(pickle.dumps(message),(controllerAddress,controllerPort))
 
 def sendGateUpdate(controllerAddress,controllerPort, animation):
+    sock = createSocket(controllerPort)
     sendDataToServer(sock,"updateAllGateColors",animation,"")
 
 def getGateList(controllerAddress,controllerPort):
