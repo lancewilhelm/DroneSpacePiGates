@@ -7,7 +7,7 @@ def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     #sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-    hostname = socket.gethostbyname('localhost')
+    hostname = socket.gethostbyname(socket.gethostname())
     sock.setblocking(0)
     print("binding to "+str(hostname)+" on port "+str(port))
     #sock.bind((hostname,port))

@@ -1,6 +1,3 @@
-printFPS = False
-printKeepAlive = False
-
 import socket
 import sys
 import time
