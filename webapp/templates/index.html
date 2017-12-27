@@ -21,16 +21,19 @@
       <div class="row">
 
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-green" onclick="changeAllGate('green')"></button>
+          <button type="button" class="btn btn-block btn-green" onclick="setAllGateColors('green')"></button>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-red" onclick="changeAllGate('red')"></button>
+          <button type="button" class="btn btn-block btn-red" onclick="setAllGateColors('red')"></button>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-yellow" onclick="changeAllGate('yellow')"></button>
+          <button type="button" class="btn btn-block btn-blue" onclick="setAllGateColors('blue')"></button>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-block btn-white" onclick="changeAllGate('white')"></button>
+          <button type="button" class="btn btn-block btn-yellow" onclick="setAllGateColors('yellow')"></button>
+        </div>
+        <div class="col-sm-3">
+          <button type="button" class="btn btn-block btn-white" onclick="setAllGateColors('white')"></button>
         </div>
       </div>
 
@@ -41,9 +44,10 @@
               PROGRAMS
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <button class="dropdown-item text-center" type="button" onclick="changeAllGate('rainbow')">RAINBOW</button>
-            <button class="dropdown-item text-center" type="button" onclick="changeAllGate('pacman')">PACMAN</button>
-            <button class="dropdown-item text-center" type="button" onclick="changeAllGate('chasing')">CHASING</button>
+            <button class="dropdown-item text-center" type="button" onclick="setAllGateColors('rainbow')">RAINBOW</button>
+            <button class="dropdown-item text-center" type="button" onclick="setAllGateColors('pacman')">PACMAN</button>
+            <button class="dropdown-item text-center" type="button" onclick="setAllGateColors('chasing')">CHASING</button>
+            <button class="dropdown-item text-center" type="button" onclick="setAllGateColors('flashWhite')">FlashWhite</button>
             </div>
           </div>
         </div>
@@ -54,32 +58,58 @@
 
       <div class="row">
         <div class="col module">
-            <button type="button" class="btn btn-white" onclick="changeAllGate('update')">UPDATE GATES</button>
+            <button type="button" class="btn btn-white" onclick="sendElementCommand('update')">UPDATE GATES</button>
+        </div>
+        <div class="col module">
+            <button type="button" class="btn btn-white" onclick="getGateList()">LIST GATES</button>
         </div>
       </div>
 
       <div class="row">
         <div class="col module">
-            <button type="button" class="btn btn-red" onclick="changeAllGate('reboot')">REBOOT</button>
+            <button type="button" class="btn btn-red" onclick="sendElementCommand('reboot')">REBOOT</button>
         </div>
         <div class="col module">
-            <button type="button" class="btn btn-red" onclick="changeAllGate('shutdown')">SHUTDOWN</button>
+            <button type="button" class="btn btn-red" onclick="sendElementCommand('shutdown')">SHUTDOWN</button>
         </div>
       </div>
 
     </div>
 
     <script>
-
-    function changeAllGate(color){
+    function setAllGateColors(color){
       origin = window.location.origin
       // gateColorURL = "{{ url_for('index') }}?color="+color
       // alert("sending POST call to "+gateColorUrl);
       var xhttp = new XMLHttpRequest();
       // event.preventDefault();
-      xhttp.open("POST", "{{ url_for('index')}}", true);
+      //xhttp.open("POST", "{{ url_for('index')}}", true);
+      xhttp.open("POST", "/api/gates/color", true);
+
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("color="+color&"gateID=all");
+      xhttp.send("color="+color+"&gateID=all");
+    }
+
+    function sendElementCommand(command){
+      origin = window.location.origin
+      // gateColorURL = "{{ url_for('index') }}?color="+color
+      // alert("sending POST call to "+gateColorUrl);
+      var xhttp = new XMLHttpRequest();
+      // event.preventDefault();
+      xhttp.open("POST", "/api/gates/system", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("command="+command+"&gateID=all");
+    }
+
+    function getGateList(){
+      origin = window.location.origin
+      // gateColorURL = "{{ url_for('index') }}?color="+color
+      // alert("sending POST call to "+gateColorUrl);
+      var xhttp = new XMLHttpRequest();
+      // event.preventDefault();
+      xhttp.open("GET", "/api/server/gates", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("");
     }
     </script>
 
