@@ -8,6 +8,7 @@ import DSUtils
 import os
 import sys
 import logging
+logging.basicConfig(filename='/DSElement.log',level=logging.DEBUG)
 try:
     import cPickle as pickle
 except:
@@ -45,16 +46,16 @@ class element:
         return sock
 
     def connectToServer(self,sock,address):
-        print("connecting to server")
+        logging.debug("connecting to server")
         self.sendData(sock,address,"connect","","")
-        print("sent connection request to server")
-        print("waiting for server to respond")
+        logging.debug("sent connection request to server")
+        logging.debug("waiting for server to respond")
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         sock.settimeout(2)
         data,address = self.recvData(sock)
         self.currentColor = data['body']
-        print(self.currentColor)
-        print("got server response")
+        logging.debug(self.currentColor)
+        logging.debug("got server response")
         sock.setblocking(0) #allow the program to return with no data once again
 
     def recvData(self,sock): #this is where we handle all recieved data
@@ -68,7 +69,7 @@ class element:
         if(data):
             try:
                 data = pickle.loads(data)
-                print("----------------")
+                logging.debug("----------------")
                 subject = data['subject'] #the subject of the message
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
@@ -77,8 +78,8 @@ class element:
                 #except:
                 #    pass
             except Exception as e:
-                print("we got bad data from "+str(address))
-                print(e)
+                logging.debug("we got bad data from "+str(address))
+                logging.debug(e)
         return data, address
 
     def sendData(self,sock,address,subject,body,recipient):
@@ -88,11 +89,11 @@ class element:
 
     def restartProcess(self,sock):
         #lets close the datagram socket
-        print("closing socket...")
+        logging.debug("closing socket...")
         sock.close()
         #Restarts the current program, with file objects and descriptors cleanup
         try:
-            print("restarting process...")
+            logging.debug("restarting process...")
             p = psutil.Process(os.getpid())
             for handler in p.get_open_files() + p.connections():
                 os.close(handler.fd)
@@ -106,7 +107,7 @@ class element:
         #let's call the linux commands to pull the repo down
         #we assume you have an ssh key setup
         branch = "master"
-        print("pulling latest repo changes")
+        logging.debug("pulling latest repo changes")
         os.system("git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
@@ -115,20 +116,20 @@ class element:
         #let's call the linux commands to pull the repo down
         #we assume you have an ssh key setup
         branch = "develop"
-        print("pulling latest repo changes")
+        logging.debug("pulling latest repo changes")
         os.system("git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
     def shutdown(self,sock):
         #let's call the linux commands to shutdown the pis
-        print("shutting down Pis...")
+        logging.debug("shutting down Pis...")
         sock.close()
         os.system("sudo shutdown now")
 
     def reboot(self,sock):
         #let's call the linux commands to shutdown the pis
-        print("rebooting Pis...")
+        logging.debug("rebooting Pis...")
         sock.close()
         os.system("sudo reboot now")
 
@@ -144,15 +145,15 @@ class element:
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
                 if(subject == "disconnect"):
-                    print("we recieved a disconnect request")
+                    logging.debug("we recieved a disconnect request")
                     break;
                 if(subject == "updateColor"):
                     self.currentColor = body
                     if(lastColor != self.currentColor):
-                        print(str(lastColor)+str(self.currentColor))
+                        logging.debug(str(lastColor)+str(self.currentColor))
                         newUpdate = True
                     if newUpdate == True:
-                        print("updating color: "+str(self.currentColor))
+                        logging.debug("updating color: "+str(self.currentColor))
                     if(not devMode):
                         if(self.currentColor=="shutdown"):
                             self.shutdown()
@@ -183,13 +184,13 @@ class element:
                     LED.rainbow()
                 if(self.currentColor=="pacman"):
                     LED.pacman()
-        print("disconnected")
+        logging.debug("disconnected")
 
 
     def start(self):
-        print("using server address "+str(self.serverAddress))
-        print("using port "+str(self.port))
-        print("starting with "+str(self.ledCount)+" LEDs")
+        logging.debug("using server address "+str(self.serverAddress))
+        logging.debug("using port "+str(self.port))
+        logging.debug("starting with "+str(self.ledCount)+" LEDs")
         if(not devMode):
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:
@@ -199,8 +200,8 @@ class element:
             try:
                 self.runProgram(sock, LED)
             except Exception as e:
-                print(e)
+                logging.debug(e)
                 for i in range(0,20):
                     LED.allGrey()
                 LED.clearPixels()
-                print("no connection to server. Retrying...")
+                logging.debug("no connection to server. Retrying...")
