@@ -97,6 +97,7 @@ def sendDisconnect(sock,address):
     sendDataTo(sock,address,"disconnect","","")
 
 def runProgram(sock):
+    currentColor = "white"
     while(True):
         disconnectedGates = []
         frameStart = getTime()
@@ -153,6 +154,9 @@ def runProgram(sock):
             sendDisconnect(sock,gate.address)
             gates.remove(gate)
         frameEnd = getTime()
+
+        for gate in gates:
+            gate.updateColor(gate.color)
 
         #lets sleep until it's time to refresh the gates
         frameDuration = float(frameEnd)-float(frameStart)
