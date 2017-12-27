@@ -5,66 +5,64 @@ import time
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
 app = Flask(__name__)
+gateMasterAddr = ""
 
-@app.route("/", methods=['POST','GET'])
-def index():
+@app.route("/api/gates/system", methods=['POST','GET'])
+def sendElementCommand():
     if request.method == 'POST':
-      color = request.form['color']
-      gateID = request.form['gateID']
-      update = request.form['update']
+        command = request.form['command']
+        gateID = request.form['gateID']
 
-      if color == 'reboot':
-        DSClient.sendGateUpdate("localhost",13246,"red")
-        time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
-        time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"reboot")
-      elif color == 'shutdown':
-        DSClient.sendGateUpdate("localhost",13246,"red")
-        time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
-        time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"red")
-        time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
-        time.sleep(0.1)
-        DSClient.sendGateUpdate("localhost",13246,"shutdown")
-      elif color == 'update':
-        DSClient.sendGateUpdate("localhost",13246,"red")
-        time.sleep(1)
-        DSClient.sendGateUpdate("localhost",13246,"update")
-        time.sleep(1)
-        DSClient.sendGateUpdate("localhost",13246,"green")
-      elif color == 'rainbow':
-        DSClient.sendGateUpdate("localhost",13246,"rainbow")
-        return 'rainbow'
-      elif color == 'red':
-        #allRed(strip)
-        DSClient.sendGateUpdate("localhost",13246,"red")
-        return 'red'
-      elif color == 'chasing':
-        #chasing(strip)
-        DSClient.sendGateUpdate("localhost",13246,"chasing")
-        return 'chasing'
-      elif color == 'pacman':
-        #chasing(strip)
-        DSClient.sendGateUpdate("localhost",13246,"pacman")
-        return 'pacman'
-      elif color == 'green':
-        #allGreen(strip)
-        DSClient.sendGateUpdate("localhost",13246,"green")
-        return 'green'
-      elif color == 'yellow':
-        DSClient.sendGateUpdate("localhost",13246,"yellow")
-        #flashYellow(strip)
-        return 'yellow'
+        if command == 'reboot':
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            time.sleep(0.1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            time.sleep(0.1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"reboot")
+            return "rebooting"
+        elif command == 'shutdown':
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            time.sleep(0.1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            time.sleep(0.1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            time.sleep(0.1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            time.sleep(0.1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"shutdown")
+            return "shutting down"
+        elif command == 'update':
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            time.sleep(1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"update")
+            time.sleep(1)
+            DSClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            return "updating software"
+
+@app.route("/api/server/gates", methods=['POST','GET'])
+def getServerGates():
+    gates = DSClient.getGateList(gateMasterAddr,13246)
+    print(gates)
+    return str(gates)
+
+@app.route("/api/gates/color", methods=['POST'])
+def setGateColors():
+    color = request.form['color']
+    gateID = request.form['gateID']
+    if(gateID == "all"):
+        DSClient.sendGateUpdate(gateMasterAddr,13246,color)
     else:
-        return render_template('index.html')
+        DSClient.sendGateUpdateTo(gateMasterAddr,gateID,13246,color)
+    return ""
+
+@app.route("/", methods=['GET'])
+def index():
+    return render_template('index.html')
 
 if __name__ == "__main__":
-  # Create NeoPixel object with appropriate configuration.
-  #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
-  # Intialize the library (must be called once before other functions).
-  #strip.begin()
+    # Create NeoPixel object with appropriate configuration.
+    #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+    # Intialize the library (must be called once before other functions).
+    #strip.begin()
 
-  app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)

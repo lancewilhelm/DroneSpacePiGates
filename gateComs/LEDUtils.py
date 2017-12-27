@@ -49,12 +49,18 @@ class LEDStrip:
         self.animationEnd = animationEnd
         if(self.animationFrame>=self.animationEnd):
             self.animationFrame = 0
+        #time.sleep(0.015)
         return self.animationFrame
 
     def clearPixels(self):
         #print ('Clearing')
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(0,0,0))
+        self.strip.show()
+
+    def allWhite(self):
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColor(i, Color(255,255,255))
         self.strip.show()
 
     def allRed(self):
@@ -191,6 +197,15 @@ class LEDStrip:
             self.strip.setPixelColor(i, self.wheel((int(i * 256 / self.strip.numPixels()) + j) & 255))
         self.strip.show()
         time.sleep(wait_ms/1000.0)
+
+    def flashWhite(self):
+        j = self.updateFrame(30)
+        for i in range(self.strip.numPixels()):
+            if(j == 0):
+                self.strip.setPixelColor(i, Color(255,255,255))
+            if(j == 29):
+                self.clearPixels()
+        self.strip.show()
 
     def theaterChaseRainbow(self,wait_ms=50):
         """Rainbow movie theater light style chaser animation."""
