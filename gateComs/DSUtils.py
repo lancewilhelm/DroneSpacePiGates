@@ -1,9 +1,5 @@
 import time
-try:
-    import cPickle as pickle
-except:
-    import pickle
-class Gate: #this is our representation of a gate
+class Gate:
     def __init__(self,sock,address,color):
         self.address = address
         self.color = color
@@ -12,27 +8,22 @@ class Gate: #this is our representation of a gate
 
     def updateColor(self,color):
         self.color = color
-        self.sendData("updateColor",color,"")
+        self.sendData(color)
 
-    def sendData(self,subject,body,recipient):
-        message = {"subject":subject,"body":body,"recipient":recipient}
-        #sock.sendto(str(data).encode('utf-8'),address)
-        self.socket.sendto(pickle.dumps(message),self.address)
+    def sendData(self,data):
+        self.socket.sendto(data.encode('utf-8'),self.address)
 
     def keepAlive(self):
         currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 5000):
-            self.sendData("keepalive","","")
+        if((currentTime-self.lastUpdate) > 10000):
+            self.sendData("keepalive")
             self.lastUpdate = currentTime
-            # print("sending keepalive")
-    def setLastKeepalive(self):
-        currentTime = self.getTime()
-        self.lastUpdate = currentTime
+            print("sending keepalive")
 
     def isAlive(self):
         alive = True
         currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 10000):
+        if((currentTime-self.lastUpdate) > 2000):
             alive = False
         return alive
 
