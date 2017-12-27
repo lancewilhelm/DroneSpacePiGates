@@ -103,7 +103,7 @@ class element:
         #we assume you have an ssh key setup
         branch = "master"
         print("pulling latest repo changes")
-        os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+        os.system("git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
@@ -112,7 +112,7 @@ class element:
         #we assume you have an ssh key setup
         branch = "develop"
         print("pulling latest repo changes")
-        os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+        os.system("git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
