@@ -9,7 +9,7 @@ class Gate: #this is our representation of a gate
         self.color = color
         self.lastUpdate = self.getTime()
         self.socket = sock
-
+        
     def updateColor(self,color):
         self.color = color
         self.sendData("updateColor",color,"")

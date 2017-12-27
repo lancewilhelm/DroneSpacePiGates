@@ -103,7 +103,7 @@ def runProgram(sock):
         frameStart = getTime()
         for gate in gates:
             if(gate.isAlive()):
-                pass
+                gate.updateColor(currentColor)
             else:
                 logging.debug("gate "+str(gate)+ " is no longer responsive")
                 disconnectedGates.append(gate)
@@ -122,6 +122,7 @@ def runProgram(sock):
                     logging.warning(e)
             if(subject == "updateAllGateColors"):
                 try:
+                    currentColor = body
                     for gate in gates:
                         gate.updateColor(body)
                     logging.debug("updated all gate colors")
@@ -154,9 +155,6 @@ def runProgram(sock):
             sendDisconnect(sock,gate.address)
             gates.remove(gate)
         frameEnd = getTime()
-
-        for gate in gates:
-            gate.updateColor(gate.color)
 
         #lets sleep until it's time to refresh the gates
         frameDuration = float(frameEnd)-float(frameStart)
