@@ -151,9 +151,9 @@ class element:
                         print("updating color: "+str(self.currentColor))
                     if(not devMode):
                         if(self.currentColor=="shutdown"):
-                            LED.shutdown()
+                            self.shutdown()
                         if(self.currentColor=="reboot"):
-                            LED.reboot()
+                            self.reboot()
                     else:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
