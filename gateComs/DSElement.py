@@ -66,15 +66,19 @@ class element:
         except:
             pass
         if(data):
-            data = pickle.loads(data)
-            print("----------------")
-            subject = data['subject'] #the subject of the message
-            body = data['body'] #the body of the message
-            recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
-            #try:
-            #    data = data.decode(encoding='utf-8')
-            #except:
-            #    pass
+            try:
+                data = pickle.loads(data)
+                print("----------------")
+                subject = data['subject'] #the subject of the message
+                body = data['body'] #the body of the message
+                recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
+                #try:
+                #    data = data.decode(encoding='utf-8')
+                #except:
+                #    pass
+            except Exception as e:
+                print("we got bad data from "+str(address))
+                print(e)
         return data, address
 
     def sendData(self,sock,address,subject,body,recipient):
@@ -129,7 +133,7 @@ class element:
         os.system("sudo reboot now")
 
     def runProgram(self,sock,LED):
-        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"white")
+        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"grey")
         self.connectToServer(sock,(self.serverAddress,self.port))
         lastColor = ""
         while(True):
@@ -166,11 +170,11 @@ class element:
                 if(self.currentColor=="red"):
                     LED.allRed()
                 if(self.currentColor=="white"):
-                    LED.allWhite()
+                    LED.allGrey()
                 if(self.currentColor=="blue"):
                     LED.allBlue()
                 if(self.currentColor=="flashWhite"):
-                    LED.flashWhite()
+                    LED.flashGrey()
                 if(self.currentColor=="update"):
                     self.pullDevelop(sock)
                 if(self.currentColor=="chasing"):
@@ -196,6 +200,6 @@ class element:
             except Exception as e:
                 print(e)
                 for i in range(0,20):
-                    LED.allWhite()
+                    LED.allGrey()
                 LED.clearPixels()
                 print("no connection to server. Retrying...")
