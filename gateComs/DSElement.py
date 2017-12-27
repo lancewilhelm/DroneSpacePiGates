@@ -34,7 +34,7 @@ class pillar:
 class element:
     def __init__(self,ledCount):
         #lets get gateServer address and port from command line, or use defaults
-        self.serverAddress = "localhost"
+        self.serverAddress = "gatemaster"
         self.port = 13246
         self.currentColor = "none"
         self.ledCount = ledCount
@@ -110,7 +110,7 @@ class element:
     def pullDevelop(self,sock):
         #let's call the linux commands to pull the repo down
         #we assume you have an ssh key setup
-        branch = "stability"
+        branch = "develop"
         print("pulling latest repo changes")
         os.system("git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
