@@ -8,7 +8,7 @@ import DSUtils
 import os
 import sys
 import logging
-logging.basicConfig(filename='/DSElement.log',level=logging.DEBUG)
+logging.basicConfig(filename='/home/pi/DSElement.log',level=logging.DEBUG)
 try:
     import cPickle as pickle
 except:
