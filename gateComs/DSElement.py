@@ -139,6 +139,7 @@ class element:
         self.connectToServer(sock,(self.serverAddress,self.port))
         lastColor = ""
         while(True):
+            newUpdate = False
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
             if(data):
