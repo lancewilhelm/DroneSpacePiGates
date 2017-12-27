@@ -56,6 +56,7 @@ class element:
         self.currentColor = data['body']
         logging.debug(self.currentColor)
         logging.debug("got server response")
+        sock.settimeout(2)
         sock.setblocking(0) #allow the program to return with no data once again
 
     def recvData(self,sock): #this is where we handle all recieved data
@@ -69,7 +70,6 @@ class element:
         if(data):
             try:
                 data = pickle.loads(data)
-                logging.debug("----------------")
                 subject = data['subject'] #the subject of the message
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
@@ -151,7 +151,6 @@ class element:
                 if(subject == "updateColor"):
                     self.currentColor = body
                     if(lastColor != self.currentColor):
-                        logging.debug(str(lastColor)+str(self.currentColor))
                         newUpdate = True
                     if newUpdate == True:
                         logging.debug("updating color: "+str(self.currentColor))
