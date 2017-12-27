@@ -108,7 +108,7 @@ class element:
         #we assume you have an ssh key setup
         branch = "master"
         logging.debug("pulling latest repo changes")
-        os.system("git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+        os.system("cd "+currentDirectory+" && git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
@@ -117,7 +117,8 @@ class element:
         #we assume you have an ssh key setup
         branch = "develop"
         logging.debug("pulling latest repo changes")
-        os.system("git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+        currentDirectory = sys.path[0]
+        os.system("cd "+currentDirectory+" && git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
