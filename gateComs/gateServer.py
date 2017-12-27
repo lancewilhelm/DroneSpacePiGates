@@ -4,10 +4,14 @@ import time
 import select
 import time
 import DSUtils
+import logging
+logging.basicConfig(filename='~/example.log',level=logging.DEBUG)
 try:
     import cPickle as pickle
 except:
     import pickle
+
+import sys
 
 printFPS = False
 
@@ -25,9 +29,9 @@ def createSocket(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #hostname = socket.gethostbyname(socket.gethostname())
     sock.setblocking(0)
-    print("binding to "+str(serverAddress)+" on port "+str(port))
+    logging.debug("binding to "+str(serverAddress)+" on port "+str(port))
     sock.bind((serverAddress,port))
-    print("bound")
+    logging.debug("bound")
     return sock
 
 def getTime():
@@ -39,9 +43,9 @@ def connectNewGate(sock,address):
     if(address not in gates):
         newGate = DSUtils.Gate(sock,address,initialGateColor)
         gates.append(newGate)
-        print("gate "+str(address)+" connected")
+        logging.debug("gate "+str(address)+" connected")
     else:
-        print("gate "+str(address)+" reconnected")
+        logging.debug("gate "+str(address)+" reconnected")
     newGate.updateColor(initialGateColor)
 
 def recvData(sock): #this is where we handle all recieved data
@@ -53,9 +57,9 @@ def recvData(sock): #this is where we handle all recieved data
         pass
     if(data):
         data = pickle.loads(data)
-        print("----------------")
-        print(address)
-        print(data)
+        logging.debug("----------------")
+        logging.debug(address)
+        logging.debug(data)
         subject = data['subject'] #the subject of the message
         body = data['body'] #the body of the message
         recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
@@ -75,7 +79,7 @@ def getGateByAddress(address):
     if(g):
         pass
     else:
-        print("could not find gate by address "+str(address)+" in list of gates "+str(gates))
+        logging.debug("could not find gate by address "+str(address)+" in list of gates "+str(gates))
     return g
 
 def getGateAddresses():
@@ -100,7 +104,7 @@ def runProgram(sock):
             if(gate.isAlive()):
                 pass
             else:
-                print("gate "+str(gate)+ " is no longer responsive")
+                logging.debug("gate "+str(gate)+ " is no longer responsive")
                 disconnectedGates.append(gate)
                 sendDisconnect(sock,gate.address)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
@@ -113,33 +117,39 @@ def runProgram(sock):
                 try:
                     connectNewGate(sock,address)
                 except Exception as e:
-                    print(e)
+                    logging.debug(e)
+                    logging.warning(e)
             if(subject == "updateAllGateColors"):
                 try:
                     for gate in gates:
                         gate.updateColor(body)
-                    print("updated all gate colors")
-                    print(str(gates))
+                    logging.debug("updated all gate colors")
+                    logging.debug(str(gates))
                 except Exception as e:
-                    print(e)
+                    logging.debug(e)
+                    logging.warning(e)
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):
-                print(gates)
+                logging.debug(gates)
                 try:
                     try:
                         getGateByAddress(address).setLastKeepalive()
-                    except:
-                        print("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
-                        print("sending reconnect request")
-                        sendDisconnect(sock,address)
+                    except Exception as e:
+                        logging.debug(e)
+                        logging.warning(e)
+                        logging.debug("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
+                        logging.debug("sending reconnect request")
+                        #sendDisconnect(sock,address)
+                        connectNewGate(sock,address)
                 except Exception as e:
-                    print(e)
+                    logging.debug(e)
+                    logging.warning(e)
 
 
         #lets disconnect gates that didn't send us a keepAlive in time
         for gate in disconnectedGates:
-            print("gate "+str(gate.address)+" disconnected")
+            logging.debug("gate "+str(gate.address)+" disconnected")
             sendDisconnect(sock,gate.address)
             gates.remove(gate)
         frameEnd = getTime()
@@ -152,7 +162,7 @@ def runProgram(sock):
         loopDuration = loopEnd-frameStart
         actualFPS = round((1.0/loopDuration)*1000,0)
         if(printFPS):
-            print("fps: "+str(actualFPS))
+            logging.debug("fps: "+str(actualFPS))
 
 def main():
     global Gate
@@ -165,3 +175,4 @@ def main():
         #    print(e)
 
 main()
+sys.stdout.close()
