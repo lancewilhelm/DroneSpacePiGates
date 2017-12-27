@@ -9,6 +9,8 @@ try:
 except:
     import pickle
 
+printFPS = False
+
 serverAddress = ""
 port = 13246
 
