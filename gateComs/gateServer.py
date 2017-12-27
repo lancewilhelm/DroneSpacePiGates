@@ -5,7 +5,7 @@ import select
 import time
 import DSUtils
 import logging
-logging.basicConfig(filename='~/example.log',level=logging.DEBUG)
+logging.basicConfig(filename='/gateServer.log',level=logging.DEBUG)
 try:
     import cPickle as pickle
 except:
