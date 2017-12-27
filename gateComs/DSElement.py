@@ -172,7 +172,7 @@ class element:
                 if(self.currentColor=="flashWhite"):
                     LED.flashWhite()
                 if(self.currentColor=="update"):
-                    self.pullMaster(sock)
+                    self.pullDevelop(sock)
                 if(self.currentColor=="chasing"):
                     LED.chasing()
                 if(self.currentColor=="rainbow"):
