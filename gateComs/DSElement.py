@@ -189,6 +189,7 @@ class element:
     def start(self):
         print("using server address "+str(self.serverAddress))
         print("using port "+str(self.port))
+        print("starting with "+str(self.ledCount)+" LEDs")
         if(not devMode):
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:
