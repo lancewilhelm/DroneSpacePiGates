@@ -6,10 +6,16 @@ import time
 import DSUtils
 import logging
 import traceback
-if(sys.argv[1] == "d"): #we are running the server on the pi in debug mode
-    logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.DEBUG)
-elif(sys.argv[1] == "l"): #we are running the server NOT on a pi
-    logging.basicConfig(filename='DSServer.log',level=logging.DEBUG)
+logLevel = None
+try:
+    logLevel = sys.argv[1]
+except:
+    pass
+if(logLevel):
+    if(sys.argv[1] == "d"): #we are running the server on the pi in debug mode
+        logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.DEBUG)
+    elif(sys.argv[1] == "l"): #we are running the server NOT on a pi
+        logging.basicConfig(filename='DSServer.log',level=logging.DEBUG)
 else: #we are running the server on a pi
     logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.WARNING)
 try:
