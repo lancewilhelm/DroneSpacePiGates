@@ -5,6 +5,8 @@ import select
 import time
 import DSUtils
 import logging
+import traceback
+
 logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.WARNING)
 try:
     import cPickle as pickle
@@ -121,7 +123,7 @@ def runProgram(sock):
                     connectNewGate(sock,address)
                 except Exception as e:
                     logging.debug(e)
-                    logging.warning(e)
+                    logging.warning(traceback.format_exc())
             if(subject == "updateAllGateColors"):
                 try:
                     currentColor = body
@@ -131,7 +133,7 @@ def runProgram(sock):
                     logging.debug(str(gates))
                 except Exception as e:
                     logging.debug(e)
-                    logging.warning(e)
+                    logging.warning(traceback.format_exc())
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):
@@ -141,14 +143,14 @@ def runProgram(sock):
                         getGateByAddress(address).setLastKeepalive()
                     except Exception as e:
                         logging.debug(e)
-                        logging.warning(e)
+                        logging.warning(traceback.format_exc())
                         logging.debug("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
                         logging.debug("sending reconnect request")
                         #sendDisconnect(sock,address)
                         connectNewGate(sock,address)
                 except Exception as e:
                     logging.debug(e)
-                    logging.warning(e)
+                    logging.warning(traceback.format_exc())
 
 
         #lets disconnect gates that didn't send us a keepAlive in time
