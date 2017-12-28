@@ -35,4 +35,4 @@ exit
 
 sudo rm /var/spool/cron/crontabs/root
 sudo cp ~/dronespacepigates/crontabScript /var/spool/cron/crontabs/root
-sudo chmod 600 /etc/crontab
+sudo chmod 600 /var/spool/cron/crontab/root
