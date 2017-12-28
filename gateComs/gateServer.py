@@ -53,9 +53,12 @@ def recvData(sock): #this is where we handle all recieved data
     address = None
     try:
         data, address = sock.recvfrom(4096)
-        data = pickle.loads(data)
-    except Exception as e:
-        logging.warning("got bad data from client at "+str(address))
+        try:
+            data = pickle.loads(data)
+        except Exception as e:
+            logging.warning("got bad data from client at "+str(address))
+    except:
+        pass
     if(data):
         logging.debug("----------------")
         logging.debug(address)
