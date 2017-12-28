@@ -20,6 +20,7 @@ sudo chown pi /dev/mem
 
 #lets install psutil so that we can restart our python process on update
 sudo pip install psutil
+exit
 
 #copy keys to root
 sudo cp -r ~/dronespacepigates/.ssh/ ~/
@@ -28,10 +29,7 @@ sudo cp ~/.ssh/id_rsa /root/.ssh/
 sudo cp ~/.ssh/id_rsa.pub /root/.ssh/
 
 #setup cron for @reboot
-sudo su
-cd
-chmod 400 ~/.ssh/id_rsa
-exit
+sudo chmod 400 /root/.ssh/id_rsa
 
 sudo rm /var/spool/cron/crontabs/root
 sudo cp ~/dronespacepigates/crontabScript /var/spool/cron/crontabs/root
