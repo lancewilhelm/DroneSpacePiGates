@@ -5,7 +5,7 @@ import select
 import time
 import DSUtils
 import logging
-logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.DEBUG)
+logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.WARNING)
 try:
     import cPickle as pickle
 except:
