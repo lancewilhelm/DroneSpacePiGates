@@ -53,10 +53,10 @@ def recvData(sock): #this is where we handle all recieved data
     address = None
     try:
         data, address = sock.recvfrom(4096)
-    except:
-        pass
-    if(data):
         data = pickle.loads(data)
+    except Exception as e:
+        logging.warning("got bad data from client at "+str(address))
+    if(data):
         logging.debug("----------------")
         logging.debug(address)
         logging.debug(data)
@@ -79,7 +79,7 @@ def getGateByAddress(address):
     if(g):
         pass
     else:
-        logging.debug("could not find gate by address "+str(address)+" in list of gates "+str(gates))
+        logging.WARNING("could not find gate by address "+str(address)+" in list of gates "+str(gates))
     return g
 
 def getGateAddresses():
@@ -105,7 +105,6 @@ def runProgram(sock):
             if(gate.isAlive()):
                 gate.updateColor(currentColor)
             else:
-                logging.debug("gate "+str(gate)+ " is no longer responsive")
                 disconnectedGates.append(gate)
                 sendDisconnect(sock,gate.address)
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
