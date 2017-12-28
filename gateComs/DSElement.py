@@ -174,7 +174,7 @@ class element:
                 if(self.currentColor=="white"):
                     LED.allGrey()
                 if(self.currentColor=="blue"):
-                    LED.allBlue()
+                    LED.allRed()
                 if(self.currentColor=="flashWhite"):
                     LED.flashGrey()
                 if(self.currentColor=="update"):
