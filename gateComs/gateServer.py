@@ -64,7 +64,7 @@ def recvData(sock): #this is where we handle all recieved data
     data = None
     address = None
     try:
-        data, address = sock.recvfrom(4096)
+        data, address = sock.recvfrom(65535)
         try:
             data = pickle.loads(data)
         except Exception as e:
@@ -140,14 +140,14 @@ def runProgram(sock):
                     for gate in gates:
                         gate.updateColor(body)
                     logging.debug("updated all gate colors")
-                    logging.debug(str(gates))
+                    logging.info(str(gates))
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):
-                logging.debug(gates)
+                logging.info(gates)
                 try:
                     try:
                         getGateByAddress(address).setLastKeepalive()

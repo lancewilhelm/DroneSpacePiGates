@@ -9,7 +9,7 @@ class Gate: #this is our representation of a gate
         self.color = color
         self.lastUpdate = self.getTime()
         self.socket = sock
-        
+
     def updateColor(self,color):
         self.color = color
         self.sendData("updateColor",color,"")
@@ -21,7 +21,7 @@ class Gate: #this is our representation of a gate
 
     def keepAlive(self):
         currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 1000):
+        if((currentTime-self.lastUpdate) > 3000):
             self.sendData("keepalive","","")
             self.lastUpdate = currentTime
             # print("sending keepalive")
