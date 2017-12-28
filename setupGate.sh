@@ -23,6 +23,7 @@ sudo pip install psutil
 
 #copy keys to root
 sudo cp -r ~/dronespacepigates/.ssh/ ~/
+sudo mkdir /root/.ssh/
 sudo cp ~/.ssh/id_rsa /root/.ssh/
 sudo cp ~/.ssh/id_rsa.pub /root/.ssh/
 
