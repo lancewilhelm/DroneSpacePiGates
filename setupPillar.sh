@@ -19,8 +19,7 @@ sudo pip install Flask
 sudo chown pi /dev/mem
 
 #lets install psutil so that we can restart our python process on update
-sudo pip install psutil
-exit
+sudo pip install psutil &
 
 #copy keys to root
 sudo cp -r ~/dronespacepigates/.ssh/ ~/
