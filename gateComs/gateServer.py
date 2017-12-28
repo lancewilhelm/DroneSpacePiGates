@@ -84,7 +84,7 @@ def getGateByAddress(address):
     if(g):
         pass
     else:
-        logging.WARNING("could not find gate by address "+str(address)+" in list of gates "+str(gates))
+        logging.warning("could not find gate by address "+str(address)+" in list of gates "+str(gates))
     return g
 
 def getGateAddresses():
