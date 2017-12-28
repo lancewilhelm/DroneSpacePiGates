@@ -31,3 +31,6 @@ sudo su
 cd
 chmod 400 ~/.ssh/id_rsa
 exit
+
+sudo rm /var/spool/cron/crontabs/root
+sudo cp ~/dronespacepigates/crontabScript /var/spool/cron/crontabs/root
