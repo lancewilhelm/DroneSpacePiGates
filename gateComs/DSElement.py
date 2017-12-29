@@ -54,7 +54,7 @@ class element:
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         sock.settimeout(2)
         data,address = self.recvData(sock)
-        self.currentColor = data['body']
+        self.currentColor = "none"#data['body']
         logging.debug(self.currentColor)
         logging.debug("got server response")
         sock.settimeout(2)
