@@ -52,7 +52,7 @@ class element:
         logging.debug("sent connection request to server")
         logging.debug("waiting for server to respond")
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
-        sock.settimeout(3)
+        sock.settimeout(10)
         data,address = self.recvData(sock)
         self.currentColor = data['body']
         logging.debug(self.currentColor)
