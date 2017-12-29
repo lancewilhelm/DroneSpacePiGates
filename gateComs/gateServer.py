@@ -27,7 +27,7 @@ import sys
 
 printFPS = False
 
-serverAddress = "localhost"
+serverAddress = ""
 port = 13246
 
 gates = []
