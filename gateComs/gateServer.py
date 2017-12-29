@@ -34,7 +34,7 @@ gates = []
 gateStates = {}
 
 animationSpeed = 10
-fps = 10
+fps = 1
 
 
 def createSocket(port):
