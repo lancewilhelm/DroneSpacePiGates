@@ -27,7 +27,7 @@ import sys
 
 printFPS = False
 
-serverAddress = ""
+serverAddress = "localhost"
 port = 13246
 
 gates = []
@@ -146,7 +146,6 @@ def runProgram(sock):
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):
-                logging.info(gates)
                 try:
                     try:
                         getGateByAddress(address).setLastKeepalive()
@@ -176,8 +175,7 @@ def runProgram(sock):
         loopEnd = getTime()
         loopDuration = loopEnd-frameStart
         actualFPS = round((1.0/loopDuration)*1000,0)
-        if(printFPS):
-            logging.debug("fps: "+str(actualFPS))
+
 
 def main():
     global Gate
