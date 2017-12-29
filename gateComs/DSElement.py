@@ -64,7 +64,7 @@ class element:
         data = None
         address = None
         try:
-            data, address = sock.recvfrom(4096)
+            data, address = sock.recvfrom(1024)
         except:
             pass
         if(data):

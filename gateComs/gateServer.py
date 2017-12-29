@@ -50,8 +50,7 @@ def getTime():
     #return the current clock time in milliseconds
     return int(round(time.time() * 1000))
 
-def connectNewGate(sock,address):
-    initialGateColor = "white"
+def connectNewGate(sock,address,initialGateColor):
     if(address not in gates):
         newGate = DSUtils.Gate(sock,address,initialGateColor)
         gates.append(newGate)
@@ -64,7 +63,7 @@ def recvData(sock): #this is where we handle all recieved data
     data = None
     address = None
     try:
-        data, address = sock.recvfrom(65535)
+        data, address = sock.recvfrom(1024)
         try:
             data = pickle.loads(data)
         except Exception as e:
@@ -130,7 +129,7 @@ def runProgram(sock):
 
             if(subject == "connect"):
                 try:
-                    connectNewGate(sock,address)
+                    connectNewGate(sock,address,currentColor)
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
@@ -157,7 +156,7 @@ def runProgram(sock):
                         logging.debug("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
                         logging.debug("sending reconnect request")
                         #sendDisconnect(sock,address)
-                        connectNewGate(sock,address)
+                        connectNewGate(sock,address,currentColor)
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
