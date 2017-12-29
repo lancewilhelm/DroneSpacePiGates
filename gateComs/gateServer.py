@@ -111,7 +111,7 @@ def sendDisconnect(sock,address):
     sendDataTo(sock,address,"disconnect","","")
 
 def runProgram(sock):
-    currentColor = "white"
+    currentColor = "none"
     while(True):
         disconnectedGates = []
         frameStart = getTime()
