@@ -36,7 +36,7 @@ class pillar:
 class element:
     def __init__(self,ledCount):
         #lets get gateServer address and port from command line, or use defaults
-        self.serverAddress = "gatemaster"
+        self.serverAddress = "192.168.1.122"
         self.port = 13246
         self.currentColor = "none"
         self.ledCount = ledCount
