@@ -21,7 +21,7 @@ class Gate: #this is our representation of a gate
 
     def keepAlive(self):
         currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 3000):
+        if((currentTime-self.lastUpdate) > 10000):
             self.sendData("keepalive","","")
             self.lastUpdate = currentTime
             # print("sending keepalive")
