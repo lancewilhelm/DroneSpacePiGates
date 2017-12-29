@@ -8,6 +8,7 @@ import DSUtils
 import os
 import sys
 import logging
+import traceback
 logging.basicConfig(filename='/home/pi/DSElement.log',level=logging.DEBUG)
 try:
     import cPickle as pickle
@@ -79,7 +80,7 @@ class element:
                 #    pass
             except Exception as e:
                 logging.debug("we got bad data from "+str(address))
-                logging.debug(e)
+                logging.warning(traceback.format_exc())
         return data, address
 
     def sendData(self,sock,address,subject,body,recipient):
@@ -98,7 +99,7 @@ class element:
             for handler in p.get_open_files() + p.connections():
                 os.close(handler.fd)
         except Exception as e:
-            logging.error(e)
+            logging.warning(traceback.format_exc())
 
         python = sys.executable
         os.execl(python, python, *sys.argv)
@@ -202,7 +203,7 @@ class element:
             try:
                 self.runProgram(sock, LED)
             except Exception as e:
-                logging.debug(e)
+                logging.warning(traceback.format_exc())
                 for i in range(0,20):
                     LED.allGrey()
                 LED.clearPixels()
