@@ -9,37 +9,51 @@ import os
 import sys
 import logging
 import traceback
-logging.basicConfig(filename='/home/pi/DSElement.log',level=logging.DEBUG)
+import argparse
 try:
     import cPickle as pickle
 except:
     import pickle
 
-if(not devMode):
-    import psutil
-    import LEDUtils
-
 class gate:
-    def __init__(self,ledCount):
-        self.ledCount = ledCount
+    def __init__(self,args):
+        self.args = args
 
     def start(self):
-        element(self.ledCount).start()
+        element(self.args).start()
 
 class pillar:
-    def __init__(self,ledCount):
-        self.ledCount = ledCount
+    def __init__(self,args):
+        self.args = args
 
     def start(self):
-        element(self.ledCount).start()
+        element(self.args).start()
 
 class element:
-    def __init__(self,ledCount):
-        #lets get gateServer address and port from command line, or use defaults
-        self.serverAddress = "192.168.1.122"
-        self.port = 13246
-        self.currentColor = "none"
-        self.ledCount = ledCount
+    def __init__(self,args):
+        global devMode
+        devMode = args.d
+        if(not devMode): #if we are in dev mod, we won't load pi specific libraries
+            import psutil
+            import LEDUtils
+        #lets handle the arguments for this element
+        logLevel = logging.WARNING
+        if(args.l=="off"):
+            logLevel = logging.ERROR
+        elif(args.l=="low"):
+            logLevel = logging.WARNING
+        elif(args.l=="medium"):
+            logLevel = logging.DEBUG
+        elif(args.l=="high"):
+            logLevel = logging.INFO
+        logFile = args.f
+        logging.basicConfig(filename=logFile,level=logLevel)
+
+        self.serverAddress = args.i
+        self.port = args.p
+        self.currentColor = args.c
+        self.ledCount = args.ledCount
+
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -204,7 +218,10 @@ class element:
                 self.runProgram(sock, LED)
             except Exception as e:
                 logging.warning(traceback.format_exc())
-                for i in range(0,20):
-                    LED.allGrey()
-                LED.clearPixels()
+                try:
+                    for i in range(0,20):
+                        LED.allGrey()
+                    LED.clearPixels()
+                except:
+                    pass
                 logging.debug("no connection to server. Retrying...")

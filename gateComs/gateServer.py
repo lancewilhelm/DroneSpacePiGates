@@ -6,18 +6,17 @@ import time
 import DSUtils
 import logging
 import traceback
-logLevel = None
-try:
-    logLevel = sys.argv[1]
-except:
-    pass
-if(logLevel):
-    if(sys.argv[1] == "d"): #we are running the server on the pi in debug mode
-        logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.DEBUG)
-    elif(sys.argv[1] == "l"): #we are running the server NOT on a pi
-        logging.basicConfig(filename='DSServer.log',level=logging.DEBUG)
-else: #we are running the server on a pi
-    logging.basicConfig(filename='/home/pi/DSServer.log',level=logging.WARNING)
+import argparse
+
+parser = argparse.ArgumentParser(description="Starts a gate server")
+parser.add_argument('--h', type=str, help="-h: help\n-l: \n-d: ")
+parser.add_argument('-l', default="off", help="log level (high,medium,low,off)")
+parser.add_argument('-f', default="/home/pi/DSServer.log", help="location to save the log file")
+parser.add_argument('-ledCount', default=337, help="the number of leds this device controls (integer)")
+parser.add_argument('-i', default="", help="the ip address of the gateServer")
+parser.add_argument('-p', default=13246, help="gateServer port")
+args = parser.parse_args()
+DSUtils.startLogging(args.l,args.f) #lets use logging to pump our logs to a file instead of printing all over the place
 try:
     import cPickle as pickle
 except:
@@ -25,7 +24,7 @@ except:
 
 import sys
 
-printFPS = False
+printFPS = True
 
 serverAddress = ""
 port = 13246
@@ -34,7 +33,7 @@ gates = []
 gateStates = {}
 
 animationSpeed = 10
-fps = 10
+fps = 60
 
 
 def createSocket(port):
@@ -63,7 +62,7 @@ def recvData(sock): #this is where we handle all recieved data
     data = None
     address = None
     try:
-        data, address = sock.recvfrom(1024)
+        data, address = sock.recvfrom(10240)
         try:
             data = pickle.loads(data)
         except Exception as e:
@@ -111,16 +110,19 @@ def sendDisconnect(sock,address):
     sendDataTo(sock,address,"disconnect","","")
 
 def runProgram(sock):
+    global printFPS
     currentColor = "none"
     while(True):
         disconnectedGates = []
         frameStart = getTime()
-        for gate in gates:
-            if(gate.isAlive()):
-                gate.updateColor(currentColor)
-            else:
-                disconnectedGates.append(gate)
-                sendDisconnect(sock,gate.address)
+        #for gate in gates:
+            #if(gate.isAlive()):
+            #    #gate.updateColor(currentColor)
+            #    gate.broadcastColor(currentColor)
+            #else:
+            #    disconnectedGates.append(gate)
+            #    sendDisconnect(sock,gate.address)
+
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
         if(data): #if we got some usable data from the buffer
             subject = data['subject'] #the subject of the message ()
@@ -170,13 +172,23 @@ def runProgram(sock):
 
         #lets sleep until it's time to refresh the gates
         frameDuration = float(frameEnd)-float(frameStart)
+        if(data==None):
+            time.sleep(1.0/fps)
 
-        time.sleep(1.0/fps)
+        else:
+            if(subject != "keepalive"):
+                logging.debug("respond quickly")
+                DSUtils.broadcastColor(sock, port,currentColor) #only update colors when we got some data that wasn't a keepalive
+            time.sleep(1.0/fps)
+
         loopEnd = getTime()
         loopDuration = loopEnd-frameStart
-        actualFPS = round((1.0/loopDuration)*1000,0)
-
-
+        try:
+            actualFPS = round((1.0/loopDuration)*1000,0)
+        except:
+            actualFPS = round((1.0/0.0001)*1000,0)
+        if(printFPS):
+            logging.debug(actualFPS)
 def main():
     global Gate
     while(True):

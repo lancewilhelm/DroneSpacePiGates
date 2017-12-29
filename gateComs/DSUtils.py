@@ -1,8 +1,30 @@
 import time
+import logging
 try:
     import cPickle as pickle
 except:
     import pickle
+
+#any script that wants nice logging can use this function
+def startLogging(argLevel,argFile):
+    logLevel = logging.WARNING
+    if(argLevel=="off"):
+        logLevel = logging.ERROR
+    elif(argLevel=="low"):
+        logLevel = logging.WARNING
+    elif(argLevel=="medium"):
+        logLevel = logging.DEBUG
+    elif(argLevel=="high"):
+        logLevel = logging.INFO
+    logging.basicConfig(filename=argFile,level=logLevel)
+
+def broadcastColor(sock, port, color):
+    broadcastData(sock, port,"updateColor",color,"")
+
+def broadcastData(sock, port,subject,body,recipient):
+    message = {"subject":subject,"body":body,"recipient":recipient}
+    #sock.sendto(str(data).encode('utf-8'),address)
+    sock.sendto(pickle.dumps(message),('255.255.255.0',port))
 class Gate: #this is our representation of a gate
     def __init__(self,sock,address,color):
         self.address = address
@@ -14,6 +36,7 @@ class Gate: #this is our representation of a gate
         self.color = color
         self.sendData("updateColor",color,"")
 
+
     def sendData(self,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}
         #sock.sendto(str(data).encode('utf-8'),address)
@@ -24,7 +47,6 @@ class Gate: #this is our representation of a gate
         if((currentTime-self.lastUpdate) > 2000):
             self.sendData("keepalive","","")
             self.lastUpdate = currentTime
-            print("sending keepalive")
     def setLastKeepalive(self):
         currentTime = self.getTime()
         self.lastUpdate = currentTime
