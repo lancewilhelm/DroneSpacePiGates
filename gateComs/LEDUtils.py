@@ -49,7 +49,6 @@ class LEDStrip:
         self.animationEnd = animationEnd
         if(self.animationFrame>=self.animationEnd):
             self.animationFrame = 0
-        time.sleep(0.015)
         return self.animationFrame
 
     def clearPixels(self):
