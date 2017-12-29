@@ -34,7 +34,7 @@ gates = []
 gateStates = {}
 
 animationSpeed = 10
-fps = 1
+fps = 10
 
 
 def createSocket(port):
@@ -71,9 +71,9 @@ def recvData(sock): #this is where we handle all recieved data
     except:
         pass
     if(data):
-        logging.debug("----------------")
-        logging.debug(address)
-        logging.debug(data)
+        #logging.debug("----------------")
+        #logging.debug(address)
+        #logging.debug(data)
         subject = data['subject'] #the subject of the message
         body = data['body'] #the body of the message
         recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
@@ -138,7 +138,7 @@ def runProgram(sock):
                     currentColor = body
                     for gate in gates:
                         gate.updateColor(body)
-                    logging.debug("updated all gate colors")
+                    logging.debug("UPDATE ALL GATE COLORS")
                     logging.info(str(gates))
                 except Exception as e:
                     logging.debug(e)
