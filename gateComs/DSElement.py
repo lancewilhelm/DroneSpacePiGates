@@ -33,12 +33,12 @@ class element:
     def __init__(self,args):
         global devMode
         devMode = args.d
-        if(devMode): #if we are in dev mod, we won't load pi specific libraries
-            print("we are in dev mode")
+        if(devMode==False): #if we are in dev mod, we won't load pi specific libraries
+            print("we are not in dev mode")
             import psutil
             import LEDUtils
         else:
-            print("we are not in dev mode")
+            print("we are in dev mode")
         #lets handle the arguments for this element
         logLevel = logging.WARNING
         if(args.l=="off"):
@@ -174,7 +174,7 @@ class element:
                         newUpdate = True
                     if newUpdate == True:
                         logging.debug("updating color: "+str(self.currentColor))
-                    if(not devMode):
+                    if(devMod==False):
                         if(self.currentColor=="shutdown"):
                             self.shutdown()
                         if(self.currentColor=="reboot"):
@@ -183,7 +183,7 @@ class element:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
                     lastColor = self.currentColor
-            if(not devMode):
+            if(devMode==False):
                 if(self.currentColor=="yellow"):
                     LED.allYellow()
                 if(self.currentColor=="green"):
@@ -211,7 +211,7 @@ class element:
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
-        if(not devMode):
+        if(devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:
             LED = 0
