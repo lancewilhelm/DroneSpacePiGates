@@ -10,8 +10,8 @@ import sys
 import logging
 import traceback
 import argparse
-import psutil
-import LEDUtils
+#import psutil
+#import LEDUtils
 try:
     import cPickle as pickle
 except:
@@ -82,7 +82,7 @@ class element:
         data = None
         address = None
         try:
-            data, address = sock.recvfrom(1024)
+            data, address = sock.recvfrom(10240)
         except:
             pass
         if(data):

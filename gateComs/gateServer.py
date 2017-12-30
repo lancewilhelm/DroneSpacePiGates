@@ -116,6 +116,7 @@ def runProgram(sock):
         frameStart = getTime()
         for gate in gates:
             if(gate.isAlive()):
+                pass
                 #gate.updateColor(currentColor)
             else:
                 disconnectedGates.append(gate)
