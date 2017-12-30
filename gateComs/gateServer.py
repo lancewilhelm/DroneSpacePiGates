@@ -88,7 +88,6 @@ def getGateByAddress(address):
     for gate in gates:
         if(gate.address == address):
             g = gate
-
     if(g):
         pass
     else:
@@ -115,13 +114,11 @@ def runProgram(sock):
     while(True):
         disconnectedGates = []
         frameStart = getTime()
-        #for gate in gates:
-            #if(gate.isAlive()):
-            #    #gate.updateColor(currentColor)
-            #    gate.broadcastColor(currentColor)
-            #else:
-            #    disconnectedGates.append(gate)
-            #    sendDisconnect(sock,gate.address)
+        for gate in gates:
+            if(gate.isAlive()):
+                #gate.updateColor(currentColor)
+            else:
+                disconnectedGates.append(gate)
 
         data,address = recvData(sock) #lets listen for data (new gates, lap times etc...)
         if(data): #if we got some usable data from the buffer
