@@ -33,9 +33,12 @@ class element:
     def __init__(self,args):
         global devMode
         devMode = args.d
-        if(not devMode): #if we are in dev mod, we won't load pi specific libraries
+        if(devMode): #if we are in dev mod, we won't load pi specific libraries
+            print("we are not in dev mode")
             import psutil
             import LEDUtils
+        else:
+            print("we are not in dev mode")
         #lets handle the arguments for this element
         logLevel = logging.WARNING
         if(args.l=="off"):
