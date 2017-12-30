@@ -10,6 +10,8 @@ import sys
 import logging
 import traceback
 import argparse
+import psutil
+import LEDUtils
 try:
     import cPickle as pickle
 except:
@@ -35,8 +37,6 @@ class element:
         devMode = args.d
         if(devMode==False): #if we are in dev mod, we won't load pi specific libraries
             print("we are not in dev mode")
-            import psutil
-            import LEDUtils
         else:
             print("we are in dev mode")
         #lets handle the arguments for this element
