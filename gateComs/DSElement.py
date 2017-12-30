@@ -150,7 +150,7 @@ class element:
         os.system("sudo reboot now")
 
     def runProgram(self,sock,LED):
-        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"grey")
+        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
         self.connectToServer(sock,(self.serverAddress,self.port))
         lastColor = ""
         while(True):
@@ -218,10 +218,11 @@ class element:
                 self.runProgram(sock, LED)
             except Exception as e:
                 logging.warning(traceback.format_exc())
+                #for i in range(0,20):
+                #    LED.allGrey()
+                #LED.clearPixels()
                 try:
-                    for i in range(0,20):
-                        LED.allGrey()
-                    LED.clearPixels()
+                    LED.rainbow()
                 except:
                     pass
                 logging.debug("no connection to server. Retrying...")
