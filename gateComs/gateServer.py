@@ -24,7 +24,7 @@ except:
 
 import sys
 
-printFPS = True
+printFPS = False
 
 serverAddress = ""
 port = 13246
