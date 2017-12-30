@@ -10,8 +10,8 @@ import sys
 import logging
 import traceback
 import argparse
-#import psutil
-#import LEDUtils
+import psutil
+import LEDUtils
 try:
     import cPickle as pickle
 except:
