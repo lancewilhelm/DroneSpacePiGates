@@ -58,61 +58,65 @@
 
       <div class="row">
         <div class="col module">
-            <button type="button" class="btn btn-white" onclick="sendElementCommand('update')">UPDATE GATES</button>
+            <button id="updateBtn" type="button" class="btn btn-white">UPDATE GATES</button>
         </div>
         <div class="col module">
             <button type="button" class="btn btn-white" onclick="getGateList()">LIST GATES</button>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col module">
-            <button type="button" class="btn btn-red" onclick="sendElementCommand('reboot')">REBOOT</button>
-        </div>
-        <div class="col module">
-            <button type="button" class="btn btn-red" onclick="sendElementCommand('shutdown')">SHUTDOWN</button>
-        </div>
-      </div>
+        <!-- Update Modal -->
+        <div id="updateModal" class="modal">
 
+          <!-- Update Modal content -->
+          <div class="modal-content">
+            <div class="row">
+                <div class="col">
+                    <span class="close">&times;</span>
+                    <p>ARE YOU FUCKING SURE BRO?</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-red" onclick="sendElementCommand('udpate')">YES</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="no btn btn-red">NO</button>
+                </div>
+            </div>
+          </div>
+        </div>
     </div>
 
-    <script>
-    function setAllGateColors(color){
-      origin = window.location.origin
-      // gateColorURL = "{{ url_for('index') }}?color="+color
-      // alert("sending POST call to "+gateColorUrl);
-      var xhttp = new XMLHttpRequest();
-      // event.preventDefault();
-      //xhttp.open("POST", "{{ url_for('index')}}", true);
-      xhttp.open("POST", "/api/gates/color", true);
+      <div class="row">
+          <div class="col module">
+              <button id="powerBtn" type="button" class="btn btn-red">POWER GATES</button>
+          </div>
 
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("color="+color+"&gateID=all");
-    }
+          <!-- Power Modal -->
+          <div id="powerModal" class="modal">
 
-    function sendElementCommand(command){
-      origin = window.location.origin
-      // gateColorURL = "{{ url_for('index') }}?color="+color
-      // alert("sending POST call to "+gateColorUrl);
-      var xhttp = new XMLHttpRequest();
-      // event.preventDefault();
-      xhttp.open("POST", "/api/gates/system", true);
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("command="+command+"&gateID=all");
-    }
+            <!-- Power Modal content -->
+            <div class="modal-content">
+              <div class="row">
+                  <div class="col">
+                      <span class="close">&times;</span>
+                      <p>ARE YOU FUCKING SURE BRO?</p>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col module">
+                      <button type="button" class="btn btn-red" onclick="sendElementCommand('reboot')">REBOOT</button>
+                  </div>
+                  <div class="col module">
+                      <button type="button" class="btn btn-red" onclick="sendElementCommand('shutdown')">SHUTDOWN</button>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
 
-    function getGateList(){
-      origin = window.location.origin
-      // gateColorURL = "{{ url_for('index') }}?color="+color
-      // alert("sending POST call to "+gateColorUrl);
-      var xhttp = new XMLHttpRequest();
-      // event.preventDefault();
-      xhttp.open("GET", "/api/server/gates", true);
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("");
-    }
-    </script>
-
+    
+    <script src="{{ url_for('static',filename='script/script.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
