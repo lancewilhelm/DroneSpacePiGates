@@ -174,7 +174,7 @@ class element:
                         newUpdate = True
                     if newUpdate == True:
                         logging.debug("updating color: "+str(self.currentColor))
-                    if(devMod==False):
+                    if(devMode==False):
                         if(self.currentColor=="shutdown"):
                             self.shutdown()
                         if(self.currentColor=="reboot"):
