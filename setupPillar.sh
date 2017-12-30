@@ -18,10 +18,6 @@ sudo pip install Flask
 #let's give python permission to alter gpio pins without sudo
 sudo chown pi /dev/mem
 
-#lets install psutil so that we can restart our python process on update
-sudo pip install psutil &&
-exit
-
 #copy keys to root
 sudo cp -r ~/dronespacepigates/.ssh/ ~/
 sudo mkdir /root/.ssh/
@@ -34,3 +30,6 @@ sudo chmod 400 /root/.ssh/id_rsa
 sudo rm /var/spool/cron/crontabs/root
 sudo cp ~/dronespacepigates/crontabScript /var/spool/cron/crontabs/root
 sudo chmod 600 /var/spool/cron/crontabs/root
+
+#lets install psutil so that we can restart our python process on update
+sudo pip install psutil
