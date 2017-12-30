@@ -13,7 +13,6 @@ sudo apt-get install screen
 
 #let's get flask installed
 sudo apt-get install python-pip
-sudo pip install Flask
 
 #let's give python permission to alter gpio pins without sudo
 sudo chown pi /dev/mem
