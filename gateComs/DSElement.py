@@ -34,7 +34,7 @@ class element:
         global devMode
         devMode = args.d
         if(devMode): #if we are in dev mod, we won't load pi specific libraries
-            print("we are not in dev mode")
+            print("we are in dev mode")
             import psutil
             import LEDUtils
         else:
