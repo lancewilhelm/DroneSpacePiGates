@@ -40,13 +40,15 @@ var powerModal = document.getElementById('powerModal');
 // Get the button that opens the modal
 var updateBtn = document.getElementById("updateBtn");
 var powerBtn = document.getElementById("powerBtn");
+var rebootBtn = document.getElementById("rebootBtn");
+var shutdownBtn = document.getElementById("shutdownBtn");
 
 // Get the <span> element that closes the modal
 var updateSpan = document.getElementsByClassName("close")[0];
 var powerSpan = document.getElementsByClassName("close")[1];
 
 var updatenoBtn = document.getElementsByClassName("no")[0];
-var powernoBtn = document.getElementsByClassName("no")[1];
+var updateyesBtn = document.getElementsByClassName("yes")[0];
 
 // When the user clicks the button, open the modal
 updateBtn.onclick = function() {
@@ -67,7 +69,16 @@ powerSpan.onclick = function() {
 updatenoBtn.onclick = function() {
     updateModal.style.display = "none";
 }
-powernoBtn.onclick = function() {
+updateyesBtn.onclick = function() {
+    sendElementCommand('update');
+    updateModal.style.display = "none";
+}
+rebootBtn.onclick = function() {
+    sendElementCommand('reboot');
+    powerModal.style.display = "none";
+}
+shutdownBtn.onclick = function() {
+    sendElementCommand('shutdown');
     powerModal.style.display = "none";
 }
 

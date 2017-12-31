@@ -20,19 +20,19 @@
     <div class="container-fluid text-center">
       <div class="row">
 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <button type="button" class="btn btn-block btn-green" onclick="setAllGateColors('green')"></button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <button type="button" class="btn btn-block btn-red" onclick="setAllGateColors('red')"></button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <button type="button" class="btn btn-block btn-blue" onclick="setAllGateColors('blue')"></button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <button type="button" class="btn btn-block btn-yellow" onclick="setAllGateColors('yellow')"></button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <button type="button" class="btn btn-block btn-white" onclick="setAllGateColors('white')"></button>
         </div>
       </div>
@@ -77,7 +77,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <button type="button" class="btn btn-red" onclick="sendElementCommand('update')">YES</button>
+                    <button type="button" class="yes btn btn-red">YES</button>
                 </div>
                 <div class="col">
                     <button type="button" class="no btn btn-red">NO</button>
@@ -105,10 +105,10 @@
               </div>
               <div class="row">
                   <div class="col module">
-                      <button type="button" class="btn btn-red" onclick="sendElementCommand('reboot')">REBOOT</button>
+                      <button id="rebootBtn" type="button" class="btn btn-red">REBOOT</button>
                   </div>
                   <div class="col module">
-                      <button type="button" class="btn btn-red" onclick="sendElementCommand('shutdown')">SHUTDOWN</button>
+                      <button id="shutdownBtn" type="button" class="btn btn-red">SHUTDOWN</button>
                   </div>
               </div>
             </div>
