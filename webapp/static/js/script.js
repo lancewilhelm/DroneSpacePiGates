@@ -91,3 +91,14 @@ window.onclick = function(event) {
         powerModal.style.display = "none";
     }
 }
+
+// Color picker
+
+function setRgb () {
+  var red = document.querySelector('.color-picker .red-slider').value;
+  var green = document.querySelector('.color-picker .green-slider').value;
+  var blue = document.querySelector('.color-picker .blue-slider').value;
+  var color = "rgb(" + red + "," + green + "," + blue + ")";
+  document.querySelector('.color-preview').style.background = color;
+}
+  setRgb();
