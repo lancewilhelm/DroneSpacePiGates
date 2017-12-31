@@ -10,6 +10,11 @@ h3 {
   font-weight: 700;
 }
 
+.row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
 .btn-green {
   background-color: green;
 }
@@ -34,21 +39,13 @@ h3 {
   padding: 50px;
 }
 
-button {
-  margin-top: 10px;
-}
-
 .col-sm-6 {
   margin 20px;
 }
 
-.module {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
 .jumbotron {
   background-color: #edfcab;
+  margin-bottom: 0px;
 }
 
 .dropdown-item {
@@ -57,6 +54,13 @@ button {
 
 .dropdown-toggle {
   font-weight: 700;
+}
+
+@media(max-width: 575px) {
+    .col-sm {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 }
 
 /* The Modal (background) */
