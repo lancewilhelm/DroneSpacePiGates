@@ -69,17 +69,18 @@ def recvData(sock): #this is where we handle all recieved data
             logging.warning("got bad data from client at "+str(address))
     except:
         pass
-    if(data):
-        #logging.debug("----------------")
-        #logging.debug(address)
-        #logging.debug(data)
-        subject = data['subject'] #the subject of the message
-        body = data['body'] #the body of the message
-        recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
-        #try:
-        #    data = data.decode(encoding='utf-8')
-        #except:
-        #    pass
+    # if(data):
+    #     #logging.debug("----------------")
+    #     #logging.debug(address)
+    #     #logging.debug(data)
+    #     subject = data['subject'] #the subject of the message
+    #     body = data['body'] #the body of the message
+    #     recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
+    #     extras = data['extras']
+    #     #try:
+    #     #    data = data.decode(encoding='utf-8')
+    #     #except:
+    #     #    pass
     return data, address
 
 
@@ -126,10 +127,22 @@ def runProgram(sock):
             subject = data['subject'] #the subject of the message ()
             body = data['body'] #the body of the message
             recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
-
             if(subject == "connect"):
                 try:
                     connectNewGate(sock,address,currentColor)
+                except Exception as e:
+                    logging.debug(e)
+                    logging.warning(traceback.format_exc())
+            if(subject == "customColor"):
+                try:
+                    red = body["red"]
+                    green = body["green"]
+                    blue = body["blue"]
+                    color = {"red":red,"green":green,"blue":blue}
+                    for gate in gates:
+                        gate.updateColor("custom", color)
+                    logging.debug("UPDATE ALL GATE CUSTOM COLORS")
+                    logging.info(str(gates))
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
@@ -137,7 +150,7 @@ def runProgram(sock):
                 try:
                     currentColor = body
                     for gate in gates:
-                        gate.updateColor(body)
+                        gate.updateColor("program", body)
                     logging.debug("UPDATE ALL GATE COLORS")
                     logging.info(str(gates))
                 except Exception as e:

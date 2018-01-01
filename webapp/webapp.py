@@ -48,9 +48,16 @@ def getServerGates():
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
     color = request.form['color']
+    red = request.form['red']
+    green = request.form['green']
+    blue = request.form['blue']
     gateID = request.form['gateID']
     if(gateID == "all"):
-        DSClient.sendGateUpdate(gateMasterAddr,13246,color)
+        if(color == "custom"):
+            print("custom")
+            DSClient.sendGateColor(gateMasterAddr,13246,red,green,blue)
+        else:
+            DSClient.sendGateUpdate(gateMasterAddr,13246,color)
     else:
         DSClient.sendGateUpdateTo(gateMasterAddr,gateID,13246,color)
     return ""

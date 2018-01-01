@@ -41,15 +41,20 @@ def sendDataToServer(sock,address,subject,body,recipient):
     print(message)
     sock.sendto(pickle.dumps(message),address)
 
-def sendGateUpdate(ip,port, animation):
+def sendGateUpdate(ip,port,animation):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),"updateAllGateColors",animation,"")
+
+def sendGateColor(ip,port,red,green,blue):
+    sock = createSocket(port)
+    body = {"red":red,"green":green,"blue":blue}
+    sendDataToServer(sock,(ip,port),"customColor",body,"")
 
 def getGateList(ip,port):
     sock = createSocket(port)
     message = pickle.dumps({"subject":"getGateList","body":"","recipient":""})
     print(message)
-    sendDataToServer(sock,(ip,port),"getGateList","","")
+    sendDataToServer(sock,(ip,port),"getGateList","")
     sock.settimeout(10)
     data,address = recvData(sock)
     result = None

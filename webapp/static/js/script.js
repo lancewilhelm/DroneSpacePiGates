@@ -3,12 +3,14 @@ function setAllGateColors(color){
   // gateColorURL = "{{ url_for('index') }}?color="+color
   // alert("sending POST call to "+gateColorUrl);
   var xhttp = new XMLHttpRequest();
+  var red = document.querySelector('.color-picker .red-slider').value;
+  var green = document.querySelector('.color-picker .green-slider').value;
+  var blue = document.querySelector('.color-picker .blue-slider').value;
   // event.preventDefault();
   //xhttp.open("POST", "{{ url_for('index')}}", true);
   xhttp.open("POST", "/api/gates/color", true);
-
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("color="+color+"&gateID=all");
+  xhttp.send("color="+color+"&gateID=all&red="+red+"&green="+green+"&blue="+blue);
 }
 
 function sendElementCommand(command){

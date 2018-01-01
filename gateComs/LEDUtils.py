@@ -57,6 +57,13 @@ class LEDStrip:
             self.strip.setPixelColor(i, Color(0,0,0))
         self.strip.show()
 
+    def customColor(self,colors):
+        for i in range(self.strip.numPixels()):
+            red = colors["red"]
+            green = colors["green"]
+            blue = colors["blue"]
+            self.strip.setPixelColor(i,Color(red,green,blue))
+
     def allWhite(self):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(255,255,255))

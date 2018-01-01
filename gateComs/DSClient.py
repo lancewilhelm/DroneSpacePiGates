@@ -13,8 +13,8 @@ def createSocket(port):
     #sock.bind((hostname,port))
     print("bound")
     return sock
-def sendGateUpdate(controllerAddress,controllerPort, animation):
+def sendGateUpdate(controllerAddress,controllerPort,command,extras):
     sock = createSocket(controllerPort)
-    message = pickle.dumps({"animation":animation})
+    message = pickle.dumps({"command":command, "extras":extras})
     print(message)
     sock.sendto(message,(controllerAddress,controllerPort))

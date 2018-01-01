@@ -10,8 +10,8 @@ import sys
 import logging
 import traceback
 import argparse
-import psutil
-import LEDUtils
+# import psutil
+# import LEDUtils
 try:
     import cPickle as pickle
 except:
@@ -168,6 +168,14 @@ class element:
                 if(subject == "disconnect"):
                     logging.debug("we recieved a disconnect request")
                     break;
+                if(subject == "customColor"):
+                    self.currentColor = body
+                    if(lastColor != self.currentColor):
+                        newUpdate = True
+                    if newUpdate == True:
+                        logging.debug("updating custom color: "+str(self.currentColor))
+                    if(devMode == False):
+                        LED.customColor(body)
                 if(subject == "updateColor"):
                     self.currentColor = body
                     if(lastColor != self.currentColor):
@@ -213,6 +221,7 @@ class element:
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
         if(devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
+            pass
         else:
             LED = 0
         sock = self.createSocket(13246)
