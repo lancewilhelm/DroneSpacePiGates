@@ -49,14 +49,14 @@ def getTime():
     #return the current clock time in milliseconds
     return int(round(time.time() * 1000))
 
-def connectNewGate(sock,address,initialGateColor):
+def connectNewGate(sock,address,initialGateState):
     if(address not in gates):
         newGate = DSUtils.Gate(sock,address,initialGateColor)
         gates.append(newGate)
         logging.debug("gate "+str(address)+" connected")
     else:
         logging.debug("gate "+str(address)+" reconnected")
-    newGate.updateAnimation(initialGateColor)
+    newGate.sendData(initialGateState)
 
 def recvData(sock): #this is where we handle all recieved data
     data = None
@@ -111,7 +111,8 @@ def sendDisconnect(sock,address):
 
 def runProgram(sock):
     global printFPS
-    currentColor= "rainbow"
+    currentState= "rainbow"
+    lastStateUpdate = {"subject":"","body":"","recipient":""}
     while(True):
         disconnectedGates = []
         frameStart = getTime()
@@ -128,7 +129,7 @@ def runProgram(sock):
             recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
             if(subject == "connect"):
                 try:
-                    connectNewGate(sock,address,currentColor)
+                    connectNewGate(sock,address,lastStateUpdate)
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
@@ -184,7 +185,7 @@ def runProgram(sock):
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
 
-
+            lastStateUpdate = data
         #lets disconnect gates that didn't send us a keepAlive in time
         for gate in disconnectedGates:
             logging.debug("gate "+str(gate.address)+" disconnected")
