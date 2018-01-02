@@ -155,11 +155,24 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
         self.connectToServer(sock,(self.serverAddress,self.port))
+        self.currentColor = "none"
+
         while(True):
             time.sleep(0.04)
             newUpdate = False
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
+
+            if(devMode==False):
+                if(self.currentColor=="flashWhite"):
+                    LED.flashGrey()
+                if(self.currentColor=="chasing"):
+                    LED.chasing()
+                if(self.currentColor=="rainbow"):
+                    LED.rainbow()
+                if(self.currentColor=="pacman"):
+                    LED.pacman()
+
             if(data):
                 subject = data['subject'] #the subject of the message ()
                 body = data['body'] #the body of the message
@@ -176,16 +189,6 @@ class element:
                     logging.debug("done updating")
                 if(subject == "updateAnimation"):
                     logging.debug("updating animation: "+str(self.currentColor))
-                    if(devMode==False):
-                        if(self.currentColor=="flashWhite"):
-                            LED.flashGrey()
-                        if(self.currentColor=="chasing"):
-                            LED.chasing()
-                        if(self.currentColor=="rainbow"):
-                            LED.rainbow()
-                        if(self.currentColor=="pacman"):
-                            LED.pacman()
-                    logging.debug("done updating")
                 if(subject == "systemCommand"):
                     logging.debug("updating color: "+str(self.currentColor))
                     if(devMode==False):
