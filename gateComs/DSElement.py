@@ -11,7 +11,13 @@ import logging
 import traceback
 import argparse
 import psutil
-import LEDUtils
+
+try:
+    import LEDUtils
+except ImportError:
+    pass
+
+
 try:
     import cPickle as pickle
 except:
@@ -120,8 +126,12 @@ class element:
 
         python = sys.executable
         os.execl(python, python, *sys.argv)
+        if(devMode == False):
+            LED.customColor([0,255,0])
 
     def pullBranch(self,sock,branch):
+        if(devMode == False):
+            LED.customColor([255,0,0])
         #let's call the linux commands to pull the repo down
         #we assume you have an ssh key setup
         logging.debug("pulling latest repo changes")
@@ -134,22 +144,36 @@ class element:
         self.restartProcess(sock)
 
     def shutdown(self,sock):
+        if(devMode == False):
+            LED.customColor([255,0,0])
+            time.sleep(0.1)
+            LED.customColor([0,255,0])
+            time.sleep(0.1)
+            LED.customColor([255,0,0])
+            time.sleep(0.1)
+            LED.customColor([0,255,0])
+            time.sleep(0.1)
         #let's call the linux commands to shutdown the pis
         logging.debug("shutting down Pis...")
         if(devMode == False):
             sock.close()
-            os.system("sudo shutdown now")
+            os.system("sudo shutdown -h now")
         else:
-            print("sudo shutdown now")
+            print("sudo shutdown -h now")
 
     def reboot(self,sock):
+        if(devMode == False):
+            LED.customColor([255,0,0])
+            time.sleep(0.1)
+            LED.customColor([0,255,0])
+            time.sleep(0.1)
         #let's call the linux commands to shutdown the pis
         logging.debug("rebooting Pis...")
         if(devMode == False):
             sock.close()
-            os.system("sudo reboot now")
+            os.system("sudo shutdown -r now")
         else:
-            print("sudo reboot now")
+            print("sudo shutdown -r now")
 
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")

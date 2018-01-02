@@ -15,29 +15,13 @@ def sendElementCommand():
         branch = request.form['branch']
 
         if command == 'reboot':
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
-            time.sleep(0.1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
-            time.sleep(0.1)
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"reboot","")
             return "rebooting"
         elif command == 'shutdown':
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
-            time.sleep(0.1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
-            time.sleep(0.1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
-            time.sleep(0.1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
-            time.sleep(0.1)
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"shutdown","")
             return "shutting down"
         elif command == 'update':
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
-            time.sleep(1)
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"update",[branch])
-            time.sleep(1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             return "updating software"
 
 @app.route("/api/server/gates", methods=['POST','GET'])
