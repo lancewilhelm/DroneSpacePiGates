@@ -48,9 +48,9 @@ def getServerGates():
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
     program = request.form['color']
-    red = request.form['red']
-    green = request.form['green']
-    blue = request.form['blue']
+    red = int(request.form['red'])
+    green = int(request.form['green'])
+    blue = int(request.form['blue'])
     rgbColor = [red,green,blue]
     gateID = request.form['gateID']
     if(gateID == "all"):
