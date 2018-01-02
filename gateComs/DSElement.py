@@ -164,6 +164,7 @@ class element:
                 subject = data['subject'] #the subject of the message ()
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+                logging.debug("recieved data")
                 self.currentColor = body
                 if(subject == "disconnect"):
                     logging.debug("we recieved a disconnect request")
@@ -172,6 +173,7 @@ class element:
                     logging.debug("updating color: "+str(self.currentColor))
                     if(devMode == False):
                         LED.customColor(body)
+                    logging.debug("done updating")
                 if(subject == "updateAnimation"):
                     logging.debug("updating animation: "+str(self.currentColor))
                     if(devMode==False):
@@ -183,6 +185,7 @@ class element:
                             LED.rainbow()
                         if(self.currentColor=="pacman"):
                             LED.pacman()
+                    logging.debug("done updating")
                 if(subject == "systemCommand"):
                     logging.debug("updating color: "+str(self.currentColor))
                     if(devMode==False):
