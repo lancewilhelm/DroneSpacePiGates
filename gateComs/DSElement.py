@@ -11,7 +11,10 @@ import logging
 import traceback
 import argparse
 import psutil
-import LEDUtils
+try:
+    import LEDUtils
+except ImportError:
+    pass
 try:
     import cPickle as pickle
 except:
@@ -73,7 +76,7 @@ class element:
         data,address = self.recvData(sock)
         self.currentColor = data['body']
         logging.debug(self.currentColor)
-        logging.debug("got server response")
+        logging.debug("got server initial state "+str(data))
         sock.settimeout(2)
         sock.setblocking(0) #allow the program to return with no data once again
 

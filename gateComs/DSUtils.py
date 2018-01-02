@@ -65,7 +65,7 @@ class Gate: #this is our representation of a gate
     def isAlive(self):
         alive = True
         currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 10000):
+        if((currentTime-self.lastUpdate) > 60000):
             alive = False
         return alive
 
