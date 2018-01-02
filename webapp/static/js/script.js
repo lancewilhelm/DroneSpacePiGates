@@ -93,10 +93,18 @@ function sendElementCommand(command){
   // gateColorURL = "{{ url_for('index') }}?color="+color
   // alert("sending POST call to "+gateColorUrl);
   var xhttp = new XMLHttpRequest();
-  // event.preventDefault();
-  xhttp.open("POST", "/api/gates/system", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("command="+command+"&gateID=all&branch=develop");
+  var branch = document.getElementById('branchInput').value;
+
+  if(branch==""){
+      updateModal.style.display = "none";
+      branchAlertModal.style.display = "block";
+  }
+  else {
+      // event.preventDefault();
+      xhttp.open("POST", "/api/gates/system", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("command="+command+"&gateID=all&branch="+branch);
+  }
 }
 
 function getGateList(){
@@ -113,6 +121,7 @@ function getGateList(){
 // Get the modal
 var updateModal = document.getElementById('updateModal');
 var powerModal = document.getElementById('powerModal');
+var branchAlertModal = document.getElementById('branchAlertModal');
 
 // Get the button that opens the modal
 var updateBtn = document.getElementById("updateBtn");
@@ -121,8 +130,9 @@ var rebootBtn = document.getElementById("rebootBtn");
 var shutdownBtn = document.getElementById("shutdownBtn");
 
 // Get the <span> element that closes the modal
-var updateSpan = document.getElementsByClassName("close")[0];
-var powerSpan = document.getElementsByClassName("close")[1];
+var updateSpan = document.getElementById("updateSpan");
+var powerSpan = document.getElementById("powerSpan");
+var branchAlertSpan = document.getElementById("branchAlertSpan");
 
 var updatenoBtn = document.getElementsByClassName("no")[0];
 var updateyesBtn = document.getElementsByClassName("yes")[0];
@@ -141,6 +151,9 @@ updateSpan.onclick = function() {
 }
 powerSpan.onclick = function() {
     powerModal.style.display = "none";
+}
+branchAlertSpan.onclick = function() {
+    branchAlertModal.style.display = "none";
 }
 
 updatenoBtn.onclick = function() {
