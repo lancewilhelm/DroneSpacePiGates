@@ -127,9 +127,9 @@ class element:
         logging.debug("pulling latest repo changes")
         currentDirectory = sys.path[0]
         if(devMode == False):
-            os.system("cd "+currentDirectory+" && git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+            os.system("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
         else:
-            print("cd "+currentDirectory+" && git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+            print("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
