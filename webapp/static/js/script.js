@@ -13,6 +13,81 @@ function setAllGateColors(color){
   xhttp.send("color="+color+"&gateID=all&red="+red+"&green="+green+"&blue="+blue);
 }
 
+function setGatesGreen(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var red = 0;
+  var green = 255;
+  var blue = 0;
+  // event.preventDefault();
+  //xhttp.open("POST", "{{ url_for('index')}}", true);
+  xhttp.open("POST", "/api/gates/color", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("color=solid&gateID=all&red="+red+"&green="+green+"&blue="+blue);
+}
+
+function setGatesRed(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var red = 255;
+  var green = 0;
+  var blue = 0;
+  // event.preventDefault();
+  //xhttp.open("POST", "{{ url_for('index')}}", true);
+  xhttp.open("POST", "/api/gates/color", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("color=solid&gateID=all&red="+red+"&green="+green+"&blue="+blue);
+}
+
+function setGatesBlue(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var red = 0;
+  var green = 0;
+  var blue = 255;
+  // event.preventDefault();
+  //xhttp.open("POST", "{{ url_for('index')}}", true);
+  xhttp.open("POST", "/api/gates/color", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("color=solid&gateID=all&red="+red+"&green="+green+"&blue="+blue);
+}
+
+function setGatesYellow(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var red = 125;
+  var green = 125;
+  var blue = 0;
+  // event.preventDefault();
+  //xhttp.open("POST", "{{ url_for('index')}}", true);
+  xhttp.open("POST", "/api/gates/color", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("color=solid&gateID=all&red="+red+"&green="+green+"&blue="+blue);
+}
+
+function setGatesWhite(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var red = 50;
+  var green = 50;
+  var blue = 50;
+  // event.preventDefault();
+  //xhttp.open("POST", "{{ url_for('index')}}", true);
+  xhttp.open("POST", "/api/gates/color", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("color=solid&gateID=all&red="+red+"&green="+green+"&blue="+blue);
+}
+
 function sendElementCommand(command){
   origin = window.location.origin
   // gateColorURL = "{{ url_for('index') }}?color="+color

@@ -49,6 +49,11 @@ def sendGateColor(ip,port,color):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),"updateColor",color,"")
 
+def sendSystemCommand(ip,port,command,arguments):
+    sock = createSocket(port)
+    body = {"command":command,"arguments":arguments}
+    sendDataToServer(sock,(ip,port),"systemCommand",body,"")
+
 def getGateList(ip,port):
     sock = createSocket(port)
     message = pickle.dumps({"subject":"getGateList","body":"","recipient":""})

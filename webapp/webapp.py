@@ -14,29 +14,29 @@ def sendElementCommand():
         gateID = request.form['gateID']
 
         if command == 'reboot':
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
             time.sleep(0.1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             time.sleep(0.1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"reboot")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"reboot","")
             return "rebooting"
         elif command == 'shutdown':
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
             time.sleep(0.1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             time.sleep(0.1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
             time.sleep(0.1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             time.sleep(0.1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"shutdown")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"shutdown","")
             return "shutting down"
         elif command == 'update':
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"red")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
             time.sleep(1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"update")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"update","")
             time.sleep(1)
-            DSWebClient.sendGateUpdate(gateMasterAddr,13246,"green")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             return "updating software"
 
 @app.route("/api/server/gates", methods=['POST','GET'])
@@ -47,20 +47,21 @@ def getServerGates():
 
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
-    color = request.form['color']
+    program = request.form['color']
     red = request.form['red']
     green = request.form['green']
     blue = request.form['blue']
     rgbColor = [red,green,blue]
     gateID = request.form['gateID']
     if(gateID == "all"):
-        if(color == "custom"):
-            print("custom")
+        if(program == "custom" or program == "solid"):
+            print("custom or solid")
             DSWebClient.sendGateColor(gateMasterAddr,13246,rgbColor)
         else:
-            DSWebClient.sendGateAnimation(gateMasterAddr,13246,color)
+            print("animation")
+            DSWebClient.sendGateAnimation(gateMasterAddr,13246,program)
     else:
-        DSWebClient.sendGateUpdateTo(gateMasterAddr,gateID,13246,color)
+        DSWebClient.sendSystemCommandTo(gateMasterAddr,gateID,13246,program,"")
     return ""
 
 @app.route("/", methods=['GET'])

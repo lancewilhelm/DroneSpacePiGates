@@ -169,9 +169,20 @@ class element:
                     logging.debug("we recieved a disconnect request")
                     break;
                 if(subject == "updateColor"):
-                    logging.debug("updating custom color: "+str(self.currentColor))
+                    logging.debug("updating color: "+str(self.currentColor))
                     if(devMode == False):
                         LED.customColor(body)
+                if(subject == "updateAnimation"):
+                    logging.debug("updating animation: "+str(self.currentColor))
+                    if(devMode==False):
+                        if(self.currentColor=="flashWhite"):
+                            LED.flashGrey()
+                        if(self.currentColor=="chasing"):
+                            LED.chasing()
+                        if(self.currentColor=="rainbow"):
+                            LED.rainbow()
+                        if(self.currentColor=="pacman"):
+                            LED.pacman()
                 if(subject == "systemCommand"):
                     logging.debug("updating color: "+str(self.currentColor))
                     if(devMode==False):
@@ -182,27 +193,6 @@ class element:
                     else:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
-            if(devMode==False):
-                if(self.currentColor=="yellow"):
-                    LED.allYellow()
-                if(self.currentColor=="green"):
-                    LED.allGreen()
-                if(self.currentColor=="red"):
-                    LED.allRed()
-                if(self.currentColor=="white"):
-                    LED.allGrey()
-                if(self.currentColor=="blue"):
-                    LED.allBlue()
-                if(self.currentColor=="flashWhite"):
-                    LED.flashGrey()
-                if(self.currentColor=="update"):
-                    self.pullDevelop(sock)
-                if(self.currentColor=="chasing"):
-                    LED.chasing()
-                if(self.currentColor=="rainbow"):
-                    LED.rainbow()
-                if(self.currentColor=="pacman"):
-                    LED.pacman()
         logging.debug("disconnected")
 
 
