@@ -10,8 +10,8 @@ import sys
 import logging
 import traceback
 import argparse
-import psutil
-import LEDUtils
+# import psutil
+# import LEDUtils
 try:
     import cPickle as pickle
 except:
@@ -155,7 +155,6 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
         self.connectToServer(sock,(self.serverAddress,self.port))
-        lastColor = ""
         while(True):
             time.sleep(0.04)
             newUpdate = False
@@ -165,32 +164,24 @@ class element:
                 subject = data['subject'] #the subject of the message ()
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+                self.currentColor = body
                 if(subject == "disconnect"):
                     logging.debug("we recieved a disconnect request")
                     break;
-                if(subject == "customColor"):
-                    self.currentColor = body
-                    if(lastColor != self.currentColor):
-                        newUpdate = True
-                    if newUpdate == True:
-                        logging.debug("updating custom color: "+str(self.currentColor))
+                if(subject == "updateColor"):
+                    logging.debug("updating custom color: "+str(self.currentColor))
                     if(devMode == False):
                         LED.customColor(body)
-                if(subject == "updateColor"):
-                    self.currentColor = body
-                    if(lastColor != self.currentColor):
-                        newUpdate = True
-                    if newUpdate == True:
-                        logging.debug("updating color: "+str(self.currentColor))
+                if(subject == "systemCommand"):
+                    logging.debug("updating color: "+str(self.currentColor))
                     if(devMode==False):
-                        if(self.currentColor=="shutdown"):
+                        if(self.body=="shutdown"):
                             self.shutdown()
-                        if(self.currentColor=="reboot"):
+                        if(self.body=="reboot"):
                             self.reboot()
                     else:
                         if(self.currentColor=="update"):
                             self.pullDevelop(sock)
-                    lastColor = self.currentColor
             if(devMode==False):
                 if(self.currentColor=="yellow"):
                     LED.allYellow()

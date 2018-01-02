@@ -41,14 +41,13 @@ def sendDataToServer(sock,address,subject,body,recipient):
     print(message)
     sock.sendto(pickle.dumps(message),address)
 
-def sendGateUpdate(ip,port,animation):
+def sendGateAnimation(ip,port,animation):
     sock = createSocket(port)
-    sendDataToServer(sock,(ip,port),"updateAllGateColors",animation,"")
+    sendDataToServer(sock,(ip,port),"updateAnimation",animation,"")
 
-def sendGateColor(ip,port,red,green,blue):
+def sendGateColor(ip,port,color):
     sock = createSocket(port)
-    body = {"red":red,"green":green,"blue":blue}
-    sendDataToServer(sock,(ip,port),"customColor",body,"")
+    sendDataToServer(sock,(ip,port),"updateColor",color,"")
 
 def getGateList(ip,port):
     sock = createSocket(port)

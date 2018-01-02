@@ -56,7 +56,7 @@ def connectNewGate(sock,address,initialGateColor):
         logging.debug("gate "+str(address)+" connected")
     else:
         logging.debug("gate "+str(address)+" reconnected")
-    newGate.updateColor(initialGateColor)
+    newGate.updateAnimation(initialGateColor)
 
 def recvData(sock): #this is where we handle all recieved data
     data = None
@@ -111,14 +111,13 @@ def sendDisconnect(sock,address):
 
 def runProgram(sock):
     global printFPS
-    currentColor = "none"
+    currentColor= "rainbow"
     while(True):
         disconnectedGates = []
         frameStart = getTime()
         for gate in gates:
             if(gate.isAlive()):
                 pass
-                #gate.updateColor(currentColor)
             else:
                 disconnectedGates.append(gate)
 
@@ -133,29 +132,30 @@ def runProgram(sock):
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
-            if(subject == "customColor"):
+            if(subject == "updateColor"):
                 try:
-                    red = body["red"]
-                    green = body["green"]
-                    blue = body["blue"]
-                    color = {"red":red,"green":green,"blue":blue}
+                    color = body
                     for gate in gates:
-                        gate.updateColor("custom", color)
+                        gate.updateSolidColor(color)
                     logging.debug("UPDATE ALL GATE CUSTOM COLORS")
                     logging.info(str(gates))
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
-            if(subject == "updateAllGateColors"):
+                currentSubject = subject
+                currentBody = body
+            if(subject == "updateAnimation"):
                 try:
-                    currentColor = body
+                    animation = body
                     for gate in gates:
-                        gate.updateColor("program", body)
+                        gate.updateAnimation(animation)
                     logging.debug("UPDATE ALL GATE COLORS")
                     logging.info(str(gates))
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
+                currentSubject = subject
+                currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):
