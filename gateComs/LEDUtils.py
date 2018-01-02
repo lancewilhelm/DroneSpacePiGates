@@ -62,7 +62,7 @@ class LEDStrip:
         red = color[0]
         green = color[1]
         blue = color[2]
-        print(red+","+green+","+blue)
+        print(color)
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i,Color(red,green,blue))
 
