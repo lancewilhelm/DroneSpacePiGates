@@ -12,6 +12,7 @@ def sendElementCommand():
     if request.method == 'POST':
         command = request.form['command']
         gateID = request.form['gateID']
+        branch = request.form['branch']
 
         if command == 'reboot':
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
@@ -34,7 +35,7 @@ def sendElementCommand():
         elif command == 'update':
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
             time.sleep(1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"update","")
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"update",branch)
             time.sleep(1)
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             return "updating software"

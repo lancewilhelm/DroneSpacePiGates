@@ -156,6 +156,17 @@ def runProgram(sock):
                     logging.warning(traceback.format_exc())
                 currentSubject = subject
                 currentBody = body
+            if(subject == "systemCommand"):
+                try:
+                    for gate in gates:
+                        gate.sendSystemCommand(body)
+                    logging.debug("SENDING SYSTEM COMMAND")
+                    logging.info(str(gates))
+                except Exception as e:
+                    logging.debug(e)
+                    logging.warning(traceback.format_exc())
+                currentSubject = subject
+                currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):

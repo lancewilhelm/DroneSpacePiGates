@@ -40,8 +40,8 @@ class Gate: #this is our representation of a gate
           self.color = color
           self.sendData("updateColor",color,"")
 
-    def sendSystemCommand(self,command,arguments):
-          body = {"command":command,"arguments":arguments}
+    def sendSystemCommand(self,body):
+          self.body = body
           self.sendData("systemCommand",body,"")
 
     def sendData(self,subject,body,recipient):

@@ -96,7 +96,7 @@ function sendElementCommand(command){
   // event.preventDefault();
   xhttp.open("POST", "/api/gates/system", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("command="+command+"&gateID=all");
+  xhttp.send("command="+command+"&gateID=all&branch=develop");
 }
 
 function getGateList(){
