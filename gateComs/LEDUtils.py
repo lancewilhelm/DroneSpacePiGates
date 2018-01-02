@@ -170,7 +170,7 @@ class LEDStrip:
     def breathing(self):
         x = self.updateFrame(200)
 
-        y = 127.5*math.cos((math.pi/50)*(x-50))+127.5
+        y = int(127.5*math.cos((math.pi/50)*(x-50))+127.5)
 
         if(x < 100):
             for j in range(self.strip.numPixels()):
