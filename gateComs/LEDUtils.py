@@ -62,9 +62,10 @@ class LEDStrip:
         red = color[0]
         green = color[1]
         blue = color[2]
-        print(color[0])
+        stripColor = Color(red,green,blue)
+        print(stripColor)
         for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i,Color(red,green,blue))
+            self.strip.setPixelColor(i,stripColor)
 
     def flashYellow(self):
         for i in range(self.strip.numPixels()):
