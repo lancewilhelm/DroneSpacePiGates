@@ -183,6 +183,7 @@ class element:
                             LED.chasing()
                         if(self.currentColor=="rainbow"):
                             LED.rainbow()
+                            time.sleep(5)
                         if(self.currentColor=="pacman"):
                             LED.pacman()
                     logging.debug("done updating")
