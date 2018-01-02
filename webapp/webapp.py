@@ -35,7 +35,7 @@ def sendElementCommand():
         elif command == 'update':
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"red","")
             time.sleep(1)
-            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"update",branch)
+            DSWebClient.sendSystemCommand(gateMasterAddr,13246,"update",[branch])
             time.sleep(1)
             DSWebClient.sendSystemCommand(gateMasterAddr,13246,"green","")
             return "updating software"

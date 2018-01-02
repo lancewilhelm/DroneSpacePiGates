@@ -193,9 +193,9 @@ class element:
                     arguments = body['arguments']
                     logging.debug("performing command: "+command)
                     if(command=="shutdown"):
-                        self.shutdown()
+                        self.shutdown(sock)
                     if(command=="reboot"):
-                        self.reboot()
+                        self.reboot(sock)
                     if(command=="update"):
                         branch = arguments[0]
                         self.pullBranch(sock,branch)

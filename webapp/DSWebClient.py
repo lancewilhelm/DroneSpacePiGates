@@ -51,7 +51,7 @@ def sendGateColor(ip,port,color):
 
 def sendSystemCommand(ip,port,command,arguments):
     sock = createSocket(port)
-    body = {"command":command,"arguments":arguments}
+    body = {"command":command,"arguments":arguments}  #arguments should be a list!
     sendDataToServer(sock,(ip,port),"systemCommand",body,"")
 
 def getGateList(ip,port):
