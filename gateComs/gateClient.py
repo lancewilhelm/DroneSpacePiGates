@@ -5,7 +5,7 @@ import argparse
 #lets allow the user to call this script with options
 parser = argparse.ArgumentParser(description="Starts a gate client")
 parser.add_argument('--h', type=str, help="-h: help\n-l: \n-d: ")
-parser.add_argument('-l', default="off", help="log level (high,medium,low,off)")
+parser.add_argument('-l', default="medium", help="log level (high,medium,low,off)")
 parser.add_argument('-f', default="/home/pi/DSElement.log", help="location to save the log file")
 parser.add_argument('-d', default=False, help="developer mode (1,0)")
 parser.add_argument('-ledCount', default=337, help="the number of leds this device controls (integer)")

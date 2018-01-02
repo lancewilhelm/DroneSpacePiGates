@@ -21,21 +21,23 @@
       <div class="row">
 
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-green" onclick="setAllGateColors('green')"></button>
+          <button type="button" class="btn btn-block btn-green" onclick="setGatesGreen()"></button>
         </div>
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-red" onclick="setAllGateColors('red')"></button>
+          <button type="button" class="btn btn-block btn-red" onclick="setGatesRed()"></button>
         </div>
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-blue" onclick="setAllGateColors('blue')"></button>
+          <button type="button" class="btn btn-block btn-blue" onclick="setGatesBlue()"></button>
         </div>
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-yellow" onclick="setAllGateColors('yellow')"></button>
+          <button type="button" class="btn btn-block btn-yellow" onclick="setGatesYellow()"></button>
         </div>
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-white" onclick="setAllGateColors('white')"></button>
+          <button type="button" class="btn btn-block btn-white" onclick="setGatesWhite()"></button>
         </div>
       </div>
+
+<hr>
 
       <div class="row">
         <div class="col-sm">
@@ -52,9 +54,27 @@
           </div>
         </div>
         <div class="col-sm">
-            Color Picker
+            <div class="color-picker">
+              <div class="sliders">
+                <div class="slide-container">
+                  <input class="red-slider short-slider" type="range" id="rangeinput" value="250" max="255" onchange="setRgb()" oninput="setRgb()" />
+                </div>
+                <div class="slide-container">
+                  <input class="green-slider short-slider" type="range" id="rangeinput" value="0" max="255" onchange="setRgb()" oninput="setRgb()" />
+                </div>
+                <div class="slide-container">
+                  <input class="blue-slider short-slider" type="range" id="rangeinput" value="0" max="255" oninput="setRgb()" onchange="setRgb()" />
+                </div>
+              </div>
+              <div id="color-preview" class="color-preview"></div>
+            </div>
+
+            <button id="sendColorBtn" type="button" class="btn btn-white" onclick="setAllGateColors('custom')">SEND COLOR</button>
+
         </div>
       </div>
+
+<hr>
 
       <div class="row">
         <div class="col">
@@ -87,6 +107,8 @@
         </div>
     </div>
 
+<hr>
+
       <div class="row">
           <div class="col">
               <button id="powerBtn" type="button" class="btn btn-red">POWER GATES</button>
@@ -116,7 +138,7 @@
     </div>
 
 
-    <script src="{{ url_for('static',filename='script/script.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/script.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>

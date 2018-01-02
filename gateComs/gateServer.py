@@ -56,7 +56,7 @@ def connectNewGate(sock,address,initialGateColor):
         logging.debug("gate "+str(address)+" connected")
     else:
         logging.debug("gate "+str(address)+" reconnected")
-    newGate.updateColor(initialGateColor)
+    newGate.updateAnimation(initialGateColor)
 
 def recvData(sock): #this is where we handle all recieved data
     data = None
@@ -69,17 +69,18 @@ def recvData(sock): #this is where we handle all recieved data
             logging.warning("got bad data from client at "+str(address))
     except:
         pass
-    if(data):
-        #logging.debug("----------------")
-        #logging.debug(address)
-        #logging.debug(data)
-        subject = data['subject'] #the subject of the message
-        body = data['body'] #the body of the message
-        recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
-        #try:
-        #    data = data.decode(encoding='utf-8')
-        #except:
-        #    pass
+    # if(data):
+    #     #logging.debug("----------------")
+    #     #logging.debug(address)
+    #     #logging.debug(data)
+    #     subject = data['subject'] #the subject of the message
+    #     body = data['body'] #the body of the message
+    #     recipient = data['recipient'] #the intended recipient of the massage. This may be blank. If so, it's for everyone
+    #     extras = data['extras']
+    #     #try:
+    #     #    data = data.decode(encoding='utf-8')
+    #     #except:
+    #     #    pass
     return data, address
 
 
@@ -110,14 +111,13 @@ def sendDisconnect(sock,address):
 
 def runProgram(sock):
     global printFPS
-    currentColor = "none"
+    currentColor= "rainbow"
     while(True):
         disconnectedGates = []
         frameStart = getTime()
         for gate in gates:
             if(gate.isAlive()):
                 pass
-                #gate.updateColor(currentColor)
             else:
                 disconnectedGates.append(gate)
 
@@ -126,23 +126,47 @@ def runProgram(sock):
             subject = data['subject'] #the subject of the message ()
             body = data['body'] #the body of the message
             recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
-
             if(subject == "connect"):
                 try:
                     connectNewGate(sock,address,currentColor)
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
-            if(subject == "updateAllGateColors"):
+            if(subject == "updateColor"):
                 try:
-                    currentColor = body
+                    color = body
                     for gate in gates:
-                        gate.updateColor(body)
+                        gate.updateSolidColor(color)
+                    logging.debug("UPDATE ALL GATE CUSTOM COLORS")
+                    logging.info(str(gates))
+                except Exception as e:
+                    logging.debug(e)
+                    logging.warning(traceback.format_exc())
+                currentSubject = subject
+                currentBody = body
+            if(subject == "updateAnimation"):
+                try:
+                    animation = body
+                    for gate in gates:
+                        gate.updateAnimation(animation)
                     logging.debug("UPDATE ALL GATE COLORS")
                     logging.info(str(gates))
                 except Exception as e:
                     logging.debug(e)
                     logging.warning(traceback.format_exc())
+                currentSubject = subject
+                currentBody = body
+            if(subject == "systemCommand"):
+                try:
+                    for gate in gates:
+                        gate.sendSystemCommand(body)
+                    logging.debug("SENDING SYSTEM COMMAND")
+                    logging.info(str(gates))
+                except Exception as e:
+                    logging.debug(e)
+                    logging.warning(traceback.format_exc())
+                currentSubject = subject
+                currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "keepalive"):

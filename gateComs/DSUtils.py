@@ -32,10 +32,17 @@ class Gate: #this is our representation of a gate
         self.lastUpdate = self.getTime()
         self.socket = sock
 
-    def updateColor(self,color):
-        self.color = color
-        self.sendData("updateColor",color,"")
+    def updateAnimation(self,animation):
+          self.animation = animation
+          self.sendData("updateAnimation",animation,"")
 
+    def updateSolidColor(self,color):
+          self.color = color
+          self.sendData("updateColor",color,"")
+
+    def sendSystemCommand(self,body):
+          self.body = body
+          self.sendData("systemCommand",body,"")
 
     def sendData(self,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}

@@ -121,89 +121,85 @@ class element:
         python = sys.executable
         os.execl(python, python, *sys.argv)
 
-    def pullMaster(self,sock):
+    def pullBranch(self,sock,branch):
         #let's call the linux commands to pull the repo down
         #we assume you have an ssh key setup
-        branch = "master"
-        logging.debug("pulling latest repo changes")
-        os.system("cd "+currentDirectory+" && git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
-        #we need to restart this python script to see the changes
-        self.restartProcess(sock)
-
-    def pullDevelop(self,sock):
-        #let's call the linux commands to pull the repo down
-        #we assume you have an ssh key setup
-        branch = "develop"
         logging.debug("pulling latest repo changes")
         currentDirectory = sys.path[0]
-        os.system("cd "+currentDirectory+" && git fetch && git reset --hard origin/"+str(branch)+" && git pull origin "+str(branch)+" && exit")
+        if(devMode == False):
+            os.system("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
+        else:
+            print("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
     def shutdown(self,sock):
         #let's call the linux commands to shutdown the pis
         logging.debug("shutting down Pis...")
-        sock.close()
-        os.system("sudo shutdown now")
+        if(devMode == False):
+            sock.close()
+            os.system("sudo shutdown now")
+        else:
+            print("sudo shutdown now")
 
     def reboot(self,sock):
         #let's call the linux commands to shutdown the pis
         logging.debug("rebooting Pis...")
-        sock.close()
-        os.system("sudo reboot now")
+        if(devMode == False):
+            sock.close()
+            os.system("sudo reboot now")
+        else:
+            print("sudo reboot now")
 
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
         self.connectToServer(sock,(self.serverAddress,self.port))
-        lastColor = ""
+        self.currentColor = "none"
+
         while(True):
-            time.sleep(0.04)
+            time.sleep(0.02)
             newUpdate = False
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
-            if(data):
-                subject = data['subject'] #the subject of the message ()
-                body = data['body'] #the body of the message
-                recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
-                if(subject == "disconnect"):
-                    logging.debug("we recieved a disconnect request")
-                    break;
-                if(subject == "updateColor"):
-                    self.currentColor = body
-                    if(lastColor != self.currentColor):
-                        newUpdate = True
-                    if newUpdate == True:
-                        logging.debug("updating color: "+str(self.currentColor))
-                    if(devMode==False):
-                        if(self.currentColor=="shutdown"):
-                            self.shutdown()
-                        if(self.currentColor=="reboot"):
-                            self.reboot()
-                    else:
-                        if(self.currentColor=="update"):
-                            self.pullDevelop(sock)
-                    lastColor = self.currentColor
+
             if(devMode==False):
-                if(self.currentColor=="yellow"):
-                    LED.allYellow()
-                if(self.currentColor=="green"):
-                    LED.allGreen()
-                if(self.currentColor=="red"):
-                    LED.allRed()
-                if(self.currentColor=="white"):
-                    LED.allGrey()
-                if(self.currentColor=="blue"):
-                    LED.allBlue()
                 if(self.currentColor=="flashWhite"):
                     LED.flashGrey()
-                if(self.currentColor=="update"):
-                    self.pullDevelop(sock)
                 if(self.currentColor=="chasing"):
                     LED.chasing()
                 if(self.currentColor=="rainbow"):
                     LED.rainbow()
                 if(self.currentColor=="pacman"):
                     LED.pacman()
+
+            if(data):
+                subject = data['subject'] #the subject of the message ()
+                body = data['body'] #the body of the message
+                recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+                logging.debug("recieved data")
+                if(subject == "disconnect"):
+                    logging.debug("we recieved a disconnect request")
+                    break;
+                if(subject == "updateColor"):
+                    self.currentColor = body
+                    logging.debug("updating color: "+str(self.currentColor))
+                    if(devMode == False):
+                        LED.customColor(body)
+                if(subject == "updateAnimation"):
+                    self.currentColor = body
+                    logging.debug("updating animation: "+str(self.currentColor))
+                if(subject == "systemCommand"):
+                    command = body['command']
+                    arguments = body['arguments']
+                    logging.debug("performing command: "+command)
+                    if(command=="shutdown"):
+                        self.shutdown(sock)
+                    if(command=="reboot"):
+                        self.reboot(sock)
+                    if(command=="update"):
+                        branch = arguments[0]
+                        self.pullBranch(sock,branch)
+
         logging.debug("disconnected")
 
 
@@ -213,6 +209,7 @@ class element:
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
         if(devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
+            pass
         else:
             LED = 0
         sock = self.createSocket(13246)

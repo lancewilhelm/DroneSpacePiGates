@@ -57,49 +57,13 @@ class LEDStrip:
             self.strip.setPixelColor(i, Color(0,0,0))
         self.strip.show()
 
-    def allWhite(self):
+    def customColor(self,color):
+        red = color[0]
+        green = color[1]
+        blue = color[2]
+        stripColor = Color(red,green,blue)
         for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(255,255,255))
-        self.strip.show()
-
-    def allGrey(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(50,50,50))
-        self.strip.show()
-
-    def allRed(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(255,0,0))
-        self.strip.show()
-
-    def allOrange(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(255,127,0))
-        self.strip.show()
-
-    def allYellow(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(125,125,0))
-        self.strip.show()
-
-    def allGreen(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(0,255,0))
-        self.strip.show()
-
-    def allBlue(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(0,0,255))
-        self.strip.show()
-
-    def allIndigo(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(127,0,255))
-        self.strip.show()
-
-    def allPurple(self):
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, Color(50,0,50))
+            self.strip.setPixelColor(i,stripColor)
         self.strip.show()
 
     def flashYellow(self):
