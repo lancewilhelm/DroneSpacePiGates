@@ -163,14 +163,17 @@ class element:
             data,address = self.recvData(sock)
 
             if(devMode==False):
-                if(self.currentColor=="flashWhite"):
-                    LED.flashGrey()
-                if(self.currentColor=="chasing"):
-                    LED.chasing()
-                if(self.currentColor=="rainbow"):
-                    LED.rainbow()
-                if(self.currentColor=="pacman"):
-                    LED.pacman()
+                try:
+                    if(self.currentColor=="breathing"):
+                        LED.breathing()
+                    if(self.currentColor=="chasing"):
+                        LED.chasing()
+                    if(self.currentColor=="rainbow"):
+                        LED.rainbow()
+                    if(self.currentColor=="pacman"):
+                        LED.pacman()
+                except Exception as e:
+                    logging.warning(traceback.format_exc())
 
             if(data):
                 subject = data['subject'] #the subject of the message ()

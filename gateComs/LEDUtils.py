@@ -10,6 +10,7 @@ from neopixel import *
 import argparse
 import signal
 import sys
+import math
 
 def signal_handler(signal, frame):
     colorWipe(self.strip, Color(0,0,0))
@@ -166,14 +167,19 @@ class LEDStrip:
         self.strip.show()
         time.sleep(wait_ms/1000.0)
 
-    def flashWhite(self):
-        j = self.updateFrame(30)
-        for i in range(self.strip.numPixels()):
-            if(j == 0):
-                self.strip.setPixelColor(i, Color(255,255,255))
-            if(j == 29):
-                self.clearPixels()
-        self.strip.show()
+    def breathing(self):
+        x = self.updateFrame(200)
+
+        y = 127.5*math.cos((pi/50)*(x-50))+127.5
+
+        if(x < 100):
+            for j in range(self.strip.numPixels()):
+                self.strip.setPixelColor(j, Color(y,0,y))
+            self.strip.show()
+        else:
+            for j in range(self.strip.numPixels()):
+                self.strip.setPixelColor(j, Color(y/2,y,0))
+            self.strip.show()
 
     def flashGrey(self):
         j = self.updateFrame(30)
