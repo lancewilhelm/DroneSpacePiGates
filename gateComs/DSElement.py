@@ -158,7 +158,7 @@ class element:
         self.currentColor = "none"
 
         while(True):
-            time.sleep(0.04)
+            time.sleep(0.02)
             newUpdate = False
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
