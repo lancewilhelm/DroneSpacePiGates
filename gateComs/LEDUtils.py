@@ -58,6 +58,7 @@ class LEDStrip:
         self.strip.show()
 
     def customColor(self,color):
+        print("custom color (from LEDUtils)")
         for i in range(self.strip.numPixels()):
             red = color[0]
             green = color[1]
