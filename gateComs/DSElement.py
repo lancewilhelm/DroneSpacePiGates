@@ -129,7 +129,7 @@ class element:
         if(devMode == False):
             LED.customColor([0,255,0])
 
-    def pullBranch(self,sock,branch):
+    def pullBranch(self,sock,branch,LED):
         if(devMode == False):
             LED.customColor([255,0,0])
         #let's call the linux commands to pull the repo down
@@ -143,7 +143,7 @@ class element:
         #we need to restart this python script to see the changes
         self.restartProcess(sock)
 
-    def shutdown(self,sock):
+    def shutdown(self,sock,LED):
         if(devMode == False):
             LED.customColor([255,0,0])
             time.sleep(0.1)
@@ -161,7 +161,7 @@ class element:
         else:
             print("sudo shutdown -h now")
 
-    def reboot(self,sock):
+    def reboot(self,sock,LED):
         if(devMode == False):
             LED.customColor([255,0,0])
             time.sleep(1)
@@ -220,12 +220,12 @@ class element:
                     arguments = body['arguments']
                     logging.debug("performing command: "+command)
                     if(command=="shutdown"):
-                        self.shutdown(sock)
+                        self.shutdown(sock,LED)
                     if(command=="reboot"):
-                        self.reboot(sock)
+                        self.reboot(sock,LED)
                     if(command=="update"):
                         branch = arguments[0]
-                        self.pullBranch(sock,branch)
+                        self.pullBranch(sock,branch,LED)
 
         logging.debug("disconnected")
 
