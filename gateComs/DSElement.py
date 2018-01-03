@@ -164,9 +164,9 @@ class element:
     def reboot(self,sock):
         if(devMode == False):
             LED.customColor([255,0,0])
-            time.sleep(0.1)
+            time.sleep(1)
             LED.customColor([0,255,0])
-            time.sleep(0.1)
+            time.sleep(1)
         #let's call the linux commands to shutdown the pis
         logging.debug("rebooting Pis...")
         if(devMode == False):

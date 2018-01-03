@@ -12340,3 +12340,142 @@ DEBUG:root:respond quickly
 DEBUG:root:gate ('127.0.0.1', 58244) connected
 DEBUG:root:respond quickly
 DEBUG:root:gate ('127.0.0.1', 51897) disconnected
+DEBUG:root:binding to  on port 13246
+DEBUG:root:bound
+DEBUG:root:gate ('192.168.1.151', 60722) connected
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:SENDING SYSTEM COMMAND
+INFO:root:[<DSUtils.Gate instance at 0x102b94320>]
+DEBUG:root:respond quickly
+DEBUG:root:gate ('192.168.1.151', 60722) disconnected
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:gate ('192.168.1.151', 55575) connected
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:SENDING SYSTEM COMMAND
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:gate ('192.168.1.151', 55575) disconnected
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[]
+DEBUG:root:respond quickly
+DEBUG:root:gate ('192.168.1.151', 57215) connected
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94998>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94998>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b94998>]
+DEBUG:root:respond quickly
+DEBUG:root:SENDING SYSTEM COMMAND
+INFO:root:[<DSUtils.Gate instance at 0x102b94998>]
+DEBUG:root:respond quickly
+DEBUG:root:gate ('192.168.1.151', 57215) disconnected
+DEBUG:root:gate ('192.168.1.151', 35015) connected
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x102b942d8>]
+DEBUG:root:respond quickly
