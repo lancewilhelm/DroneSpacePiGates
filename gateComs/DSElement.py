@@ -141,6 +141,8 @@ class element:
         else:
             print("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
+        if(devMode == False):
+            LED.customColor([0,255,0])
         self.restartProcess(sock)
 
     def shutdown(self,sock,LED):
@@ -164,9 +166,9 @@ class element:
     def reboot(self,sock,LED):
         if(devMode == False):
             LED.customColor([255,0,0])
-            time.sleep(1)
+            time.sleep(0.1)
             LED.customColor([0,255,0])
-            time.sleep(1)
+            time.sleep(0.1)
         #let's call the linux commands to shutdown the pis
         logging.debug("rebooting Pis...")
         if(devMode == False):

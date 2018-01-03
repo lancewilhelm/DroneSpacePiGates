@@ -12629,3 +12629,25 @@ DEBUG:root:respond quickly
 DEBUG:root:gate ('192.168.1.151', 46571) disconnected
 DEBUG:root:gate ('192.168.1.151', 46571) connected
 DEBUG:root:respond quickly
+DEBUG:root:binding to  on port 13246
+DEBUG:root:bound
+DEBUG:root:gate ('192.168.1.151', 46983) connected
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x1029942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x1029942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x1029942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:UPDATE ALL GATE CUSTOM COLORS
+INFO:root:[<DSUtils.Gate instance at 0x1029942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:SENDING SYSTEM COMMAND
+INFO:root:[<DSUtils.Gate instance at 0x1029942d8>]
+DEBUG:root:respond quickly
+DEBUG:root:gate ('192.168.1.151', 46983) disconnected
+DEBUG:root:gate ('192.168.1.151', 59501) connected
+DEBUG:root:respond quickly
