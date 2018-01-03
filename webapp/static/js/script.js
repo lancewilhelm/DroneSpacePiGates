@@ -94,10 +94,16 @@ function sendElementCommand(command){
   // alert("sending POST call to "+gateColorUrl);
   var xhttp = new XMLHttpRequest();
   var branch = document.getElementById('branchInput').value;
-
-  if(branch==""){
-      updateModal.style.display = "none";
-      branchAlertModal.style.display = "block";
+  if(command == "update"){
+      if(branch==""){
+          updateModal.style.display = "none";
+          branchAlertModal.style.display = "block";
+      }
+      else{
+          xhttp.open("POST", "/api/gates/system", true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send("command="+command+"&gateID=all&branch="+branch);
+      }
   }
   else {
       // event.preventDefault();
