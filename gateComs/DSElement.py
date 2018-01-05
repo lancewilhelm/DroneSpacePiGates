@@ -194,7 +194,7 @@ class element:
             newUpdate = False
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
-            updateAnimations(LED)
+            self.updateAnimations(LED)
             if(data):
                 if(self.handleMessage(data,LED)): #if this returns false, we've been disconnected
                     pass
@@ -275,6 +275,7 @@ class element:
                 print("trying to run program")
                 self.runProgram(sock, LED)
             except Exception as e:
+                time.sleep(3) #lets sleep so we don't end up spamming connection requests
                 print("error")
                 print(traceback.format_exc())
                 logging.debug(traceback.format_exc())
