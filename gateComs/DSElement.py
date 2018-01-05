@@ -82,7 +82,7 @@ class element:
         if(self.handleMessage(data,LED)):
             logging.debug(self.currentColor)
             logging.debug("got connection response "+str(data))
-        else
+        else:
             logging.debug("no response from server")
             //lets run our fallback animation
             self.handleMessage({"body":self.currentColor,"subject":"updateAnimation","recipient":"")
