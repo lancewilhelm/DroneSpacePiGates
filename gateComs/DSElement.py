@@ -74,14 +74,14 @@ class element:
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         sock.settimeout(10)
         data,address = self.recvData(sock)
-        connectionSuccess = self.handleMessage(data,LED)
+        connectionSuccess = self.handleMessage(sock,data,LED)
         if(connectionSuccess):
             logging.debug(self.currentColor)
             logging.debug("got connection response "+str(data))
         else:
             logging.debug("no response from server")
             #lets run our fallback animation
-            self.handleMessage({"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
+            self.handleMessage(sock,{"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
             self.updateAnimations(LED) #make the animation actually play momentarily
             sock.settimeout(2)
             sock.setblocking(0) #allow the program to return with no data once again
@@ -191,7 +191,7 @@ class element:
             data,address = self.recvData(sock)
             self.updateAnimations(LED)
             if(data):
-                if(self.handleMessage(data,LED)): #if this returns false, we've been disconnected
+                if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
                     pass
                 else:
                     break
@@ -212,7 +212,7 @@ class element:
             except Exception as e:
                 logging.debug(traceback.format_exc())
 
-    def handleMessage(self,data,LED):
+    def handleMessage(self,sock,data,LED):
         if(data):
             try:
                 subject = data['subject'] #the subject of the message ()
