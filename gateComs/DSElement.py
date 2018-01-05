@@ -212,32 +212,37 @@ class element:
         logging.debug("disconnected")
 
     def handleMessage(self,data):
-        subject = data['subject'] #the subject of the message ()
-        body = data['body'] #the body of the message
-        recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
-        logging.debug("recieved data")
-        if(subject == "disconnect"):
-            logging.debug("we recieved a disconnect request")
-            return False; #we gotta bail out
-        if(subject == "updateColor"):
-            self.currentColor = body
-            logging.debug("updating color: "+str(self.currentColor))
-            if(self.devMode == False):
-                LED.customColor(body)
-        if(subject == "updateAnimation"):
-            self.currentColor = body
-            logging.debug("updating animation: "+str(self.currentColor))
-        if(subject == "systemCommand"):
-            command = body['command']
-            arguments = body['arguments']
-            logging.debug("performing command: "+command)
-            if(command=="shutdown"):
-                self.shutdown(sock)
-            if(command=="reboot"):
-                self.reboot(sock)
-            if(command=="update"):
-                branch = arguments[0]
-                self.pullBranch(sock,branch)
+        if(data):
+            try:
+                subject = data['subject'] #the subject of the message ()
+                body = data['body'] #the body of the message
+                recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
+                logging.debug("recieved data")
+                if(subject == "disconnect"):
+                    logging.debug("we recieved a disconnect request")
+                    return False; #we gotta bail out
+                if(subject == "updateColor"):
+                    self.currentColor = body
+                    logging.debug("updating color: "+str(self.currentColor))
+                    if(self.devMode == False):
+                        LED.customColor(body)
+                if(subject == "updateAnimation"):
+                    self.currentColor = body
+                    logging.debug("updating animation: "+str(self.currentColor))
+                if(subject == "systemCommand"):
+                    command = body['command']
+                    arguments = body['arguments']
+                    logging.debug("performing command: "+command)
+                    if(command=="shutdown"):
+                        self.shutdown(sock)
+                    if(command=="reboot"):
+                        self.reboot(sock)
+                    if(command=="update"):
+                        branch = arguments[0]
+                        self.pullBranch(sock,branch)
+            except Exception as e:
+                print("failed to parse "+str(traceback.format_exc()))
+                logging.debug(traceback.format_exc())
 
         return True; #everything went well
 
