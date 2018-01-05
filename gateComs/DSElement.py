@@ -86,7 +86,7 @@ class element:
         else:
             logging.debug("no response from server")
             #lets run our fallback animation
-            self.handleMessage({"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
+            self.handleMessage({"body":self.currentColor,"subject":"updateColor","recipient":""},LED)
             sock.settimeout(2)
             sock.setblocking(0) #allow the program to return with no data once again
     def recvData(self,sock): #this is where we handle all recieved data
