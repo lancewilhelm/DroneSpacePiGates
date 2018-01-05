@@ -11,7 +11,7 @@ parser.add_argument('-d', type=int, default=0, help="developer mode (1,0)")
 parser.add_argument('-e', type=int, default=337, help="the number of leds this device controls (integer)")
 parser.add_argument('-i', type=str, default="gatemaster", help="the ip address of the gateServer")
 parser.add_argument('-p', type=int, default=13246, help="gateServer port")
-parser.add_argument('-c', type=str, default="breathing", help="the color of the element before we connect to the server")
+parser.add_argument('-c', type=list, default=[0,255,0], help="the color of the element before we connect to the server")
 args = parser.parse_args()
 #all options have defaults, so we don't HAVE to provide them when calling the script
 
