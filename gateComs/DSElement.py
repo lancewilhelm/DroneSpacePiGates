@@ -247,7 +247,8 @@ class element:
                 print("failed to handle message: "+str(data))
                 logging.debug(traceback.format_exc())
                 return False
-
+        else:
+            return False
         return True #everything went well
 
     def start(self):
