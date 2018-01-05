@@ -84,7 +84,7 @@ class element:
             logging.debug("got connection response "+str(data))
         else:
             logging.debug("no response from server")
-            //lets run our fallback animation
+            #lets run our fallback animation
             self.handleMessage({"body":self.currentColor,"subject":"updateAnimation","recipient":"")
             sock.settimeout(2)
             sock.setblocking(0) #allow the program to return with no data once again
