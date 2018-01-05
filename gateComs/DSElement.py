@@ -71,7 +71,7 @@ class element:
         print("done creating socket")
         return sock
 
-    def connectToServer(self,sock,address):
+    def connectToServer(self,sock,address,LED):
         logging.debug("connecting to server")
         self.sendData(sock,address,"connect","","")
         logging.debug("sent connection request to server")
@@ -79,7 +79,7 @@ class element:
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         sock.settimeout(10)
         data,address = self.recvData(sock)
-        self.handleMessage(data)
+        self.handleMessage(data,LED)
         logging.debug(self.currentColor)
         logging.debug("got connection response "+str(data))
         sock.settimeout(2)
@@ -181,7 +181,7 @@ class element:
 
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
-        self.connectToServer(sock,(self.serverAddress,self.port))
+        self.connectToServer(sock,(self.serverAddress,self.port),LED)
         self.currentColor = "none"
 
         while(True):
@@ -204,14 +204,14 @@ class element:
                     logging.warning(traceback.format_exc())
 
             if(data):
-                if(self.handleMessage(data)): #if this returns false, we've been disconnected
+                if(self.handleMessage(data,LED)): #if this returns false, we've been disconnected
                     pass
                 else:
                     break
 
         logging.debug("disconnected")
 
-    def handleMessage(self,data):
+    def handleMessage(self,data,LED):
         if(data):
             try:
                 subject = data['subject'] #the subject of the message ()
