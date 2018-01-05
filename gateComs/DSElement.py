@@ -63,6 +63,7 @@ class element:
         self.port = args.p
         self.currentColor = args.c
         self.ledCount = args.e
+        print("made it to the end")
 
 
     def createSocket(self,port):
