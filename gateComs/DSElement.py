@@ -87,6 +87,7 @@ class element:
             logging.debug("no response from server")
             #lets run our fallback animation
             self.handleMessage({"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
+            self.updateAnimations(LED) #make the animation actually play momentarily
             sock.settimeout(2)
             sock.setblocking(0) #allow the program to return with no data once again
     def recvData(self,sock): #this is where we handle all recieved data
@@ -193,20 +194,7 @@ class element:
             newUpdate = False
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
-
-            if(self.devMode==False):
-                try:
-                    if(self.currentColor=="breathing"):
-                        LED.breathing()
-                    if(self.currentColor=="chasing"):
-                        LED.chasing()
-                    if(self.currentColor=="rainbow"):
-                        LED.rainbow()
-                    if(self.currentColor=="pacman"):
-                        LED.pacman()
-                except Exception as e:
-                    logging.debug(traceback.format_exc())
-
+            updateAnimations(LED)
             if(data):
                 if(self.handleMessage(data,LED)): #if this returns false, we've been disconnected
                     pass
@@ -214,6 +202,20 @@ class element:
                     break
 
         logging.debug("disconnected")
+
+    def updateAnimations(self,LED):
+        if(self.devMode==False):
+            try:
+                if(self.currentColor=="breathing"):
+                    LED.breathing()
+                if(self.currentColor=="chasing"):
+                    LED.chasing()
+                if(self.currentColor=="rainbow"):
+                    LED.rainbow()
+                if(self.currentColor=="pacman"):
+                    LED.pacman()
+            except Exception as e:
+                logging.debug(traceback.format_exc())
 
     def handleMessage(self,data,LED):
         if(data):
