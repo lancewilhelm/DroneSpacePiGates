@@ -242,6 +242,7 @@ class element:
         return True; #everything went well
 
     def start(self):
+        print("calling start")
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
@@ -251,6 +252,7 @@ class element:
         else:
             LED = 0
         sock = self.createSocket(13246)
+        print("starting while loop")
         while(True):
             try:
                 self.runProgram(sock, LED)
@@ -261,6 +263,8 @@ class element:
                 #LED.clearPixels()
                 try:
                     LED.rainbow()
-                except:
-                    pass
+                except Exception as e:
+                    logging.debug("Unable to play initial color ")
+                    logging.warning(traceback.format_exc())
                 logging.debug("no connection to server. Retrying...")
+        print("done with while loop somehow")
