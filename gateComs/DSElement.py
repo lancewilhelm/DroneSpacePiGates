@@ -1,5 +1,3 @@
-devMode = False
-
 import socket
 import time
 import select
@@ -40,9 +38,8 @@ class pillar:
 class element:
     def __init__(self,args):
         print("starting DSElement with args "+str(args))
-        global devMode
-        devMode = args.d
-        if(devMode==False): #if we are in dev mod, we won't load pi specific libraries
+        self.devMode = args.d
+        if(self.devMode==False): #if we are in dev mod, we won't load pi specific libraries
             print("we are not in dev mode")
         else:
             print("we are in dev mode")
@@ -128,27 +125,27 @@ class element:
 
         python = sys.executable
         os.execl(python, python, *sys.argv)
-        if(devMode == False):
+        if(self.devMode == False):
             LED.customColor([0,255,0])
 
     def pullBranch(self,sock,branch,LED):
-        if(devMode == False):
+        if(self.devMode == False):
             LED.customColor([255,0,0])
         #let's call the linux commands to pull the repo down
         #we assume you have an ssh key setup
         logging.debug("pulling latest repo changes")
         currentDirectory = sys.path[0]
-        if(devMode == False):
+        if(self.devMode == False):
             os.system("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
         else:
             print("cd "+currentDirectory+" && git fetch && git reset --hard && git checkout "+str(branch)+" && git pull origin "+str(branch)+" && exit")
         #we need to restart this python script to see the changes
-        if(devMode == False):
+        if(self.devMode == False):
             LED.customColor([0,255,0])
         self.restartProcess(sock)
 
     def shutdown(self,sock,LED):
-        if(devMode == False):
+        if(self.devMode == False):
             LED.customColor([255,0,0])
             time.sleep(0.5)
             LED.customColor([0,255,0])
@@ -159,21 +156,21 @@ class element:
             time.sleep(0.5)
         #let's call the linux commands to shutdown the pis
         logging.debug("shutting down Pis...")
-        if(devMode == False):
+        if(self.devMode == False):
             sock.close()
             os.system("sudo shutdown -h now")
         else:
             print("sudo shutdown -h now")
 
     def reboot(self,sock,LED):
-        if(devMode == False):
+        if(self.devMode == False):
             LED.customColor([255,0,0])
             time.sleep(0.5)
             LED.customColor([0,255,0])
             time.sleep(0.5)
         #let's call the linux commands to shutdown the pis
         logging.debug("rebooting Pis...")
-        if(devMode == False):
+        if(self.devMode == False):
             sock.close()
             os.system("sudo shutdown -r now")
         else:
@@ -190,7 +187,7 @@ class element:
             gate.keepAlive() #let's let the server know we're still there
             data,address = self.recvData(sock)
 
-            if(devMode==False):
+            if(self.devMode==False):
                 try:
                     if(self.currentColor=="breathing"):
                         LED.breathing()
@@ -222,7 +219,7 @@ class element:
         if(subject == "updateColor"):
             self.currentColor = body
             logging.debug("updating color: "+str(self.currentColor))
-            if(devMode == False):
+            if(self.devMode == False):
                 LED.customColor(body)
         if(subject == "updateAnimation"):
             self.currentColor = body
@@ -242,12 +239,11 @@ class element:
         return True; #everything went well
 
     def start(self):
-        global devMode
         print("calling start")
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
-        if(devMode==False):
+        if(self.devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
             pass
         else:
