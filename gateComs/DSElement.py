@@ -39,6 +39,7 @@ class pillar:
 
 class element:
     def __init__(self,args):
+        print("starting DSElement with args "+str(args))
         global devMode
         devMode = args.d
         if(devMode==False): #if we are in dev mod, we won't load pi specific libraries
