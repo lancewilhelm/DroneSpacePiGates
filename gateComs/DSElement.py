@@ -37,7 +37,6 @@ class pillar:
 
 class element:
     def __init__(self,args):
-        print("starting DSElement with args "+str(args))
         self.devMode = args.d
         if(self.devMode==False): #if we are in dev mod, we won't load pi specific libraries
             print("we are not in dev mode")
@@ -60,15 +59,11 @@ class element:
         self.port = args.p
         self.currentColor = args.c
         self.ledCount = args.e
-        print("made it to the end")
 
 
     def createSocket(self,port):
-        print("initialize socket")
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        print("set blocking to 0")
         sock.setblocking(0)
-        print("done creating socket")
         return sock
 
     def connectToServer(self,sock,address,LED):
@@ -247,7 +242,6 @@ class element:
                         branch = arguments[0]
                         self.pullBranch(sock,branch)
             except Exception as e:
-                print("failed to handle message: "+str(data))
                 logging.debug(traceback.format_exc())
                 return False
         else:
@@ -255,29 +249,19 @@ class element:
         return True #everything went well
 
     def start(self):
-        print("calling start")
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
-        print("checking if we are in dev mode")
         if(self.devMode==False):
-            print("we are not in devmode")
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:
-            print("we are in devmode")
             LED = 0
-        print("creating socket")
         sock = self.createSocket(13246)
-        print("starting while loop")
         while(True):
-            print("in while loop")
             try:
-                print("trying to run program")
                 self.runProgram(sock, LED)
             except Exception as e:
                 time.sleep(3) #lets sleep so we don't end up spamming connection requests
-                print("error")
-                print(traceback.format_exc())
                 logging.debug(traceback.format_exc())
                 #for i in range(0,20):
                 #    LED.allGrey()
@@ -288,4 +272,3 @@ class element:
                     logging.debug("Unable to play initial color ")
                     logging.debug(traceback.format_exc())
                 logging.debug("no connection to server. Retrying...")
-        print("done with while loop somehow")
