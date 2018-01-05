@@ -64,8 +64,11 @@ class element:
 
 
     def createSocket(self,port):
+        print("initialize socket")
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        print("set blocking to 0")
         sock.setblocking(0)
+        print("done creating socket")
         return sock
 
     def connectToServer(self,sock,address):
