@@ -41,9 +41,6 @@ class LEDStrip:
         self.strip.begin()
         self.animationFrame = 0
         self.animationEnd = 1
-        # Process arguments
-        opt_parse()
-        # Define functions which animate LEDs in various ways.
 
     def updateFrame(self, animationEnd):
         self.animationFrame += 1
