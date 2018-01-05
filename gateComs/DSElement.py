@@ -243,11 +243,14 @@ class element:
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
+        print("checking if we are in dev mode")
         if(self.devMode==False):
+            print("we are not in devmode")
             LED = LEDUtils.LEDStrip(self.ledCount)
-            pass
         else:
+            print("we are in devmode")
             LED = 0
+        print("creating socket")
         sock = self.createSocket(13246)
         print("starting while loop")
         while(True):
