@@ -61,6 +61,11 @@ h3 {
   font-weight: 700;
 }
 
+.gates-list {
+    margin: 10px auto;
+    font-size: 20px;
+}
+
 @media(max-width: 575px) {
     .col-sm {
         padding-top: 5px;
