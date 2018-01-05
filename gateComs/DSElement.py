@@ -79,7 +79,9 @@ class element:
         sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         sock.settimeout(10)
         data,address = self.recvData(sock)
-        if(self.handleMessage(data,LED)):
+        connectionSuccess = self.handleMessage(data,LED)
+        print(connectionSuccess)
+        if(connectionSuccess):
             logging.debug(self.currentColor)
             logging.debug("got connection response "+str(data))
         else:
