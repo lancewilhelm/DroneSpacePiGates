@@ -32,7 +32,6 @@ port = 13246
 gates = []
 gateStates = {}
 
-animationSpeed = 10
 fps = 60
 
 
