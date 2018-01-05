@@ -240,7 +240,7 @@ class element:
                         self.reboot(sock)
                     if(command=="update"):
                         branch = arguments[0]
-                        self.pullBranch(sock,branch)
+                        self.pullBranch(sock,branch,LED)
             except Exception as e:
                 logging.debug(traceback.format_exc())
                 return False
