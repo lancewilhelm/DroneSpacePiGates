@@ -179,8 +179,7 @@ def runProgram(sock):
                         logging.debug(e)
                         logging.warning(traceback.format_exc())
                         logging.debug("gate with address "+str(address)+ "tried to send a keepalive but isn't in our connection list")
-                        logging.debug("sending reconnect request")
-                        #sendDisconnect(sock,address)
+                        logging.debug("lets just connect him like nothing ever happend")
                         connectNewGate(sock,address,lastStateUpdate)
                 except Exception as e:
                     logging.debug(e)
