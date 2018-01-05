@@ -243,8 +243,9 @@ class element:
             except Exception as e:
                 print("failed to handle message: "+str(data))
                 logging.debug(traceback.format_exc())
+                return False
 
-        return True; #everything went well
+        return True #everything went well
 
     def start(self):
         print("calling start")
