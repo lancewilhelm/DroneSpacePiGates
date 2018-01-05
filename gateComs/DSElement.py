@@ -255,8 +255,10 @@ class element:
         print("starting while loop")
         while(True):
             try:
+                print("calling program loop")
                 self.runProgram(sock, LED)
             except Exception as e:
+                print(traceback.format_exc())
                 logging.warning(traceback.format_exc())
                 #for i in range(0,20):
                 #    LED.allGrey()
