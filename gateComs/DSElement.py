@@ -105,7 +105,7 @@ class element:
                 #    pass
             except Exception as e:
                 logging.debug("we got bad data from "+str(address))
-                logging.warning(traceback.format_exc())
+                logging.debug(traceback.format_exc())
         return data, address
 
     def sendData(self,sock,address,subject,body,recipient):
@@ -124,7 +124,7 @@ class element:
             for handler in p.get_open_files() + p.connections():
                 os.close(handler.fd)
         except Exception as e:
-            logging.warning(traceback.format_exc())
+            logging.debug(traceback.format_exc())
 
         python = sys.executable
         os.execl(python, python, *sys.argv)
@@ -201,7 +201,7 @@ class element:
                     if(self.currentColor=="pacman"):
                         LED.pacman()
                 except Exception as e:
-                    logging.warning(traceback.format_exc())
+                    logging.debug(traceback.format_exc())
 
             if(data):
                 if(self.handleMessage(data,LED)): #if this returns false, we've been disconnected
@@ -241,7 +241,7 @@ class element:
                         branch = arguments[0]
                         self.pullBranch(sock,branch)
             except Exception as e:
-                print("failed to parse "+str(traceback.format_exc()))
+                print("failed to handle message: "+str(data))
                 logging.debug(traceback.format_exc())
 
         return True; #everything went well
@@ -269,7 +269,7 @@ class element:
             except Exception as e:
                 print("error")
                 print(traceback.format_exc())
-                logging.warning(traceback.format_exc())
+                logging.debug(traceback.format_exc())
                 #for i in range(0,20):
                 #    LED.allGrey()
                 #LED.clearPixels()
@@ -277,6 +277,6 @@ class element:
                     LED.rainbow()
                 except Exception as e:
                     logging.debug("Unable to play initial color ")
-                    logging.warning(traceback.format_exc())
+                    logging.debug(traceback.format_exc())
                 logging.debug("no connection to server. Retrying...")
         print("done with while loop somehow")
