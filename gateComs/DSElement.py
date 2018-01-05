@@ -198,7 +198,6 @@ class element:
         logging.debug("disconnected")
 
     def updateAnimations(self,LED):
-        print(self.currentColor)
         if(self.devMode==False):
             try:
                 if(self.currentColor=="breathing"):
