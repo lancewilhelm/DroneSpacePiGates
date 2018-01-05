@@ -242,6 +242,7 @@ class element:
         return True; #everything went well
 
     def start(self):
+        global devMode
         print("calling start")
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
@@ -254,10 +255,12 @@ class element:
         sock = self.createSocket(13246)
         print("starting while loop")
         while(True):
+            print("in while loop")
             try:
-                print("calling program loop")
+                print("trying to run program")
                 self.runProgram(sock, LED)
             except Exception as e:
+                print("error")
                 print(traceback.format_exc())
                 logging.warning(traceback.format_exc())
                 #for i in range(0,20):
