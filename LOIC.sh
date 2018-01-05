@@ -1,0 +1,16 @@
+#!/bin/bash
+ssh pi@192.168.1.129 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.167 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.139 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.157 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.123 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.146 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.124 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@gate192.168.1.190 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@gate192.168.1.151 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@gate192.168.1.101 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@gate192.168.1.198 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@gate192.168.1.144 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.154 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+ssh pi@192.168.1.110 'sudo sh dronespacepigates/scriptForUnfucking.sh'
+
