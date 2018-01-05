@@ -83,8 +83,8 @@ class element:
             #lets run our fallback animation
             self.handleMessage(sock,{"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
             self.updateAnimations(LED) #make the animation actually play momentarily
-            sock.settimeout(2)
-            sock.setblocking(0) #allow the program to return with no data once again
+        sock.settimeout(2)
+        sock.setblocking(0) #allow the program to return with no data once again
     def recvData(self,sock): #this is where we handle all recieved data
         global currentColor
         data = None
