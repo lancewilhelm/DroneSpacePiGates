@@ -182,7 +182,6 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
         self.connectToServer(sock,(self.serverAddress,self.port),LED)
-        self.currentColor = "none"
 
         while(True):
             time.sleep(0.02)
@@ -199,6 +198,7 @@ class element:
         logging.debug("disconnected")
 
     def updateAnimations(self,LED):
+        print(self.currentColor)
         if(self.devMode==False):
             try:
                 if(self.currentColor=="breathing"):
