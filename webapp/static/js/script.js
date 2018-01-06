@@ -113,19 +113,21 @@ function sendElementCommand(command){
   }
 }
 
+var responseTextArray = [];
+
 function getGateList(){
   origin = window.location.origin
   // gateColorURL = "{{ url_for('index') }}?color="+color
   // alert("sending POST call to "+gateColorUrl);
   var xhttp = new XMLHttpRequest();
-  var re = /'(\S*)/g;
+  var re = /(?!')(\S*)'/g;
   // event.preventDefault();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      var responseTextArray = this.responseText.match(re);
+      responseTextArray = this.responseText.match(re);
       var text = "";
       for (i = 0; i < responseTextArray.length; i++){
-          text += (i+1) + ": " + responseTextArray[i] + "<br>";
+          text += "<div class=\"gate-address id=\"element" + i + "\" onclick=\"gateClick(" + i + ")\">" + i + ": " + responseTextArray[i] + "</div>";
       }
       document.getElementById("gates-list").innerHTML = text;
     }
@@ -133,6 +135,16 @@ function getGateList(){
   xhttp.open("GET", "/api/server/gates", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("");
+}
+
+function gateClick(gate) {
+    origin = window.location.origin
+    var xhttp = new XMLHttpRequest();
+    var id = " element" + gate;
+    console.log(responseTextArray[gate]);
+    // xhttp.open("POST", "/api/gates/color", true);
+    // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // xhttp.send("color=solid&gateID=all&red="+red+"&green="+green+"&blue="+blue);
 }
 
 // Get the modal
