@@ -203,10 +203,10 @@ shutdownBtn.onclick = function() {
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-    if (event.target == modal) {
+    if (event.target == updateModal) {
         updateModal.style.display = "none";
     }
-    else if (event.target == modal) {
+    else if (event.target == powerModal) {
         powerModal.style.display = "none";
     }
 }
