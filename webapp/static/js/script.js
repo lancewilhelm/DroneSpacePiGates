@@ -120,7 +120,7 @@ function getGateList(){
   // gateColorURL = "{{ url_for('index') }}?color="+color
   // alert("sending POST call to "+gateColorUrl);
   var xhttp = new XMLHttpRequest();
-  var re = /(?!')(\S*)'/g;
+  var re = /'(\S*)'/g;
   // event.preventDefault();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
