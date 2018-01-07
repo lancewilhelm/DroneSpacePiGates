@@ -9,7 +9,7 @@ parser.add_argument('-l', type=str, default="medium", help="log level (high,medi
 parser.add_argument('-f', type=str, default="/home/pi/DSElement.log", help="location to save the log file")
 parser.add_argument('-d', type=int, default=0, help="developer mode (1,0)")
 parser.add_argument('-e', type=int, default=337, help="the number of leds this device controls (integer)")
-parser.add_argument('-i', type=str, default="gatemaster", help="the ip address of the gateServer")
+parser.add_argument('-i', type=str, default="gatemaster.local", help="the ip address of the gateServer")
 parser.add_argument('-p', type=int, default=13246, help="gateServer port")
 parser.add_argument('-c', type=str, default="rainbow", help="the color of the element before we connect to the server")
 args = parser.parse_args()
