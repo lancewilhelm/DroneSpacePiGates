@@ -200,7 +200,11 @@ def runProgram(sock):
         else:
             if(subject != "keepalive"):
                 logging.debug("respond quickly")
-                DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
+                #let's not use multicast if the router doesn't support it
+                for gate in gates:
+                    addr = gate.address
+                    DSUtils.sendMessage(lastStateUpdate)
+                #DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
             time.sleep(1.0/fps)
 
         loopEnd = getTime()

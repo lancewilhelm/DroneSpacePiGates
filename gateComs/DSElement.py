@@ -67,7 +67,7 @@ class element:
         return sock
 
     def connectToServer(self,sock,address,LED):
-        logging.debug("connecting to server")
+        logging.debug("connecting to server at: "+str(address))
         self.sendData(sock,address,"connect","","")
         logging.debug("sent connection request to server")
         logging.debug("waiting for server to respond")
