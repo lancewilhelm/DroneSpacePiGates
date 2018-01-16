@@ -128,7 +128,7 @@ class element:
 
         if((currentTime-self.lastUpdate) > self.keepaliveDelay):
             try:
-                self.sendData(sock,self.serverAddress,"keepalive","","")
+                self.sendData(sock,(self.serverAddress,port),"keepalive","","")
                 self.lastUpdate = currentTime
             except Exception as e:
                 #one of a few things may have happened
@@ -220,6 +220,8 @@ class element:
                         pass
                     else:
                         break
+            else:
+                break #something went wrong. let's start over
 
         logging.debug("disconnected")
 
