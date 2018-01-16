@@ -60,7 +60,8 @@ class element:
         self.currentColor = args.c
         self.ledCount = args.e
         self.lastUpdate = self.getTime() #Used for keeping track of when to send next keepalive
-
+        self.keepaliveDelay = 5000 #keepalive delay in ms
+        self.connectionTimeout = 3000 #time in ms of not being able to send before we consider the network disconnected
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setblocking(0)
