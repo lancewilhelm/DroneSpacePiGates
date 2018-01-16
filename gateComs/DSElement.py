@@ -124,6 +124,7 @@ class element:
         #if this code runs, we are having network issues, and should consider ourselves disconnected
         if((currentTime-self.lastUpdate) > self.keepaliveDelay+self.connectionTimeout):
             logging.debug("Keepalive failed to send for "+str(self.connectionTimeout/1000.0)+" seconds. Let's consider ourselves disconnected.")
+            self.lastUpdate = currentTime
             return False
 
         if((currentTime-self.lastUpdate) > self.keepaliveDelay):
@@ -287,6 +288,7 @@ class element:
         while(True):
             try:
                 self.runProgram(sock, LED)
+                time.sleep(3) #if we lose connection, lets sleep to avoid spamming
             except Exception as e:
                 time.sleep(3) #lets sleep so we don't end up spamming connection requests
                 logging.debug(traceback.format_exc())
