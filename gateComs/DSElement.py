@@ -129,7 +129,7 @@ class element:
 
         if((currentTime-self.lastUpdate) > self.keepaliveDelay):
             try:
-                self.sendData(sock,(self.serverAddress,port),"keepalive","","")
+                self.sendData(sock,(self.serverAddress,self.port),"keepalive","","")
                 self.lastUpdate = currentTime
             except Exception as e:
                 #one of a few things may have happened
