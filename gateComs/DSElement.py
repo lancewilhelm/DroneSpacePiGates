@@ -59,7 +59,7 @@ class element:
         self.port = args.p
         self.currentColor = args.c
         self.ledCount = args.e
-
+        self.lastUpdate = self.getTime() #Used for keeping track of when to send next keepalive
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -112,6 +112,16 @@ class element:
         message = {"subject":subject,"body":body,"recipient":recipient}
         #sock.sendto(str(data).encode('utf-8'),address)
         sock.sendto(pickle.dumps(message),address)
+
+    def getTime(self):
+        #return the current clock time in milliseconds
+        return int(round(time.time() * 1000))
+
+    def keepAlive(self,sock):
+        currentTime = self.getTime()
+        if((currentTime-self.lastUpdate) > 2000):
+            self.sendData(sock,self.serverAddress,"keepalive","","")
+            self.lastUpdate = currentTime
 
     def restartProcess(self,sock):
         #lets close the datagram socket
@@ -186,7 +196,7 @@ class element:
         while(True):
             time.sleep(0.02)
             newUpdate = False
-            gate.keepAlive() #let's let the server know we're still there
+            self.keepAlive(sock) #let's let the server know we're still there
             data,address = self.recvData(sock)
             self.updateAnimations(LED)
             if(data):

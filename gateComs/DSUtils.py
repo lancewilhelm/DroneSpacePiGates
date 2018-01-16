@@ -53,11 +53,6 @@ class Gate: #this is our representation of a gate
         #sock.sendto(str(data).encode('utf-8'),address)
         self.socket.sendto(pickle.dumps(message),self.address)
 
-    def keepAlive(self):
-        currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 2000):
-            self.sendData("keepalive","","")
-            self.lastUpdate = currentTime
     def setLastKeepalive(self):
         currentTime = self.getTime()
         self.lastUpdate = currentTime
