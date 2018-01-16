@@ -119,9 +119,24 @@ class element:
 
     def keepAlive(self,sock):
         currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 2000):
-            self.sendData(sock,self.serverAddress,"keepalive","","")
-            self.lastUpdate = currentTime
+
+        #if this code runs, we are having network issues, and should consider ourselves disconnected
+        if((currentTime-self.lastUpdate) > self.keepaliveDelay+self.connectionTimeout):
+            logging.debug("Keepalive failed to send for "+str(self.connectionTimeout/1000.0)+" seconds. Let's consider ourselves disconnected.")
+            return False
+
+        if((currentTime-self.lastUpdate) > self.keepaliveDelay):
+            try:
+                self.sendData(sock,self.serverAddress,"keepalive","","")
+                self.lastUpdate = currentTime
+            except Exception as e:
+                #one of a few things may have happened
+                #either the OS is blocking our send for some reason (buffer full?),
+                #our pi is not connected to wifi
+                #or gatemaster is not available on the network
+                logging.debug("Failed to send keepalive. We may get disconnected")
+                logging.debug(traceback.format_exc())
+        return True
 
     def restartProcess(self,sock):
         #lets close the datagram socket
@@ -196,14 +211,14 @@ class element:
         while(True):
             time.sleep(0.02)
             newUpdate = False
-            self.keepAlive(sock) #let's let the server know we're still there
-            data,address = self.recvData(sock)
-            self.updateAnimations(LED)
-            if(data):
-                if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
-                    pass
-                else:
-                    break
+            if self.keepAlive(sock): #let's let the server know we're still there
+                data,address = self.recvData(sock)
+                self.updateAnimations(LED)
+                if(data):
+                    if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
+                        pass
+                    else:
+                        break
 
         logging.debug("disconnected")
 
