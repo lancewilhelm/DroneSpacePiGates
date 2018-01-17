@@ -278,7 +278,7 @@ class element:
                     logging.debug("updating animation: "+str(self.currentColor))
                 if(subject == "tempAnimation"):
                     self.tempAnimationQueue.append(body)
-                    logging.debug("adding temp animation to queue: "+str(self.currentColor))
+                    logging.debug("adding temp animation to queue: "+str(body))
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']
