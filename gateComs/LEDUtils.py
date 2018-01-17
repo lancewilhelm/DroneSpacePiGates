@@ -229,7 +229,7 @@ class LEDStrip:
       self.strip.show()
 
     def tempFlash(self):
-        frameCount = 10
+        frameCount = 20
         x = self.updateTempFrame(frameCount)
         for j in range(self.strip.numPixels()):
             brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
