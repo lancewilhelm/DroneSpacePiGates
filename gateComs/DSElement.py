@@ -62,6 +62,8 @@ class element:
         self.lastUpdate = self.getTime() #Used for keeping track of when to send next keepalive
         self.keepaliveDelay = 5000 #keepalive delay in ms
         self.connectionTimeout = 3000 #time in ms of not being able to send before we consider the network disconnected
+        self.tempAnimationQueue = []
+
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setblocking(0)
@@ -229,14 +231,21 @@ class element:
     def updateAnimations(self,LED):
         if(self.devMode==False):
             try:
-                if(self.currentColor=="breathing"):
-                    LED.breathing()
-                if(self.currentColor=="chasing"):
-                    LED.chasing()
-                if(self.currentColor=="rainbow"):
-                    LED.rainbow()
-                if(self.currentColor=="pacman"):
-                    LED.pacman()
+                if not self.tempAnimationQueue: #if we don't have any temporary animations to get through
+                    #lets figure out what animation/color we should be playing
+                    if(self.currentColor=="breathing"):
+                        LED.breathing()
+                    elif(self.currentColor=="chasing"):
+                        LED.chasing()
+                    elif(self.currentColor=="rainbow"):
+                        LED.rainbow()
+                    elif(self.currentColor=="pacman"):
+                        LED.pacman()
+                    else: #it must be a list of rgb values
+                        LED.customColor(body)
+                else:#lets play our temp animation
+                    if not LED.tempFlash(): #let's flash until this function returns false
+                        del self.animationQueue[0] #animation is finished, remove it from the queue
             except Exception as e:
                 logging.debug(traceback.format_exc())
 
@@ -253,11 +262,13 @@ class element:
                 if(subject == "updateColor"):
                     self.currentColor = body
                     logging.debug("updating color: "+str(self.currentColor))
-                    if(self.devMode == False):
-                        LED.customColor(body)
+
                 if(subject == "updateAnimation"):
                     self.currentColor = body
                     logging.debug("updating animation: "+str(self.currentColor))
+                if(subject == "tempAnimation"):
+                    self.tempAnimationQueue.append(body)
+                    logging.debug("adding temp animation to queue: "+str(self.currentColor))
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']

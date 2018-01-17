@@ -212,3 +212,10 @@ class LEDStrip:
             self.strip.setPixelColor((y % self.strip.numPixels()), Color(0,0,255))
 
       self.strip.show()
+
+  def tempFlash(self):
+      x = self.updateFrame(255)
+      for j in range(self.strip.numPixels()):
+          lum = ((math.sin((x*math.pi*0.02)-(math.pi*.5))+1)*127.5
+          self.strip.setPixelColor(j, Color(lum,lum,lum))
+      self.strip.show()
