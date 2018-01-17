@@ -78,7 +78,7 @@ class element:
         #sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         #sock.settimeout(10)
         startTime = self.getTime()
-        while(self.getTime()-startTime>10000):
+        while(self.getTime()-startTime<10000):
             self.updateAnimations(LED)
             data,address = self.recvData(sock)
             if(data):
