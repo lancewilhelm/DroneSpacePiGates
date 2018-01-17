@@ -58,6 +58,7 @@ class element:
         self.serverAddress = args.i
         self.port = args.p
         self.currentColor = args.c
+        self.defaultColor = args.c
         self.ledCount = args.e
         self.lastUpdate = self.getTime() #Used for keeping track of when to send next keepalive
         self.keepaliveDelay = 5000 #keepalive delay in ms
@@ -209,7 +210,7 @@ class element:
             print("sudo shutdown -r now")
 
     def runProgram(self,sock,LED):
-        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
+        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
         self.connectToServer(sock,(self.serverAddress,self.port),LED)
 
         while(True):
@@ -242,8 +243,13 @@ class element:
                     elif(self.currentColor=="pacman"):
                         LED.pacman()
                     else: #it must be a list of rgb values
-                        print(self.currentColor)
-                        LED.customColor(self.currentColor)
+                        try:
+                            LED.customColor(self.currentColor)
+                        except:
+                            logging.debug("Color or animation \""+str(self.currentColor)+"\" not recognized")
+                            logging.debug("playing default instead")
+                            self.currentColor = self.defaultColor
+                            LED.rainbow()
                 else:#lets play our temp animation
                     if not LED.tempFlash(): #let's flash until this function returns false
                         del self.animationQueue[0] #animation is finished, remove it from the queue
