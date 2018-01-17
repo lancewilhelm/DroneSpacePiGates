@@ -86,7 +86,7 @@ class element:
                 connectionSuccess = self.handleMessage(sock,data,LED)
             else:
                 connectionSuccess = False
-            if self.getTime()-startTime<10000:
+            if self.getTime()-startTime>10000:
                 break
         if(connectionSuccess):
             logging.debug(self.currentColor)
