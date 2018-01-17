@@ -255,8 +255,8 @@ class element:
                         pass
                     else:
                         print("animation is complete")
-                        del self.animationQueue[0] #animation is finished, remove it from the queue
-                        print(self.animationQueue)
+                        del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
+                        print(self.tempAnimationQueue)
             except Exception as e:
                 logging.debug(traceback.format_exc())
 
