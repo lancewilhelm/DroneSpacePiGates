@@ -78,13 +78,16 @@ class element:
         #sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         #sock.settimeout(10)
         startTime = self.getTime()
-        while(self.getTime()-startTime<10000):
+        while(True):
+
             self.updateAnimations(LED)
             data,address = self.recvData(sock)
             if(data):
                 connectionSuccess = self.handleMessage(sock,data,LED)
             else:
                 connectionSuccess = False
+            if self.getTime()-startTime<10000:
+                break
         if(connectionSuccess):
             logging.debug(self.currentColor)
             logging.debug("got connection response "+str(data))
@@ -271,7 +274,7 @@ class element:
                 subject = data['subject'] #the subject of the message ()
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
-                logging.debug("recieved data")
+                logging.debug("recieved data: "+str(data))
                 if(subject == "disconnect"):
                     logging.debug("we recieved a disconnect request")
                     return False; #we gotta bail out
