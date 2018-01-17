@@ -62,7 +62,7 @@ class element:
         self.ledCount = args.e
         self.lastUpdate = self.getTime() #Used for keeping track of when to send next keepalive
         self.keepaliveDelay = 5000 #keepalive delay in ms
-        self.connectionTimeout = 3000 #time in ms of not being able to send before we consider the network disconnected
+        self.connectionTimeout = 15000 #time in ms of not being able to send before we consider the network disconnected
         self.tempAnimationQueue = []
 
     def createSocket(self,port):
