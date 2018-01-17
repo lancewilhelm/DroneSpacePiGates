@@ -84,6 +84,7 @@ class element:
             data,address = self.recvData(sock)
             if(data):
                 connectionSuccess = self.handleMessage(sock,data,LED)
+                break
             else:
                 connectionSuccess = False
             if self.getTime()-startTime>10000:
