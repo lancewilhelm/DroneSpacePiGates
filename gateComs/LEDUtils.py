@@ -220,7 +220,7 @@ class LEDStrip:
         frameCount = 50
         x = self.updateFrame(frameCount)
         for j in range(self.strip.numPixels()):
-            brt = int(round((math.sin((x*math.pi*(2/frameCount))-(math.pi*.5))+1)*127.5))
+            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5))
             self.strip.setPixelColor(j, Color(brt,brt,brt))
         self.strip.show()
         if(x < frameCount-1):
