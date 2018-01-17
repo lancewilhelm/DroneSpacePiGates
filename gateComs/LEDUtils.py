@@ -240,3 +240,55 @@ class LEDStrip:
         else:
             self.resetTempAnimation()
             return False
+
+    def tempFlashRed(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        for j in range(self.strip.numPixels()):
+            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
+            self.strip.setPixelColor(j, Color(brt,0,0))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
+
+    def tempFlashGreen(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        for j in range(self.strip.numPixels()):
+            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
+            self.strip.setPixelColor(j, Color(0,brt,0))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
+
+    def tempFlashBlue(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        for j in range(self.strip.numPixels()):
+            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
+            self.strip.setPixelColor(j, Color(0,0,brt))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
+
+    def tempFlashYellow(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        for j in range(self.strip.numPixels()):
+            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
+            self.strip.setPixelColor(j, Color(brt,brt,0))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False

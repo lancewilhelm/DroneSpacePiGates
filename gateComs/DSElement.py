@@ -75,10 +75,16 @@ class element:
         self.sendData(sock,address,"connect","","")
         logging.debug("sent connection request to server")
         logging.debug("waiting for server to respond")
-        sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
-        sock.settimeout(10)
-        data,address = self.recvData(sock)
-        connectionSuccess = self.handleMessage(sock,data,LED)
+        #sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
+        #sock.settimeout(10)
+        startTime = getTime()
+        while(getTime()-startTime>10000):
+            self.updateAnimations(LED):
+            data,address = self.recvData(sock)
+            if(data):
+                connectionSuccess = self.handleMessage(sock,data,LED)
+            else:
+                connectionSuccess = False
         if(connectionSuccess):
             logging.debug(self.currentColor)
             logging.debug("got connection response "+str(data))
