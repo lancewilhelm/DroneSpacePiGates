@@ -242,6 +242,7 @@ class element:
                     elif(self.currentColor=="pacman"):
                         LED.pacman()
                     else: #it must be a list of rgb values
+                        print(self.currentColor)
                         LED.customColor(self.currentColor)
                 else:#lets play our temp animation
                     if not LED.tempFlash(): #let's flash until this function returns false
