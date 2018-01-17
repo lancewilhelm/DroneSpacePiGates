@@ -41,6 +41,8 @@ class LEDStrip:
         self.strip.begin()
         self.animationFrame = 0
         self.animationEnd = 1
+        self.tempAnimationFrame = 0
+        self.tempAnimationEnd = 1
 
     def updateFrame(self, animationEnd):
         self.animationFrame += 1
@@ -49,8 +51,18 @@ class LEDStrip:
             self.animationFrame = 0
         return self.animationFrame
 
+    def updateTempFrame(self, animationEnd):
+        self.tempAnimationFrame += 1
+        self.tempAnimationEnd = animationEnd
+        if(self.tempAnimationFrame>=self.tempAnimationEnd):
+            self.tempAnimationFrame = 0
+        return self.tempAnimationFrame
+
     def resetAnimation(self):
         self.animationFrame = 0
+
+    def resetTempAnimation(self):
+        self.tempAnimationFrame = 0
 
     def clearPixels(self):
         #print ('Clearing')
@@ -218,7 +230,7 @@ class LEDStrip:
 
     def tempFlash(self):
         frameCount = 25
-        x = self.updateFrame(frameCount)
+        x = self.updateTempFrame(frameCount)
         for j in range(self.strip.numPixels()):
             brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5))
             self.strip.setPixelColor(j, Color(brt,brt,brt))
