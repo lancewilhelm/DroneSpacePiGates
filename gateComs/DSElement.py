@@ -232,7 +232,7 @@ class element:
     def updateAnimations(self,LED):
         if(self.devMode==False):
             try:
-                if not self.tempAnimationQueue: #if we don't have any temporary animations to get through
+                if self.tempAnimationQueue == []: #if we don't have any temporary animations to get through
                     #lets figure out what animation/color we should be playing
                     if(self.currentColor=="breathing"):
                         LED.breathing()
@@ -256,6 +256,7 @@ class element:
                     else:
                         print("animation is complete")
                         del self.animationQueue[0] #animation is finished, remove it from the queue
+                        print(self.animationQueue)
             except Exception as e:
                 logging.debug(traceback.format_exc())
 
