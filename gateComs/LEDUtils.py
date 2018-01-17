@@ -214,12 +214,12 @@ class LEDStrip:
       self.strip.show()
 
     def tempFlash(self):
-        x = self.updateFrame(255)
+        x = self.updateFrame(100)
         for j in range(self.strip.numPixels()):
             brt = int(round((math.sin((x*math.pi*0.02)-(math.pi*.5))+1)*127.5))
             self.strip.setPixelColor(j, Color(brt,brt,brt))
         self.strip.show()
-        if(x < 255):
+        if(x < 99):
             return True
         else:
             return False
