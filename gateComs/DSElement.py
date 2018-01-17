@@ -79,7 +79,7 @@ class element:
         #sock.settimeout(10)
         startTime = getTime()
         while(getTime()-startTime>10000):
-            self.updateAnimations(LED):
+            self.updateAnimations(LED)
             data,address = self.recvData(sock)
             if(data):
                 connectionSuccess = self.handleMessage(sock,data,LED)
