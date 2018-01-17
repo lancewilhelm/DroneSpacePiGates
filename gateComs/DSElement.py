@@ -251,12 +251,12 @@ class element:
                             self.currentColor = self.defaultColor
                             LED.rainbow()
                 else:#lets play our temp animation
-                    if LED.tempFlash(): #let's flash until this function returns false
-                        pass
-                    else:
-                        print("animation is complete")
+                    animationInProgress = False
+                    if self.tempAnimationQueue[0] == "flashbang":
+                        if LED.tempFlash(): #let's flash until this function returns false
+                            pass
+                    if animationInProgress = False:
                         del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
-                        print(self.tempAnimationQueue)
             except Exception as e:
                 logging.debug(traceback.format_exc())
 
