@@ -238,5 +238,5 @@ class LEDStrip:
         if(x < frameCount-1):
             return True
         else:
-            self.resetAnimation()
+            self.resetTempAnimation()
             return False
