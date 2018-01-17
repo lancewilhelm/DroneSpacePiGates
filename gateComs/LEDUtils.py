@@ -219,7 +219,7 @@ class LEDStrip:
             brt = int(round((math.sin((x*math.pi*0.02)-(math.pi*.5))+1)*127.5))
             self.strip.setPixelColor(j, Color(brt,brt,brt))
         self.strip.show()
-        if(x < 99):
+        if(x < 98):
             return True
         else:
             return False
