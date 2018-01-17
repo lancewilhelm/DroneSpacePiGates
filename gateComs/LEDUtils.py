@@ -229,10 +229,10 @@ class LEDStrip:
       self.strip.show()
 
     def tempFlash(self):
-        frameCount = 25
+        frameCount = 10
         x = self.updateTempFrame(frameCount)
         for j in range(self.strip.numPixels()):
-            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5))
+            brt = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
             self.strip.setPixelColor(j, Color(brt,brt,brt))
         self.strip.show()
         if(x < frameCount-1):
