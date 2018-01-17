@@ -217,5 +217,5 @@ class LEDStrip:
         x = self.updateFrame(255)
         for j in range(self.strip.numPixels()):
             brt = int(round((math.sin((x*math.pi*0.02)-(math.pi*.5))+1)*127.5))
-            self.strip.setPixelColor(j, Color((int)brt,(int)brt,(int)brt))
+            self.strip.setPixelColor(j, Color(brt,brt,brt))
         self.strip.show()
