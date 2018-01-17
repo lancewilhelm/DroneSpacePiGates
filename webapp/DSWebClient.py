@@ -45,6 +45,10 @@ def sendGateAnimation(ip,port,animation):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),"updateAnimation",animation,"")
 
+def sendTempAnimation(ip,port,animation):
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),"tempAnimation",animation,"")
+
 def sendGateColor(ip,port,color):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),"updateColor",color,"")

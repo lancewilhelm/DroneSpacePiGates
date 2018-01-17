@@ -22,7 +22,7 @@ def main():
                 values = eval(line)
                 average = values
                 #print(line)
-                if ((lastFrame-lastPing) > 10000):
+                if ((lastFrame-lastPing) > 500):
                     average = thresh+1
                     lastPing = lastFrame
 
@@ -33,6 +33,7 @@ def main():
                     lapTime = getTime()-lastTime
                     print("lap "+str(laps)+": "+str(lapTime/1000.0))
                     lastTime = getTime()
+                    DSWebClient.sendGateAnimation("",13246,"flashbang")
                 if((not readyForLap)&(average<resetValue)):
                     readyForLap = True
                     print("reset")
