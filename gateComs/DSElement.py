@@ -96,8 +96,7 @@ class element:
             #lets run our fallback animation
             self.handleMessage(sock,{"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
             self.updateAnimations(LED) #make the animation actually play momentarily
-        sock.settimeout(2)
-        sock.setblocking(0) #allow the program to return with no data once again
+        return connectionSuccess:
     def recvData(self,sock): #this is where we handle all recieved data
         global currentColor
         data = None
@@ -220,21 +219,21 @@ class element:
 
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
-        self.connectToServer(sock,(self.serverAddress,self.port),LED)
+        if self.connectToServer(sock,(self.serverAddress,self.port),LED):
 
-        while(True):
-            time.sleep(0.02)
-            newUpdate = False
-            if self.keepAlive(sock): #let's let the server know we're still there
-                data,address = self.recvData(sock)
-                self.updateAnimations(LED)
-                if(data):
-                    if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
-                        pass
-                    else:
-                        break
-            else:
-                break #something went wrong. let's start over
+            while(True):
+                time.sleep(0.02)
+                newUpdate = False
+                if self.keepAlive(sock): #let's let the server know we're still there
+                    data,address = self.recvData(sock)
+                    self.updateAnimations(LED)
+                    if(data):
+                        if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
+                            pass
+                        else:
+                            break
+                else:
+                    break #something went wrong. let's start over
 
         logging.debug("disconnected")
 
