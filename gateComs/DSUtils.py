@@ -36,6 +36,9 @@ class Gate: #this is our representation of a gate
           self.animation = animation
           self.sendData("updateAnimation",animation,"")
 
+    def updateAnimation(self,tempAnimation):
+        self.sendData("updateAnimation",tempAnimation,"")
+
     def updateSolidColor(self,color):
           self.color = color
           self.sendData("updateColor",color,"")
