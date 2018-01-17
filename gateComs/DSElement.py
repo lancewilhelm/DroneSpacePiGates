@@ -77,8 +77,8 @@ class element:
         logging.debug("waiting for server to respond")
         #sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
         #sock.settimeout(10)
-        startTime = getTime()
-        while(getTime()-startTime>10000):
+        startTime = self.getTime()
+        while(self.getTime()-startTime>10000):
             self.updateAnimations(LED)
             data,address = self.recvData(sock)
             if(data):
