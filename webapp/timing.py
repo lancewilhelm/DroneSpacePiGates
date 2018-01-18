@@ -6,7 +6,7 @@ from serial.tools import list_ports
 def getTime():
     return int(round(time.time() * 1000))
 def sendFlashbang():
-    port = 56891
+    port = 13246
     address = ("10.0.0.10",port)
     subject = "tempAnimation"
     body = "flashbang"
@@ -23,8 +23,8 @@ def main():
             ser = serial.Serial(str(arduinoCom.device))  # open serial port
             print(ser.name)         # check which port was really used
             laps = 0
-            thresh = 100
-            resetValue = 70
+            thresh = 60
+            resetValue = 50
             readyForLap = True
             lastTime = getTime()
             lastPing = lastTime
