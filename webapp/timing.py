@@ -8,7 +8,7 @@ def getTime():
 def sendFlashbang():
     port = 13246
     ip = "10.0.0.10"
-    DSWebClient.sendTempAnimation(ip,port,"flashbang")
+    DSWebClient.sendTempAnimation(ip,port,"bluebang")
 
 def main():
     #print(serial.tools.list_ports)
@@ -37,14 +37,14 @@ def main():
                         #    lastPing = lastFrame
 
                         print(line)
+                        lapTime = getTime()-lastTime
                         if((average>thresh)&(readyForLap)):
                             laps+=1
                             readyForLap = False
-                            lapTime = getTime()-lastTime
                             print("lap "+str(laps)+": "+str(lapTime/1000.0))
                             lastTime = getTime()
                             sendFlashbang()
-                        if((not readyForLap)&(average<resetValue)):
+                        if((not readyForLap)&(average<resetValue)&(lapTime>3)):
                             readyForLap = True
                             print("reset")
                         lastFrame = getTime()
