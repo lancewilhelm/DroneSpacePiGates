@@ -44,7 +44,7 @@ def main():
                             print("lap "+str(laps)+": "+str(lapTime/1000.0))
                             lastTime = getTime()
                             sendFlashbang()
-                        if((not readyForLap)&(average<resetValue)&(lapTime>3)):
+                        if((not readyForLap)&(average<resetValue)&(lapTime>3000)):
                             readyForLap = True
                             print("reset")
                         lastFrame = getTime()
