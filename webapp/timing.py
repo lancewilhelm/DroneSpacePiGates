@@ -9,7 +9,6 @@ def sendFlashbang():
     port = 13246
     ip = "10.0.0.10"
     DSWebClient.sendTempAnimation(ip,port,"flashbang")
-    DSWebClient.sendDataToServer(sock,address,subject,body,recipient)
 
 def main():
     #print(serial.tools.list_ports)
