@@ -7,11 +7,8 @@ def getTime():
     return int(round(time.time() * 1000))
 def sendFlashbang():
     port = 13246
-    address = ("10.0.0.10",port)
-    subject = "tempAnimation"
-    body = "flashbang"
-    recipient = ""
-    sock = DSWebClient.createSocket(port)
+    ip = "10.0.0.10"
+    DSWebClient.sendTempAnimation(ip,port,"flashbang")
     DSWebClient.sendDataToServer(sock,address,subject,body,recipient)
 
 def main():
