@@ -5,6 +5,15 @@ from serial.tools import list_ports
 
 def getTime():
     return int(round(time.time() * 1000))
+def sendFlashbang():
+    port = 56891
+    address = ("10.0.0.10",port)
+    subject = "tempAnimation"
+    body = "flashbang"
+    recipient = ""
+    sock = DSWebClient.createSocket(port)
+    DSWebClient.sendDataToServer(sock,address,subject,body,recipient)
+
 def main():
     #print(serial.tools.list_ports)
     while(True):
@@ -38,7 +47,7 @@ def main():
                             lapTime = getTime()-lastTime
                             print("lap "+str(laps)+": "+str(lapTime/1000.0))
                             lastTime = getTime()
-                            DSWebClient.sendTempAnimation("",13246,"flashbang")
+                            sendFlashbang()
                         if((not readyForLap)&(average<resetValue)):
                             readyForLap = True
                             print("reset")
@@ -61,4 +70,4 @@ def main():
             print("arduino not found. Retrying...")
             time.sleep(5)
               # close port
-main()
+test()
