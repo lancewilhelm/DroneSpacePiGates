@@ -181,7 +181,7 @@ def runProgram(sock):
                 currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
-            if((subject == "keepalive") or (subject == "tempAnimation")):
+            if((subject == "keepalive")):
                 try:
                     try:
                         getGateByAddress(address).setLastKeepalive()

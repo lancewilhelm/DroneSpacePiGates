@@ -263,6 +263,12 @@ class element:
                     animationInProgress = False
                     if self.tempAnimationQueue[0] == "flashbang":
                         animationInProgress = LED.tempFlash() #let's flash until this function returns false
+                    if self.tempAnimationQueue[0] == "bluebang":
+                        animationInProgress = LED.tempFlashBlue()
+                    if self.tempAnimationQueue[0] == "greenbang":
+                        animationInProgress = LED.tempFlashGreen()
+                    if self.tempAnimationQueue[0] == "redbang":
+                        animationInProgress = LED.tempFlashRed()
                     if animationInProgress == False:
                         del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
             except Exception as e:
