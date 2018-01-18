@@ -19,7 +19,7 @@ def main():
             ser = serial.Serial(str(arduinoCom.device))  # open serial port
             print(ser.name)         # check which port was really used
             laps = 0
-            thresh = 40
+            thresh = 60
             resetValue = 35
             readyForLap = True
             lastTime = getTime()
