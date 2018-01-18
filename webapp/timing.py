@@ -8,7 +8,7 @@ def getTime():
 def sendFlashbang():
     port = 13246
     ip = "10.0.0.10"
-    DSWebClient.sendTempAnimation(ip,port,"flashbang")
+    DSWebClient.sendGateColor(ip,port,[0,0,255])
 
 def main():
     #print(serial.tools.list_ports)
