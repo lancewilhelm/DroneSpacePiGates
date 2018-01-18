@@ -20,7 +20,7 @@ def main():
             print(ser.name)         # check which port was really used
             laps = 0
             thresh = 60
-            resetValue = 40
+            resetValue = 35
             readyForLap = True
             lastTime = getTime()
             lastPing = lastTime
