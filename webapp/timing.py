@@ -66,4 +66,4 @@ def main():
             print("arduino not found. Retrying...")
             time.sleep(5)
               # close port
-test()
+main()
