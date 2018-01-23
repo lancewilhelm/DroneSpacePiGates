@@ -11,7 +11,7 @@ class pilot:
             start = self.laps[-1].getStartTime()
             newLap = lap(start,start,len(self.laps))
         else:
-            newLap = lap(self.getTime(),None,len(self.laps))
+            newLap = lap(self.getTime(),self.getTime(),len(self.laps))
         self.laps.append(newLap)
 
     def endLap(self):
