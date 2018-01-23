@@ -6,7 +6,7 @@ class pilot:
         self.color = color
 
     def startLap(self):
-        if(len(self.laps>0)):
+        if(len(self.laps)>0)):
             start = self.laps[-1].getStartTime()
             newLap = lap(start,start,len(self.laps))
         else:
