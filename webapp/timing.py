@@ -40,7 +40,6 @@ def main():
                     try:
                         line = ser.readline()
                         values = eval(line)
-                        print(values)
                         for i in range(0,len(values)):
                             rssi = values[i]
                             lapTime = getTime()-lastTime
