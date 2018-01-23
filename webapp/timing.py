@@ -21,7 +21,7 @@ def main():
             #print("arduino port: "+str(arduinoCom.device))
             #ser = serial.Serial(str(arduinoCom.device))  # open serial port
             ser = serial.Serial(arduinoCom,115200)
-            print(ser.name)         # check which port was really used
+            #print(ser.name)         # check which port was really used
             pilots = []
             pilots.append(Pilot.pilot("Sky",0))
             pilots.append(Pilot.pilot("Ninja",1))
