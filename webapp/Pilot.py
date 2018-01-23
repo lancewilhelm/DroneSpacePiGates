@@ -10,11 +10,11 @@ class pilot:
             start = self.laps[-1].getStartTime()
             newLap = lap(start,start,len(self.laps))
         else:
-            newLap = lap(getTime(),None,len(self.laps))
+            newLap = lap(self.getTime(),None,len(self.laps))
         self.laps.append(newLap)
 
     def endLap(self):
-        self.laps[-1].setEndTime(getTime())
+        self.laps[-1].setEndTime(self.getTime())
         print(str(self.name)+" completed lap "+str(self.laps-1))
 
     def getTime(self):
