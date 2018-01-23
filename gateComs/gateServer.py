@@ -145,6 +145,16 @@ def runProgram(sock):
                     logging.warning(traceback.format_exc())
                 currentSubject = subject
                 currentBody = body
+            if(subject == "tempAnimation"):
+                try:
+                    animation = body
+                    for gate in gates:
+                        gate.tempAnimation(animation)
+                    logging.debug("sending temp animation")
+                    logging.info(str(gates))
+                except Exception as e:
+                    logging.debug(e)
+                    logging.warning(traceback.format_exc())
             if(subject == "updateAnimation"):
                 try:
                     animation = body
@@ -171,7 +181,7 @@ def runProgram(sock):
                 currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
-            if(subject == "keepalive"):
+            if((subject == "keepalive")):
                 try:
                     try:
                         getGateByAddress(address).setLastKeepalive()
@@ -203,7 +213,7 @@ def runProgram(sock):
                 #let's not use multicast if the router doesn't support it
                 for gate in gates:
                     addr = gate.address
-                    DSUtils.sendMessage(lastStateUpdate)
+                    gate.sendMessage(lastStateUpdate)
                 #DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
             time.sleep(1.0/fps)
 
