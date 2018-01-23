@@ -16,7 +16,7 @@ def main():
     while(True):
         try:
             #arduinoCom = next(list_ports.grep("rduino"))
-            arduinoCom  "/dev/ttyUSB0"
+            arduinoCom = "/dev/ttyUSB0"
             print("arduino port: "+str(arduinoCom.device))
             ser = serial.Serial(str(arduinoCom.device))  # open serial port
             print(ser.name)         # check which port was really used
