@@ -1,6 +1,7 @@
 import serial
 import time
 import DSWebClient
+import Pilot
 from serial.tools import list_ports
 
 def getTime():
@@ -11,16 +12,22 @@ def sendFlashbang():
     DSWebClient.sendTempAnimation(ip,port,"bluebang")
 
 def main():
-    #print(serial.tools.list_ports)
+    print(serial.tools.list_ports)
     while(True):
         try:
             arduinoCom = next(list_ports.grep("rduino"))
             print("arduino port: "+str(arduinoCom.device))
             ser = serial.Serial(str(arduinoCom.device))  # open serial port
             print(ser.name)         # check which port was really used
-            laps = 0
-            thresh = 60
-            resetValue = 35
+            pilots = []
+            pilots.append(Pilot.pilot("Sky"),0)
+            pilots.append(Pilot.pilot("Ninja"),1)
+            pilots.append(Pilot.pilot("PoisonPilot"),2)
+            pilots.append(Pilot.pilot("Freefall"),3)
+            for pilot in pilots:
+                pilot.startLap()
+            thresh = 140
+            resetValue = 40
             readyForLap = True
             lastTime = getTime()
             lastPing = lastTime
@@ -30,24 +37,21 @@ def main():
                     try:
                         line = ser.readline()
                         values = eval(line)
-                        average = values
-                        #print(line)
-                        #if ((lastFrame-lastPing) > 10000):
-                        #    average = thresh+1
-                        #    lastPing = lastFrame
-
-                        print(line)
-                        lapTime = getTime()-lastTime
-                        if((average>thresh)&(readyForLap)):
-                            laps+=1
-                            readyForLap = False
-                            print("lap "+str(laps)+": "+str(lapTime/1000.0))
-                            lastTime = getTime()
-                            sendFlashbang()
-                        if((not readyForLap)&(average<resetValue)&(lapTime>3000)):
-                            readyForLap = True
-                            print("reset")
-                        lastFrame = getTime()
+                        print(values)
+                        for i in range(0,len(values)):
+                            rssi = values[i]
+                            lapTime = getTime()-lastTime
+                            if((rssi>thresh)&(readyForLap)):
+                                pilots[i].endLap()
+                                pilots[i].startLap()
+                                readyForLap = False
+                                print("lap "+str(laps)+": "+str(lapTime/1000.0))
+                                lastTime = getTime()
+                                sendFlashbang()
+                            if((not readyForLap)&(rssi<resetValue)&(lapTime>3000)):
+                                readyForLap = True
+                                print("reset")
+                            lastFrame = getTime()
                     except Exception as e:
                         print(e)
                         print("bad data: "+str(line))
