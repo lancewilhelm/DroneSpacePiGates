@@ -18,7 +18,8 @@ def main():
             #arduinoCom = next(list_ports.grep("rduino"))
             arduinoCom = "/dev/ttyUSB0"
             print("arduino port: "+str(arduinoCom.device))
-            ser = serial.Serial(str(arduinoCom.device))  # open serial port
+            #ser = serial.Serial(str(arduinoCom.device))  # open serial port
+            ser = serial.Serial("/dev/ttyUSB0")
             print(ser.name)         # check which port was really used
             pilots = []
             pilots.append(Pilot.pilot("Sky"),0)
