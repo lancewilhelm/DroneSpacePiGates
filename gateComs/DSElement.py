@@ -58,8 +58,12 @@ class element:
         self.serverAddress = args.i
         self.port = args.p
         self.currentColor = args.c
+        self.defaultColor = args.c
         self.ledCount = args.e
-
+        self.lastUpdate = self.getTime() #Used for keeping track of when to send next keepalive
+        self.keepaliveDelay = 5000 #keepalive delay in ms
+        self.connectionTimeout = 15000 #time in ms of not being able to send before we consider the network disconnected
+        self.tempAnimationQueue = []
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -71,10 +75,20 @@ class element:
         self.sendData(sock,address,"connect","","")
         logging.debug("sent connection request to server")
         logging.debug("waiting for server to respond")
-        sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
-        sock.settimeout(10)
-        data,address = self.recvData(sock)
-        connectionSuccess = self.handleMessage(sock,data,LED)
+        #sock.setblocking(1) #freeze the program for up to 5 seconds until we get some data back
+        #sock.settimeout(10)
+        startTime = self.getTime()
+        while(True):
+
+            self.updateAnimations(LED)
+            data,address = self.recvData(sock)
+            if(data):
+                connectionSuccess = self.handleMessage(sock,data,LED)
+                break
+            else:
+                connectionSuccess = False
+            if self.getTime()-startTime>10000:
+                break
         if(connectionSuccess):
             logging.debug(self.currentColor)
             logging.debug("got connection response "+str(data))
@@ -83,8 +97,7 @@ class element:
             #lets run our fallback animation
             self.handleMessage(sock,{"body":self.currentColor,"subject":"updateAnimation","recipient":""},LED)
             self.updateAnimations(LED) #make the animation actually play momentarily
-        sock.settimeout(2)
-        sock.setblocking(0) #allow the program to return with no data once again
+        return connectionSuccess
     def recvData(self,sock): #this is where we handle all recieved data
         global currentColor
         data = None
@@ -112,6 +125,32 @@ class element:
         message = {"subject":subject,"body":body,"recipient":recipient}
         #sock.sendto(str(data).encode('utf-8'),address)
         sock.sendto(pickle.dumps(message),address)
+
+    def getTime(self):
+        #return the current clock time in milliseconds
+        return int(round(time.time() * 1000))
+
+    def keepAlive(self,sock):
+        currentTime = self.getTime()
+
+        #if this code runs, we are having network issues, and should consider ourselves disconnected
+        if((currentTime-self.lastUpdate) > self.keepaliveDelay+self.connectionTimeout):
+            logging.debug("Keepalive failed to send for "+str(self.connectionTimeout/1000.0)+" seconds. Let's consider ourselves disconnected.")
+            self.lastUpdate = currentTime
+            return False
+
+        if((currentTime-self.lastUpdate) > self.keepaliveDelay):
+            try:
+                self.sendData(sock,(self.serverAddress,self.port),"keepalive","","")
+                self.lastUpdate = currentTime
+            except Exception as e:
+                #one of a few things may have happened
+                #either the OS is blocking our send for some reason (buffer full?),
+                #our pi is not connected to wifi
+                #or gatemaster is not available on the network
+                logging.debug("Failed to send keepalive. We may get disconnected")
+                logging.debug(traceback.format_exc())
+        return True
 
     def restartProcess(self,sock):
         #lets close the datagram socket
@@ -180,34 +219,58 @@ class element:
             print("sudo shutdown -r now")
 
     def runProgram(self,sock,LED):
-        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),"rainbow")
-        self.connectToServer(sock,(self.serverAddress,self.port),LED)
+        gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
+        if self.connectToServer(sock,(self.serverAddress,self.port),LED):
 
-        while(True):
-            time.sleep(0.02)
-            newUpdate = False
-            gate.keepAlive() #let's let the server know we're still there
-            data,address = self.recvData(sock)
-            self.updateAnimations(LED)
-            if(data):
-                if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
-                    pass
+            while(True):
+                time.sleep(0.02)
+                newUpdate = False
+                if self.keepAlive(sock): #let's let the server know we're still there
+                    data,address = self.recvData(sock)
+                    self.updateAnimations(LED)
+                    if(data):
+                        if(self.handleMessage(sock,data,LED)): #if this returns false, we've been disconnected
+                            pass
+                        else:
+                            break
                 else:
-                    break
+                    break #something went wrong. let's start over
 
         logging.debug("disconnected")
 
     def updateAnimations(self,LED):
         if(self.devMode==False):
             try:
-                if(self.currentColor=="breathing"):
-                    LED.breathing()
-                if(self.currentColor=="chasing"):
-                    LED.chasing()
-                if(self.currentColor=="rainbow"):
-                    LED.rainbow()
-                if(self.currentColor=="pacman"):
-                    LED.pacman()
+                if self.tempAnimationQueue == []: #if we don't have any temporary animations to get through
+                    #lets figure out what animation/color we should be playing
+                    if(self.currentColor=="breathing"):
+                        LED.breathing()
+                    elif(self.currentColor=="chasing"):
+                        LED.chasing()
+                    elif(self.currentColor=="rainbow"):
+                        LED.rainbow()
+                    elif(self.currentColor=="pacman"):
+                        LED.pacman()
+                    else: #it must be a list of rgb values
+                        try:
+                            LED.customColor(self.currentColor)
+                        except:
+                            logging.debug("Color or animation \""+str(self.currentColor)+"\" not recognized")
+                            logging.debug("playing default instead")
+                            self.currentColor = self.defaultColor
+                            LED.rainbow()
+                else:#lets play our temp animation
+                    animationInProgress = False
+                    if self.tempAnimationQueue[0] == "flashbang":
+                        animationInProgress = LED.tempFlash() #let's flash until this function returns false
+                    if self.tempAnimationQueue[0] == "bluebang":
+                        animationInProgress = LED.tempFlashBlue()
+                    if self.tempAnimationQueue[0] == "greenbang":
+                        animationInProgress = LED.tempFlashGreen()
+                    if self.tempAnimationQueue[0] == "redbang":
+                        animationInProgress = LED.tempFlashRed()
+                    if animationInProgress == False:
+                        del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
             except Exception as e:
                 logging.debug(traceback.format_exc())
 
@@ -217,18 +280,20 @@ class element:
                 subject = data['subject'] #the subject of the message ()
                 body = data['body'] #the body of the message
                 recipient = data['recipient'] #the intended recipient. If there isn't one, the message is for everyone
-                logging.debug("recieved data")
+                logging.debug("recieved data: "+str(data))
                 if(subject == "disconnect"):
                     logging.debug("we recieved a disconnect request")
                     return False; #we gotta bail out
                 if(subject == "updateColor"):
                     self.currentColor = body
                     logging.debug("updating color: "+str(self.currentColor))
-                    if(self.devMode == False):
-                        LED.customColor(body)
+
                 if(subject == "updateAnimation"):
                     self.currentColor = body
                     logging.debug("updating animation: "+str(self.currentColor))
+                if(subject == "tempAnimation"):
+                    self.tempAnimationQueue.append(body)
+                    logging.debug("adding temp animation to queue: "+str(body))
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']
