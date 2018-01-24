@@ -63,13 +63,13 @@ def main():
                         try:
                             ser = serial.Serial('/dev/cu.usbmodem1421')
                         except:
-                            pass
+                            print(traceback.format_exc())
             except KeyboardInterrupt:
                 ser.close()
                 raise
                 quit()
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
             print("arduino not found. Retrying...")
             time.sleep(5)
               # close port
