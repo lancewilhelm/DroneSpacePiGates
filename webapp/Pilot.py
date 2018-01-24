@@ -5,6 +5,7 @@ class pilot:
         self.name = name
         self.frequency = frequency
         self.animation = animation
+        self.readyForLap = True
 
     def startLap(self):
         if(len(self.laps)>0):

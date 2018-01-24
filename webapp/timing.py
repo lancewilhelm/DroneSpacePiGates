@@ -32,7 +32,6 @@ def main():
                 pilot.startLap()
             thresh = 140
             resetValue = 40
-            readyForLap = True
             lastTime = getTime()
             lastPing = lastTime
             lastFrame = lastTime
@@ -46,14 +45,14 @@ def main():
                             rssi = values[i]
                             pilot = pilots[i]
                             lapTime = getTime()-lastTime
-                            if((rssi>thresh)&(readyForLap)):
+                            if((rssi>thresh)&(pilot.readyForLap)):
                                 pilot.endLap()
                                 pilot.startLap()
-                                readyForLap = False
+                                pilot.readyForLap = False
                                 print("lap "+str(len(pilot.laps))+": "+str(lapTime/1000.0))
                                 sendAnimation(pilot.getAnimation())
-                            if((not readyForLap)&(rssi<resetValue)&(lapTime>3000)):
-                                readyForLap = True
+                            if((not pilot.readyForLap)&(rssi<resetValue)&(lapTime>3000)):
+                                pilot.readyForLap = True
                                 print("reset")
                             lastFrame = getTime()
                     except Exception as e:
