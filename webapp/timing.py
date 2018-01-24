@@ -31,7 +31,7 @@ def main():
             for pilot in pilots:
                 pilot.startLap()
             thresh = 140
-            resetValue = 40
+            resetValue = 110
             lastTime = getTime()
             lastPing = lastTime
             lastFrame = lastTime
