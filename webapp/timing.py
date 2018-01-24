@@ -56,7 +56,7 @@ def main():
                                 print("reset")
                             lastFrame = getTime()
                     except Exception as e:
-                        logging.debug(traceback.format_exc())
+                        print(traceback.format_exc())
                         print("bad data: "+str(line))
                         ser.close()
                         time.sleep(10)
