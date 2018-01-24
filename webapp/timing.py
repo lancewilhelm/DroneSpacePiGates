@@ -41,6 +41,7 @@ def main():
                     try:
                         line = ser.readline()
                         values = eval(line)
+                        print(values)
                         for i in range(0,len(values)):
                             rssi = values[i]
                             lapTime = getTime()-lastTime
@@ -56,15 +57,14 @@ def main():
                                 print("reset")
                             lastFrame = getTime()
                     except Exception as e:
-                        print(e)
                         print(traceback.format_exc())
                         print("bad data: "+str(line))
                         ser.close()
                         time.sleep(10)
                         try:
                             ser = serial.Serial('/dev/cu.usbmodem1421')
-                        except Exception as e:
-                            print(e)
+                        except:
+                            pass
             except KeyboardInterrupt:
                 ser.close()
                 raise
