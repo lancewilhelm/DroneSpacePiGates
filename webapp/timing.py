@@ -56,6 +56,7 @@ def main():
                                 print("reset")
                             lastFrame = getTime()
                     except Exception as e:
+                        print(e)
                         print(traceback.format_exc())
                         print("bad data: "+str(line))
                         ser.close()
@@ -63,13 +64,13 @@ def main():
                         try:
                             ser = serial.Serial('/dev/cu.usbmodem1421')
                         except:
-                            print(traceback.format_exc())
+                            pass
             except KeyboardInterrupt:
                 ser.close()
                 raise
                 quit()
         except Exception as e:
-            print(traceback.format_exc())
+            print(e)
             print("arduino not found. Retrying...")
             time.sleep(5)
               # close port
