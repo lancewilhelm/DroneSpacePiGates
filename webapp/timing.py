@@ -51,7 +51,7 @@ def main():
                                 pilot.readyForLap = False
                                 print("lap "+str(len(pilot.laps))+": "+str(lapTime/1000.0))
                                 sendAnimation(pilot.getAnimation())
-                            if((not pilot.readyForLap)&(rssi<resetValue)&(lapTime>3000)):
+                            if((not pilot.readyForLap)&(rssi<resetValue)&(pilot.getCurrentLapDuration()>3000)):
                                 pilot.readyForLap = True
                                 print("reset")
                             lastFrame = getTime()
