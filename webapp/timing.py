@@ -63,8 +63,8 @@ def main():
                         time.sleep(10)
                         try:
                             ser = serial.Serial('/dev/cu.usbmodem1421')
-                        except:
-                            pass
+                        except Exception as e:
+                            print(e)
             except KeyboardInterrupt:
                 ser.close()
                 raise
