@@ -2,6 +2,7 @@ import serial
 import time
 import DSWebClient
 import Pilot
+import traceback
 from serial.tools import list_ports
 
 def getTime():
