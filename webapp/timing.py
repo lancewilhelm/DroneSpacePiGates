@@ -7,10 +7,10 @@ from serial.tools import list_ports
 
 def getTime():
     return int(round(time.time() * 1000))
-def sendFlashbang():
+def sendAnimation(animation):
     port = 13246
     ip = "10.0.0.10"
-    DSWebClient.sendTempAnimation(ip,port,"bluebang")
+    DSWebClient.sendTempAnimation(ip,port,animation)
 
 def main():
     print(serial.tools.list_ports)
