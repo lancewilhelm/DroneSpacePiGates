@@ -19,6 +19,12 @@ class pilot:
         self.laps[-1].setEndTime(self.getTime())
         print(str(self.name)+" completed lap "+str(len(self.laps)))
 
+    def getCurrentLapDuration(self):
+        duration = 0
+        if(len(self.laps)>0):
+            duration = self.laps[-1].getDuration()
+        return duration
+
     def getTime(self):
         return int(round(time.time() * 1000))
 
@@ -32,9 +38,16 @@ class lap:
         self.duration = end-start
         self.number = number
 
+    def getTime(self):
+        return int(round(time.time() * 1000))
+
     def setEndTime(self,end):
         self.endTime = end
         self.duration = self.endTime-self.startTime
+
+    def getDuration(self):
+        self.duration = self.getTime()-self.startTime
+        return self.duration
 
     def getStartTime(self):
         return self.startTime;
