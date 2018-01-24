@@ -24,10 +24,10 @@ def main():
             ser = serial.Serial(arduinoCom,115200)
             #print(ser.name)         # check which port was really used
             pilots = []
-            pilots.append(Pilot.pilot("Sky",0))
-            pilots.append(Pilot.pilot("Ninja",1))
-            pilots.append(Pilot.pilot("PoisonPilot",2))
-            pilots.append(Pilot.pilot("Freefall",3))
+            pilots.append(Pilot.pilot("Sky",0,"bluebang"))
+            pilots.append(Pilot.pilot("Ninja",1,"redbang"))
+            pilots.append(Pilot.pilot("PoisonPilot",2,"greenbang"))
+            pilots.append(Pilot.pilot("Freefall",3,"flashbang"))
             for pilot in pilots:
                 pilot.startLap()
             thresh = 140

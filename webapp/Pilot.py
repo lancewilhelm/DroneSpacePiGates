@@ -4,7 +4,7 @@ class pilot:
         self.laps = []
         self.name = name
         self.frequency = frequency
-        self.color = color
+        self.animation = animation
 
     def startLap(self):
         if(len(self.laps)>0):
