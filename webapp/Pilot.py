@@ -22,7 +22,7 @@ class pilot:
         return int(round(time.time() * 1000))
 
     def getAnimation(self):
-        return this.animation
+        return self.animation
 
 class lap:
     def __init__(self,start,end,number):
