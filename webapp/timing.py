@@ -44,14 +44,14 @@ def main():
                         print(values)
                         for i in range(0,len(values)):
                             rssi = values[i]
+                            pilot = pilots[i]
                             lapTime = getTime()-lastTime
                             if((rssi>thresh)&(readyForLap)):
-                                pilots[i].endLap()
-                                pilots[i].startLap()
+                                pilot.endLap()
+                                pilot.startLap()
                                 readyForLap = False
-                                print("lap "+str(laps)+": "+str(lapTime/1000.0))
-                                lastTime = getTime()
-                                sendFlashbang()
+                                print("lap "+str(len(pilot.laps))+": "+str(lapTime/1000.0))
+                                sendAnimation(pilot.getAnimation())
                             if((not readyForLap)&(rssi<resetValue)&(lapTime>3000)):
                                 readyForLap = True
                                 print("reset")

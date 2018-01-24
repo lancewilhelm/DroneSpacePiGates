@@ -1,6 +1,6 @@
 import time
 class pilot:
-    def __init__(self,name="unkown pilot",frequency=5800,color=[175,175,175]):
+    def __init__(self,name="unkown pilot",frequency=5800,animation="bluebang"):
         self.laps = []
         self.name = name
         self.frequency = frequency
