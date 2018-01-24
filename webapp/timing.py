@@ -30,7 +30,7 @@ def main():
             pilots.append(Pilot.pilot("Freefall",3,"flashbang"))
             for pilot in pilots:
                 pilot.startLap()
-            thresh = 140
+            thresh = 150
             resetValue = 110
             lastTime = getTime()
             lastPing = lastTime
