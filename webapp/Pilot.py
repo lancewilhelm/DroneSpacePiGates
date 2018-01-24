@@ -30,7 +30,7 @@ class lap:
 
     def setEndTime(self,end):
         self.endTime = end
-        self.duration = self.endTime-self.start
+        self.duration = self.endTime-self.startTime
 
     def getStartTime(self):
         return self.startTime;
