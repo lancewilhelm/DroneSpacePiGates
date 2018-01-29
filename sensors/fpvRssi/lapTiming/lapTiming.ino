@@ -57,6 +57,7 @@ struct {
   uint16_t noiseFloor = 0; //this is the rssi initially read for a period of time before any quad has been powered on
   uint16_t frequency = raceband[0]; //the frequency this device is listening on
   uint16_t passPeakTimestamp; //this is the timestamp of the maximum value observed from trigger to reset
+  uint16_t channelNumber = 0;
 } rxModule;
 
 struct {
@@ -65,22 +66,44 @@ struct {
   uint16_t frequency = raceband[0]; //the frequency this pilot is broadcasting on
 } pilot;
 
-void setPilotChannels(uint16_t[] channels){
-  if(sizeof(channels)>=sizeofpilots){
-    for(int i=0;i<pilotNumber;i++){
-      pilot = pilots[i];
-      pilot.frequency = channels[i];
-    }
-  }else{
-    Serial.println("too many pilots for this channel map") //you might be trying to run 8 pilots on imd5 or imd6
-  }
-
-}
-
 //create an array of rx8508 modules
 struct rxModule modules[deviceNumber];
 //create an array of pilots
 struct pilot pilots[pilotNumber];
+
+void setPilotChannels(uint16_t[] channels){
+  if(sizeof(channels)==pilotNumber){
+    Serial.println("we have a full heat")
+    if(pilotNumber==deviceNumber){
+      for(int i=0;i<pilotNumber;i++){
+        pilot = pilots[i];
+        pilot.frequency = channels[i];
+        Serial.println("setting pilot ",i," to channel ",pilot.frequency);
+      }
+    }else if(pilotNumber>deviceNumber){ //we are tracking more pilots than we have modules for
+      //let's distribute the devices as evenly as possible over the channels
+      //later we'll scroll through the the modules up the channel as needed
+      int spacing = pilotNumber/deviceNumber-(pilotNumber % deviceNumber); //FIX MEEEEEE
+      modules[0] = channels[0]; //first device
+      int nextChannel = 0;
+      int lastChannel = channels[sizeof(channels)-1];
+      for(int i=0;i<sizeof(channels);i++){
+        if(nextChannel==i){
+          modules[i].frequency = channel[i];
+          nextChannel = nextChannel+spacing;
+        }
+        if(nextChannel>channels[sizeof(channels)-1]){ //if we are at the end
+          modules[i].frequency = lastChannel;
+        }
+      }
+
+    }
+  }else if(sizeof(channels)==pilotNumber){
+    Serial.println("we don't have a full heat\n using custom channel map");
+  }else{
+    Serial.println("too many pilots for this channel map") //you might be trying to run 8 pilots on imd5 or imd6
+  }
+}
 
 // Define vtx frequencies in mhz and their hex code for setting the rx5808 module
 int vtxFreqTable[] = {
@@ -110,7 +133,7 @@ void setup() {
   while (!Serial) {
   }; // Wait for the Serial port to initialise
 
-  setChannelMap(raceband);
+  setPilotChannels(raceband);
 
   // set ADC prescaler to 16 to speedup ADC readings
   sbi(ADCSRA,ADPS2);
