@@ -8,9 +8,8 @@ const int initLength = 100;
 
 const int deviceNumber = 4;
 int pilotNumber = 8;
-const int averaging = 10;
-const int slaveSelectPins[] = {10,9,8,7,6,5,4,3
-}; // Setup data pins for rx5808 comms
+const int averaging = 3;
+const int slaveSelectPins[] = {10,9,8,7,6,5,4,3}; // Setup data pins for rx5808 comms
 const int spiDataPin = 11;
 const int spiClockPin = 13;
 const int rssiPins[] = {0,1,2,3,4,5,6,7};
@@ -52,24 +51,36 @@ struct {
 } settings;
 
 struct {
-  uint16_t trigger = 150 //value at which we will consider a pass initiated
+  uint16_t trigger = 150; //value at which we will consider a pass initiated
   uint16_t reset = 110; //value below which we will consider the pass complete
   uint16_t noiseFloor = 0; //this is the rssi initially read for a period of time before any quad has been powered on
   uint16_t frequency = raceband[0]; //the frequency this device is listening on
   uint16_t passPeakTimestamp; //this is the timestamp of the maximum value observed from trigger to reset
   uint16_t channelNumber = 0;
+  uint16_t rssi;
 } rxModule;
 
 struct {
-  uint16_t completedLaps = 0; //number of laps this pilot has completed
-  uint16_t[] crossTimes = {}; //a list of timestamps of each start/finish pass
+  int completedLaps = 0; //number of laps this pilot has completed
+  int crossTimes[] = {}; //a list of timestamps of each start/finish pass
   uint16_t frequency = raceband[0]; //the frequency this pilot is broadcasting on
 } pilot;
 
 //create an array of rx8508 modules
-struct rxModule modules[deviceNumber];
+struct rxModule modules[deviceNumber] = {
+  {150,110,0,raceband[0],0,0,0}
+  };
 //create an array of pilots
-struct pilot pilots[pilotNumber];
+struct pilot pilots[pilotNumber] = {
+  {0,{},raceband[0]},
+  {0,{},raceband[0]},
+  {0,{},raceband[0]},
+  {0,{},raceband[0]},
+  {0,{},raceband[0]},
+  {0,{},raceband[0]},
+  {0,{},raceband[0]},
+  {0,{},raceband[0]}
+  };
 
 void setPilotChannels(uint16_t[] channels){
   if(sizeof(channels)==pilotNumber){
@@ -84,6 +95,8 @@ void setPilotChannels(uint16_t[] channels){
       //let's distribute the devices as evenly as possible over the channels
       //later we'll scroll through the the modules up the channel as needed
       int spacing = pilotNumber/deviceNumber-(pilotNumber % deviceNumber); //FIX MEEEEEE
+      Serial.print("spacing is");
+      Serial.println(spacing);
       modules[0] = channels[0]; //first device
       int nextChannel = 0;
       int lastChannel = channels[sizeof(channels)-1];
@@ -197,11 +210,11 @@ void SERIAL_SLAVE_HIGH(int pin) {
 // Set the frequency given on the rx5808 module
 void setRxModule(int frequency,int pin) {
   uint8_t i; // Used in the for loops
-  /*Serial.print("settings device at pin ");
+  Serial.print("settings device at pin ");
   Serial.print(pin);
   Serial.print(" to ");
   Serial.print(frequency);
-  Serial.println(" mHz ");*/
+  Serial.println(" mHz ");
   uint8_t index; // Find the index in the frequency lookup table
   for (i = 0; i < sizeof(vtxFreqTable); i++) {
     if (frequency == vtxFreqTable[i]) {
@@ -263,12 +276,8 @@ void setRxModule(int frequency,int pin) {
   digitalWrite(spiDataPin, LOW);
 }
 
-float getRSSIAvg(int slave){
-  int total = 0;
-  for(int i=0;i<averaging-1;i++){
-    total+=analogRead(slave);
-  }
-  return total/averaging;
+float refreshRssi(){
+  int total = analogRead(slave);
 }
 
 // Main loop
@@ -277,13 +286,7 @@ void loop() {
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
-  Serial.print("[");
-  for(int i=0;i<deviceNumber;i++){
-    Serial.print(getRSSIAvg(rssiPins[i])-rssiOffsets[i]);
-    if(i<deviceNumber-1){
-      Serial.print(",");
-    }
-  }
+
   //Serial.println();
   Serial.println("]");
 }
