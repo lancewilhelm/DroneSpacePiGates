@@ -7,17 +7,9 @@ class pilot:
         self.animation = animation
         self.readyForLap = True
 
-    def startLap(self):
-        if(len(self.laps)>0):
-            start = self.laps[-1].getStartTime()
-            newLap = lap(start,start,len(self.laps))
-        else:
-            newLap = lap(self.getTime(),self.getTime(),len(self.laps))
+    def addLap(self,start,end):
+        newLap = lap(start,end,len(self.laps))
         self.laps.append(newLap)
-
-    def endLap(self):
-        self.laps[-1].setEndTime(self.getTime())
-        print(str(self.name)+" completed lap "+str(len(self.laps)))
 
     def getCurrentLapDuration(self):
         duration = 0

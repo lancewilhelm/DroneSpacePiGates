@@ -5,6 +5,17 @@ import Pilot
 import traceback
 from serial.tools import list_ports
 
+#these are the states we'll use to let our loop know what a given RX is doing atm
+CALIBRATE = 0;    #the moments while a module is discovering its noise floor
+STANDBY = 1;      #the moments before a race starts
+START = 2;        #the moment when the race starts
+FAR = 3;          #the moments while a quad is out of the bubble
+ENTER = 4;        #the moments while quad passes through the bubble
+PASS = 5;         #the moment an rssi peaks inside the bubble
+EXIT = 6;         #the moment when a quad exits the bubble
+CHANNEL_HOP = 9;  #the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
+FINISHED = 10;    #the moment when the race is completed
+
 def getTime():
     return int(round(time.time() * 1000))
 def sendAnimation(animation):
@@ -28,33 +39,18 @@ def main():
             pilots.append(Pilot.pilot("Ninja",1,"redbang"))
             pilots.append(Pilot.pilot("PoisonPilot",2,"greenbang"))
             pilots.append(Pilot.pilot("Freefall",3,"flashbang"))
-            for pilot in pilots:
-                pilot.startLap()
-            thresh = 150
-            resetValue = 110
-            lastTime = getTime()
-            lastPing = lastTime
-            lastFrame = lastTime
             try:
                 while(True):
                     try:
                         line = ser.readline()
-                        values = eval(line)
-                        print(values)
-                        for i in range(0,len(values)):
-                            rssi = values[i]
-                            pilot = pilots[i]
-                            lapTime = getTime()-lastTime
-                            if((rssi>thresh)&(pilot.readyForLap)):
-                                pilot.endLap()
-                                pilot.startLap()
-                                pilot.readyForLap = False
-                                print("lap "+str(len(pilot.laps))+": "+str(lapTime/1000.0))
-                                sendAnimation(pilot.getAnimation())
-                            if((not pilot.readyForLap)&(rssi<resetValue)&(pilot.getCurrentLapDuration()>3000)):
-                                pilot.readyForLap = True
-                                print("reset")
-                            lastFrame = getTime()
+                        event = eval(line)
+                        print(event)
+                        pilotId = event[0]
+                        state = event[1]
+                        timestamp = event[2]
+                        if(state==PASS):
+                            addLap(0,timestamp)
+                            sendAnimation(pilots[pilotId].getAnimation())
                     except Exception as e:
                         print(traceback.format_exc())
                         print("bad data: "+str(line))
