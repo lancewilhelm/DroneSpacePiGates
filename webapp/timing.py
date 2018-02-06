@@ -46,12 +46,12 @@ def main():
                         line = ser.readline()
                         event = eval(line)
                         print(event)
-                        pilotId = event[0]
+                        pilot = pilots[event[0]]
                         state = event[1]
                         timestamp = event[2]
                         if(state==PASS):
-                            addLap(0,timestamp)
-                            sendAnimation(pilots[pilotId].getAnimation())
+                            pilot.addLap(0,timestamp)
+                            sendAnimation(pilot.getAnimation())
                     except Exception as e:
                         print(traceback.format_exc())
                         print("bad data: "+str(line))
