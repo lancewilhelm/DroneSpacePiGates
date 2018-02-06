@@ -54,11 +54,10 @@ def main():
                         state = event[1]
                         timestamp = event[2]
                         if(state==PASS):
-                            if(timestamp>5.0):
-                                pilot.addLap(0,timestamp)
-                                sendAnimation(pilot.getAnimation())
-                                print(str(pilot.name)+": "+str(timestamp))
-                                logging.debug(str(pilot.name)+": "+str(timestamp))
+                            pilot.addLap(0,timestamp)
+                            sendAnimation(pilot.getAnimation())
+                            print(str(pilot.name)+": "+str(timestamp))
+                            logging.debug(str(pilot.name)+": "+str(timestamp))
                         if(state==CALIBRATE):
                             print("calibrating module "+str(pilotId))
                         if(state==STANDBY):
