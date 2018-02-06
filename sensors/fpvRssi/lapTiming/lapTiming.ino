@@ -7,20 +7,35 @@
 const int initLength = 100;
 
 const int deviceNumber = 4;
-int pilotNumber = 8;
+const int pilotNumber = 4;
 const int averaging = 3;
-const int slaveSelectPins[] = {10,9,8,7,6,5,4,3}; // Setup data pins for rx5808 comms
 const int spiDataPin = 11;
 const int spiClockPin = 13;
 const int rssiPins[] = {0,1,2,3,4,5,6,7};
 int rssiOffsets[] = {0,0,0,0,0,0,0,0};
-
+int rxLoop = -1;
+const int enterThreshold = 150;
+const int exitThreshold = 100;
+int raceStart = 0;
 
 //let's define some popular channel maps
 //if you are using something other than these, reconsider your life choices
 const int imd5[] = {5685,5760,5800,5860,5905};
 const int imd6[] = {5645,5685,5760,5800,5860,5905};
-const int raceband[] = {5658,5732,5806,5880,5860,5905,5800,5800};
+const int raceband[] = {5658,5695,5732,5769,5843,5905,5880,5917};
+const int racebandOdds[] = {5658,5732,5843,5880};
+const int racebandEvens[] = {5695,5769,5905,5917};
+
+//these are the states we'll use to let our loop know what a given RX is doing atm
+const int CALIBRATE = 0;    //the moments while a module is discovering its noise floor
+const int STANDBY = 1;      //the moments before a race starts
+const int START = 2;        //the moment when the race starts
+const int FAR = 3;          //the moments while a quad is out of the bubble
+const int ENTER = 4;        //the moments while quad passes through the bubble
+const int PASS = 5;         //the moment an rssi peaks inside the bubble
+const int EXIT = 6;         //the moment when a quad exits the bubble
+const int CHANNEL_HOP = 9;  //the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
+const int FINISHED = 10;    //the moment when the race is completed
 
 #define READ_ADDRESS 0x00
 #define READ_FREQUENCY 0x03
@@ -39,85 +54,60 @@ const int raceband[] = {5658,5732,5806,5880,5860,5905,5800,5800};
 #define WRITE_FILTER_RATIO 0x69
 
 struct {
-  uint16_t volatile vtxFreqs[8] = {5658,5732,5806,5880,5860,5905,5800,5800};
+  uint16_t channel[8] = {5658,5695,5732,5769,5843,5905,5880,5917};
+  uint16_t volatile rssi[8] = {0,0,0,0,0,0,0,0};
+  uint16_t rssiMultiplier[8] = {1,1,1,1,1,1,1,1};
   // Subtracted from the peak rssi during a calibration pass to determine the trigger value
-  uint16_t volatile calibrationOffset[8] = {8,8,8,8,8,8,8,8};
+  uint16_t volatile noiseFloor[8] = {8,8,8,8,8,8,8,8};
   // Rssi must fall below trigger - settings.calibrationThreshold to end a calibration pass
-  uint16_t volatile calibrationThreshold = 95;
-  // Rssi must fall below trigger - settings.triggerThreshold to end a normal pass
-  uint16_t volatile triggerThreshold = 40;
-  uint8_t volatile filterRatio = 10;
-  float volatile filterRatioFloat = 0.0f;
-} settings;
+  uint16_t volatile maxRssiTime[8] = {0,0,0,0,0,0,0,0};
+  uint16_t volatile maxRssi[8] = {0,0,0,0,0,0,0,0};
+  // Setup data pins for rx5808 comms
+  uint16_t slaveSelectPins[8] = {10,9,8,7,6,5,4,3};
+  int state[8] = {START,START,START,START,START,START,START,START};
+} rxModules;
 
-struct {
-  uint16_t trigger = 150; //value at which we will consider a pass initiated
-  uint16_t reset = 110; //value below which we will consider the pass complete
-  uint16_t noiseFloor = 0; //this is the rssi initially read for a period of time before any quad has been powered on
-  uint16_t frequency = raceband[0]; //the frequency this device is listening on
-  uint16_t passPeakTimestamp; //this is the timestamp of the maximum value observed from trigger to reset
-  uint16_t channelNumber = 0;
-  uint16_t rssi;
-} rxModule;
-
-struct {
-  int completedLaps = 0; //number of laps this pilot has completed
-  int crossTimes[] = {}; //a list of timestamps of each start/finish pass
-  uint16_t frequency = raceband[0]; //the frequency this pilot is broadcasting on
-} pilot;
-
-//create an array of rx8508 modules
-struct rxModule modules[deviceNumber] = {
-  {150,110,0,raceband[0],0,0,0}
-  };
-//create an array of pilots
-struct pilot pilots[pilotNumber] = {
-  {0,{},raceband[0]},
-  {0,{},raceband[0]},
-  {0,{},raceband[0]},
-  {0,{},raceband[0]},
-  {0,{},raceband[0]},
-  {0,{},raceband[0]},
-  {0,{},raceband[0]},
-  {0,{},raceband[0]}
-  };
-
-void setPilotChannels(uint16_t[] channels){
-  if(sizeof(channels)==pilotNumber){
-    Serial.println("we have a full heat")
-    if(pilotNumber==deviceNumber){
-      for(int i=0;i<pilotNumber;i++){
-        pilot = pilots[i];
-        pilot.frequency = channels[i];
-        Serial.println("setting pilot ",i," to channel ",pilot.frequency);
-      }
-    }else if(pilotNumber>deviceNumber){ //we are tracking more pilots than we have modules for
-      //let's distribute the devices as evenly as possible over the channels
-      //later we'll scroll through the the modules up the channel as needed
-      int spacing = pilotNumber/deviceNumber-(pilotNumber % deviceNumber); //FIX MEEEEEE
-      Serial.print("spacing is");
-      Serial.println(spacing);
-      modules[0] = channels[0]; //first device
-      int nextChannel = 0;
-      int lastChannel = channels[sizeof(channels)-1];
-      for(int i=0;i<sizeof(channels);i++){
-        if(nextChannel==i){
-          modules[i].frequency = channel[i];
-          nextChannel = nextChannel+spacing;
-        }
-        if(nextChannel>channels[sizeof(channels)-1]){ //if we are at the end
-          modules[i].frequency = lastChannel;
-        }
-      }
-
-    }
-  }else if(sizeof(channels)==pilotNumber){
-    Serial.println("we don't have a full heat\n using custom channel map");
-  }else{
-    Serial.println("too many pilots for this channel map") //you might be trying to run 8 pilots on imd5 or imd6
-  }
+void setRxState(int rxId, int state){
+  rxModules.state[rxId] = state;
 }
 
+void setupRace(uint16_t channels[]){
+  if(pilotNumber==deviceNumber){
+    Serial.println("we have enough devices for this channel map");
+    for(int i=0;i<pilotNumber;i++){
+      rxModules.channel[i] = channels[i];
+    }
+  }else if(pilotNumber>deviceNumber){ //we are tracking more pilots than we have modules for
+    //let's distribute the devices as evenly as possible over the channels
+    //later we'll scroll through the the modules up the channel as needed
+    Serial.println("we will have to ghost channels");
+    int spacing = pilotNumber/deviceNumber-(pilotNumber % deviceNumber); //FIX MEEEEEE
+    Serial.print("spacing is");
+    Serial.println(spacing);
+    rxModules.channel[0] = channels[0]; //first device
+    int nextChannel = 0;
+    int lastChannel = channels[sizeof(channels)-1];
+    for(int i=0;i<sizeof(channels);i++){
+      if(nextChannel==i){
+        rxModules.channel[i] = channels[i];
+        nextChannel = nextChannel+spacing;
+      }
+      if(nextChannel>channels[sizeof(channels)-1]){ //if we are at the end
+        rxModules.channel[i] = lastChannel;
+      }
+    }
+
+    for(int i=0;i<8;i++){
+      Serial.print("Setting rx ");
+      Serial.print(i+1);
+      Serial.print(" to channel ");
+      Serial.println(rxModules.channel[i]);
+      setRxState(i,CHANNEL_HOP);
+      setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
+      setRxState(i,STANDBY);
+    }
+  }
+}
 // Define vtx frequencies in mhz and their hex code for setting the rx5808 module
 int vtxFreqTable[] = {
   5865, 5845, 5825, 5805, 5785, 5765, 5745, 5725, // Band A
@@ -146,7 +136,7 @@ void setup() {
   while (!Serial) {
   }; // Wait for the Serial port to initialise
 
-  setPilotChannels(raceband);
+  setupRace(rxModules.channel);
 
   // set ADC prescaler to 16 to speedup ADC readings
   sbi(ADCSRA,ADPS2);
@@ -155,25 +145,23 @@ void setup() {
   pinMode (spiDataPin, OUTPUT);
   pinMode (spiClockPin, OUTPUT);
   for (int i = 0; i < deviceNumber; i++) {
-    pinMode (slaveSelectPins[i], OUTPUT); // RX5808 comms
-    digitalWrite(slaveSelectPins[i], HIGH);
-    setRxModule(settings.vtxFreqs[i],slaveSelectPins[i]);
+    pinMode (rxModules.slaveSelectPins[i], OUTPUT); // RX5808 comms
+    digitalWrite(rxModules.slaveSelectPins[i], HIGH);
+    setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
   }
   for (int i = 0; i < deviceNumber; i++){ //we need to set all the pins low now
-    digitalWrite(slaveSelectPins[i],LOW);
+    digitalWrite(rxModules.slaveSelectPins[i],LOW);
   }
 
   //let's initialize our offset
   for(int y=0;y<deviceNumber;y++){
     for(int x=0;x<initLength;x++){
-      rssiOffsets[y] += getRSSIAvg(rssiPins[y]);
+      rxModules.noiseFloor[y] += refreshRx(y);
     }
-    rssiOffsets[y] = rssiOffsets[y]/initLength;
+    rxModules.noiseFloor[y] = rxModules.noiseFloor[y]/initLength;
   }
 
 }
-
-void addLap()
 
 // Functions for the rx5808 module
 void SERIAL_SENDBIT1() {
@@ -276,17 +264,127 @@ void setRxModule(int frequency,int pin) {
   digitalWrite(spiDataPin, LOW);
 }
 
-float refreshRssi(){
-  int total = analogRead(slave);
+int getTime(){
+  return millis();
+}
+
+void sendStateUpdate(int rxId,int state,int timestamp){
+  Serial.print("[");
+  Serial.print(rxId);
+  Serial.print(",");
+  Serial.print(state);
+  Serial.print(",");
+  Serial.print(timestamp);
+  Serial.println("]");
+}
+
+void updateRxState(int rxId, int state){
+  sendStateUpdate(rxId,state,getTime());
+  rxModules.state[rxId] = state;
+}
+
+int refreshRx(int rxId){
+  rxModules.rssi[rxId] = analogRead(rxModules.slaveSelectPins[rxId])*rxModules.rssiMultiplier[rxId];
+  return rxModules.rssi[rxId];
+}
+
+void handleRxStart(int rxId){
+  rxModules.state[rxId] = FAR;
+}
+
+void handleRxFar(int rxId){
+  int rssi = refreshRx(rxId);
+  if(rssi>enterThreshold){ //quad is entering the gate
+    updateRxState(rxId,ENTER);
+    rxModules.maxRssiTime[rxId] = getTime();
+    rxModules.maxRssi[rxId] = rssi;
+  }
+}
+
+void handleRxEnter(int rxId){
+  int rssi = refreshRx(rxId);
+  if(rssi<exitThreshold){
+    updateRxState(rxId,EXIT);
+  }else{
+    if(rssi>rxModules.maxRssi[rxId]){ //we found a peak, let's note the timestamp
+      rxModules.maxRssiTime[rxId] = getTime();
+      rxModules.maxRssi[rxId] = rssi;
+    }
+  }
+}
+
+void handleRxExit(int rxId){
+  sendStateUpdate(rxId,PASS,rxModules.maxRssiTime[rxId]);
+  updateRxState(rxId,FAR);
+}
+
+void handleRxStates(){
+  for(int i=0;i<pilotNumber;i++){
+    int state = rxModules.state[i];
+    switch (state) {
+      case CALIBRATE:
+        // statements
+        break;
+      case STANDBY:
+        // statements
+        break;
+      case START:
+        handleRxStart(i);
+        break;
+      case FAR:
+        handleRxFar(i);
+        break;
+      case ENTER:
+        handleRxEnter(i);
+        break;
+      case EXIT:
+        handleRxExit(i);
+        break;
+      case CHANNEL_HOP:
+        // statements
+        break;
+      case FINISHED:
+        // statements
+        break;
+      default:
+        // statements
+        break;
+    }
+  }
+}
+
+void scrollChannels(){
+  //move last channel to first
+  int firstChannel = rxModules.channel[0];
+  rxModules.channel[pilotNumber-1] = firstChannel;
+
+  //move all other channels up one
+  for(int i=0;i<deviceNumber-1;i++){
+    int nextChannel = rxModules.channel[i+1];
+    rxModules.channel[i] = nextChannel;
+  }
+  lockModuleChannels();
+}
+
+void lockModuleChannels(){
+  for(int i=0;i<deviceNumber;i++){
+    int state = rxModules.state[i];
+    if(state==FAR){
+      setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
+    }
+  }
 }
 
 // Main loop
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(50);
   digitalWrite(LED_BUILTIN, LOW);
-  delay(50);
-
-  //Serial.println();
-  Serial.println("]");
+  raceStart = getTime();
+  if(rxLoop == -1){  //we have enough modules for each channel
+    handleRxStates();
+  }else{            //we need to scroll the module channels
+    scrollChannels();
+    handleRxStates();
+  }
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(10);
 }
