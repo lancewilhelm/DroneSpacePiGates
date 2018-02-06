@@ -60,7 +60,7 @@ struct {
   // Subtracted from the peak rssi during a calibration pass to determine the trigger value
   uint16_t volatile noiseFloor[8] = {0,0,0,0,0,0,0,0};
   // Rssi must fall below trigger - settings.calibrationThreshold to end a calibration pass
-  uint16_t volatile maxRssiTime[8] = {0,0,0,0,0,0,0,0};
+  unsigned long maxRssiTime[8] = {0,0,0,0,0,0,0,0};
   uint16_t volatile maxRssi[8] = {0,0,0,0,0,0,0,0};
   // Setup data pins for rx5808 comms
   unsigned long lapStartTime[8] = {raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart};
@@ -111,7 +111,7 @@ void setup() {
     setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
     digitalWrite(rxModules.slaveSelectPins[i],HIGH);
   }
-  
+
   for (int i = 0; i < deviceNumber; i++){ //we need to set all the pins low now
     digitalWrite(rxModules.slaveSelectPins[i], LOW);
   }
@@ -155,7 +155,7 @@ void SERIAL_SLAVE_HIGH(int pin) {
 }
 
 void calibrateModules(){
-  
+
   for(int y=0;y<deviceNumber;y++){
     updateRxState(y,CALIBRATE);
     for(int x=0;x<initLength;x++){
@@ -267,7 +267,7 @@ void setupRace(uint16_t channels[]){
   //lockModuleChannels();
 }
 
-void sendStateUpdate(int rxId,int state,int timestamp){
+void sendStateUpdate(int rxId,int state,unsigned long timestamp){
   float seconds = (float)timestamp/1000.0f;
   Serial.print("[");
   Serial.print(rxId);
@@ -402,7 +402,7 @@ void printRSSI(){
       Serial.println("");
     }
   }
-  
+
 }
 
 // Main loop
