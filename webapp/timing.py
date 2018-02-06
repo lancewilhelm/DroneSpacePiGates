@@ -3,8 +3,10 @@ import time
 import DSWebClient
 import Pilot
 import traceback
+import logging
 from serial.tools import list_ports
 
+logging.basicConfig(filename="../../timing.log",level=logging.DEBUG)
 #these are the states we'll use to let our loop know what a given RX is doing atm
 CALIBRATE = 0;    #the moments while a module is discovering its noise floor
 STANDBY = 1;      #the moments before a race starts
@@ -20,12 +22,12 @@ def getTime():
     return int(round(time.time() * 1000))
 def sendAnimation(animation):
     port = 13246
-    ip = "10.0.0.10"
+    ip = ""
     DSWebClient.sendTempAnimation(ip,port,animation)
 
 def main():
     print(serial.tools.list_ports)
-    DSWebClient.sendTempAnimation("",13246,"bluebang")
+    DSWebClient.sendTempAnimation("",13246,"flashbang")
     while(True):
         try:
             #arduinoCom = next(list_ports.grep("rduino"))
@@ -55,6 +57,7 @@ def main():
                                 pilot.addLap(0,timestamp)
                                 sendAnimation(pilot.getAnimation())
                                 print(str(pilot.name)+": "+str(timestamp))
+                                logging.debug(str(pilot.name)+": "+str(timestamp))
                     except Exception as e:
                         print(traceback.format_exc())
                         print("bad data: "+str(line))
