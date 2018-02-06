@@ -33,6 +33,7 @@ def main():
             #arduinoCom = next(list_ports.grep("rduino"))
             arduinoCom = "/dev/ttyUSB0"
             #arduinoCom = "/dev/ttyACM0"
+            #arduinoCom = "COM11"
             #print("arduino port: "+str(arduinoCom.device))
             #ser = serial.Serial(str(arduinoCom.device))  # open serial port
             ser = serial.Serial(arduinoCom,115200)
@@ -58,6 +59,10 @@ def main():
                                 sendAnimation(pilot.getAnimation())
                                 print(str(pilot.name)+": "+str(timestamp))
                                 logging.debug(str(pilot.name)+": "+str(timestamp))
+                        if(state==CALIBRATE):
+                            print("calibrating module "+str(pilotId))
+                        if(state==STANDBY):
+                            print("module "+str(pilotId)+" ready")
                     except Exception as e:
                         print(traceback.format_exc())
                         print("bad data: "+str(line))

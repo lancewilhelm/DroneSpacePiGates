@@ -14,8 +14,8 @@ const int spiClockPin = 13;
 
 int rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
-const int enterThreshold = 130;
-const int exitThreshold = 110;
+const int enterThreshold = 125;
+const int exitThreshold = 90;
 unsigned long raceStart = millis();
 
 //let's define some popular channel maps
