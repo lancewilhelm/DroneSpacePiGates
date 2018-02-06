@@ -46,7 +46,7 @@ def main():
                         event = eval(line)
                         #print(event)
                         pilotId = event[0]
-                        pilot = pilots[]
+                        pilot = pilots[pilotId]
                         state = event[1]
                         timestamp = event[2]
                         if(state==PASS):
