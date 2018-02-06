@@ -9,9 +9,9 @@ def createSocket(port):
     #sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
     hostname = ""
     sock.setblocking(0)
-    print("binding to "+str(hostname)+" on port "+str(port))
+    #print("binding to "+str(hostname)+" on port "+str(port))
     #sock.bind((hostname,port))
-    print("bound")
+    #print("bound")
     return sock
 
 def recvData(sock): #this is where we handle all recieved data
@@ -38,7 +38,7 @@ def recvData(sock): #this is where we handle all recieved data
 def sendDataToServer(sock,address,subject,body,recipient):
     message = {"subject":subject,"body":body,"recipient":recipient}
     #sock.sendto(str(data).encode('utf-8'),address)
-    print(message)
+    #print(message)
     sock.sendto(pickle.dumps(message),address)
 
 def sendGateAnimation(ip,port,animation):
