@@ -50,7 +50,7 @@ def main():
                         state = event[1]
                         timestamp = event[2]
                         if(state==PASS):
-                            if((float)timestamp>5.0):
+                            if(timestamp>5.0):
                                 pilot.addLap(0,timestamp)
                                 sendAnimation(pilot.getAnimation())
                                 print(str(pilot.name)+": "+str(timestamp))
