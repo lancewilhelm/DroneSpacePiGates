@@ -22,7 +22,6 @@ def sendAnimation(animation):
     port = 13246
     ip = "10.0.0.10"
     DSWebClient.sendTempAnimation(ip,port,animation)
-    print("sending "+str(animation)+" animation")
 
 def main():
     print(serial.tools.list_ports)
@@ -37,21 +36,24 @@ def main():
             #print(ser.name)         # check which port was really used
             pilots = []
             pilots.append(Pilot.pilot("Sky",0,"bluebang"))
-            pilots.append(Pilot.pilot("Ninja",1,"redbang"))
-            pilots.append(Pilot.pilot("PoisonPilot",2,"greenbang"))
-            pilots.append(Pilot.pilot("Freefall",3,"flashbang"))
+            pilots.append(Pilot.pilot("ScraggleFPV",1,"greenbang"))
+            pilots.append(Pilot.pilot("RandoBando",2,"flashbang"))
+            pilots.append(Pilot.pilot("Ninja",3,"redbang"))
             try:
                 while(True):
                     try:
                         line = ser.readline()
                         event = eval(line)
-                        print(event)
-                        pilot = pilots[event[0]]
+                        #print(event)
+                        pilotId = event[0]
+                        pilot = pilots[]
                         state = event[1]
                         timestamp = event[2]
                         if(state==PASS):
-                            pilot.addLap(0,timestamp)
-                            sendAnimation(pilot.getAnimation())
+                            if((float)timestamp>5.0):
+                                pilot.addLap(0,timestamp)
+                                sendAnimation(pilot.getAnimation())
+                                print(str(pilot.name)+": "+str(timestamp))
                     except Exception as e:
                         print(traceback.format_exc())
                         print("bad data: "+str(line))
