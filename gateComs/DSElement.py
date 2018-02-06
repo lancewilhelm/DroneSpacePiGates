@@ -67,6 +67,7 @@ class element:
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind(('',port))
         sock.setblocking(0)
         return sock
 
