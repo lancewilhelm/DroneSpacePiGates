@@ -22,6 +22,7 @@ def sendAnimation(animation):
     port = 13246
     ip = "10.0.0.10"
     DSWebClient.sendTempAnimation(ip,port,animation)
+    print("sending "+str(animation)+" animation")
 
 def main():
     print(serial.tools.list_ports)
