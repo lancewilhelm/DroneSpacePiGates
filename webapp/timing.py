@@ -25,6 +25,7 @@ def sendAnimation(animation):
 
 def main():
     print(serial.tools.list_ports)
+    DSWebClient.sendTempAnimation("",13246,"bluebang")
     while(True):
         try:
             #arduinoCom = next(list_ports.grep("rduino"))
