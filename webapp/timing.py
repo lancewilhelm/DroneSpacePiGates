@@ -57,7 +57,7 @@ def main():
                             pilot.addLap(0,timestamp)
                             print(str(pilot.name)+": "+str(timestamp))
                             logging.debug(str(pilot.name)+": "+str(timestamp))
-                        if(state==Enter):
+                        if(state==ENTER):
                             sendAnimation(pilot.getAnimation())
                         if(state==CALIBRATE):
                             print("calibrating module "+str(pilotId))
