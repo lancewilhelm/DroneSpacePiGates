@@ -102,6 +102,7 @@ class element:
         self.connectArduino
 
     def connectArduino(self):
+        print("disconnecting arduino")
         try:
             #arduinoCom = next(list_ports.grep("rduino"))
 
@@ -117,13 +118,17 @@ class element:
             self.pilots.append(Pilot.pilot("ScraggleFPV",1,"greenbang"))
             self.pilots.append(Pilot.pilot("RandoBando",2,"flashbang"))
             self.pilots.append(Pilot.pilot("Ninja",3,"redbang"))
+            print("arduino connected")
             return True
         except Exception as e:
             logging.debug("failed to connect to arduino ")
             logging.debug(traceback.format_exc())
+            print("failed to connect arduino")
+            print(e)
             return False
 
     def disconnectArduino(self):
+        print("disconnecting arduino")
         try:
             self.serial.close()
         except Exception as e:
