@@ -134,12 +134,12 @@ class element:
 
     def readSerial(self):
         try:
+            line = self.serial.readline()
             try:
-                line = self.serial.readline()
-            except:
-                line = None
-            if(line!=None):
                 event = eval(line)
+            except:
+                event = None
+            if(event!=None):
                 #print(event)
                 pilotId = event[0]
                 pilot = self.pilots[pilotId]
