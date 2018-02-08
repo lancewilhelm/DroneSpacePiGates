@@ -319,6 +319,7 @@ class element:
             while(True):
                 time.sleep(0.02)
                 self.readSerial()
+                print("done reading serial")
                 newUpdate = False
                 if self.keepAlive(sock): #let's let the server know we're still there
                     data,address = self.recvData(sock)
