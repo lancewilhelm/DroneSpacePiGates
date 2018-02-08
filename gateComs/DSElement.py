@@ -153,6 +153,7 @@ class element:
                 print("calibrating module "+str(pilotId))
             if(state==STANDBY):
                 print("module "+str(pilotId)+" ready")
+            print("read serial "+line);
         except Exception as e:
             print(traceback.format_exc())
             print("bad data: "+str(line))
