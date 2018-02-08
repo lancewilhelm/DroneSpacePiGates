@@ -109,7 +109,7 @@ class element:
             #arduinoCom = "COM11"
             #print("arduino port: "+str(arduinoCom.device))
             #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-            self.serial = serial.Serial(arduinoCom,115200)
+            self.serial = serial.Serial(arduinoCom,115200, timeout=0.1)
             #print(ser.name)         # check which port was really used
             self.pilots = []
             self.pilots.append(Pilot.pilot("Sky",0,"bluebang"))
@@ -151,7 +151,6 @@ class element:
                 print("calibrating module "+str(pilotId))
             if(state==STANDBY):
                 print("module "+str(pilotId)+" ready")
-            print("read serial "+line);
         except Exception as e:
             print(traceback.format_exc())
             print("bad data: "+str(line))
@@ -316,9 +315,7 @@ class element:
             self.connectArduino()
             while(True):
                 time.sleep(0.02)
-                print("starting serial read")
                 self.readSerial()
-                print("done reading serial")
                 newUpdate = False
                 if self.keepAlive(sock): #let's let the server know we're still there
                     data,address = self.recvData(sock)
