@@ -88,8 +88,6 @@ class element:
         self.serial = None
         self.pilots = []
 
-        self.connectArduino()
-
     def getSendableLaps(self):
         laps = []
         for pilot in self.pilots:
@@ -315,7 +313,7 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
         if self.connectToServer(sock,(self.serverAddress,self.port),LED):
-
+            self.connectArduino()
             while(True):
                 time.sleep(0.02)
                 self.readSerial()
