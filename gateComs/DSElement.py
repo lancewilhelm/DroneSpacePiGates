@@ -100,7 +100,7 @@ class element:
         self.connectArduino
 
     def connectArduino(self):
-        print("disconnecting arduino")
+        print("connecting arduino")
         try:
             #arduinoCom = next(list_ports.grep("rduino"))
 
@@ -316,6 +316,7 @@ class element:
             self.connectArduino()
             while(True):
                 time.sleep(0.02)
+                print("starting serial read")
                 self.readSerial()
                 print("done reading serial")
                 newUpdate = False
