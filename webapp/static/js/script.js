@@ -115,6 +115,51 @@ function sendElementCommand(command){
 
 var responseTextArray = [];
 
+function addLapToTable(pilot, time, number){
+  // Find a <table> element with id="myTable":
+  var table = document.getElementById("lapTable");
+
+  // Create an empty <tr> element and add it to the 1st position of the table:
+  var row = table.insertRow(-1);
+
+  // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+  row.insertCell(0).innerHTML = pilot;
+  row.insertCell(1).innerHTML = time;
+  row.insertCell(2).innerHTML = number;
+}
+function clearLapList(){
+  var table = document.getElementById("lapTable");
+  while(table.hasChildNodes())
+  {
+     table.removeChild(table.firstChild);
+  }
+  addLapToTable("Pilot","Time","Lap #");
+}
+
+function getLapList(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var reg = /'(\S*)'/g;
+  // event.preventDefault();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+      responseTextArray = eval(this.responseText);
+      for (i = 0; i < responseTextArray.length; i++){
+          pilot = responseTextArray[i][0];
+          time = responseTextArray[i][1];
+          number = responseTextArray[i][2];
+          addLapToTable(pilot,time,number);
+      }
+    }
+  };
+  xhttp.open("GET", "/api/server/sensors/timing", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("");
+}
+
 function getGateList(){
   origin = window.location.origin
   // gateColorURL = "{{ url_for('index') }}?color="+color

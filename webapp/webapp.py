@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 import DSWebClient
 import time
+import json
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
@@ -30,6 +31,12 @@ def getServerGates():
     print(gates)
     return str(gates)
 
+@app.route("/api/server/sensors/timing", methods=['POST','GET'])
+def getServerTiming():
+    laps = DSWebClient.getLapList(gateMasterAddr,13246)
+    print(laps)
+    return json.dumps(laps)
+
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
     program = request.form['color']
@@ -52,6 +59,10 @@ def setGateColors():
 @app.route("/", methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.route("/timing", methods=['GET'])
+def timing():
+    return render_template('timing.html')
 
 if __name__ == "__main__":
     # Create NeoPixel object with appropriate configuration.

@@ -21,7 +21,7 @@ FINISHED = 10;    #the moment when the race is completed
 def getTime():
     return int(round(time.time() * 1000))
 def sendAnimation(animation):
-    port = 13246
+    port = 13247
     ip = ""
     DSWebClient.sendTempAnimation(ip,port,animation)
 
@@ -69,7 +69,7 @@ def main():
                         ser.close()
                         time.sleep(10)
                         try:
-                            ser = serial.Serial('/dev/cu.usbmodem1421')
+                            ser = serial.Serial(arduinoCom,115200)
                         except:
                             pass
             except KeyboardInterrupt:
