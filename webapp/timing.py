@@ -46,22 +46,22 @@ def main():
             try:
                 line = ser.readline()
                 print(line)
-                #event = eval(line)
-                #print(event)
-                #pilotId = event[0]
-                #pilot = pilots[pilotId]
-                #state = event[1]
-                #timestamp = event[2]
-                #if(state==PASS):
-                #    pilot.addLap(0,timestamp)
-                #    print(str(pilot.name)+": "+str(timestamp))
-                #    logging.debug(str(pilot.name)+": "+str(timestamp))
-                #if(state==ENTER):
-                #    sendAnimation(pilot.getAnimation())
-                #if(state==CALIBRATE):
-                #    print("calibrating module "+str(pilotId))
-                #if(state==STANDBY):
-                #    print("module "+str(pilotId)+" ready")
+                event = eval(line)
+                print(event)
+                pilotId = event[0]
+                pilot = pilots[pilotId]
+                state = event[1]
+                timestamp = event[2]
+                if(state==PASS):
+                    pilot.addLap(0,timestamp)
+                    print(str(pilot.name)+": "+str(timestamp))
+                    logging.debug(str(pilot.name)+": "+str(timestamp))
+                if(state==ENTER):
+                    sendAnimation(pilot.getAnimation())
+                if(state==CALIBRATE):
+                    print("calibrating module "+str(pilotId))
+                if(state==STANDBY):
+                    print("module "+str(pilotId)+" ready")
             except Exception as e:
                 print(traceback.format_exc())
                 print("bad data: "+str(line))
