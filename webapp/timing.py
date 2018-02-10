@@ -28,57 +28,51 @@ def sendAnimation(animation):
 def main():
     print(serial.tools.list_ports)
     DSWebClient.sendTempAnimation("",13246,"flashbang")
-    while(True):
-        try:
-            #arduinoCom = next(list_ports.grep("rduino"))
-            arduinoCom = "/dev/ttyUSB0"
-            #arduinoCom = "/dev/ttyACM0"
-            #arduinoCom = "COM11"
-            #print("arduino port: "+str(arduinoCom.device))
-            #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-            ser = serial.Serial(arduinoCom,115200)
-            #print(ser.name)         # check which port was really used
-            pilots = []
-            pilots.append(Pilot.pilot("Sky",0,"bluebang"))
-            pilots.append(Pilot.pilot("ScraggleFPV",1,"greenbang"))
-            pilots.append(Pilot.pilot("RandoBando",2,"flashbang"))
-            pilots.append(Pilot.pilot("Ninja",3,"redbang"))
+    #arduinoCom = next(list_ports.grep("rduino"))
+    arduinoCom = "/dev/ttyUSB0"
+    #arduinoCom = "/dev/ttyACM0"
+    #arduinoCom = "COM11"
+    #print("arduino port: "+str(arduinoCom.device))
+    #ser = serial.Serial(str(arduinoCom.device))  # open serial port
+    ser = serial.Serial(arduinoCom,115200)
+    #print(ser.name)         # check which port was really used
+    pilots = []
+    pilots.append(Pilot.pilot("Sky",0,"bluebang"))
+    pilots.append(Pilot.pilot("ScraggleFPV",1,"greenbang"))
+    pilots.append(Pilot.pilot("RandoBando",2,"flashbang"))
+    pilots.append(Pilot.pilot("Ninja",3,"redbang"))
+    try:
+        while(True):
             try:
-                while(True):
-                    try:
-                        line = ser.readline()
-                        event = eval(line)
-                        #print(event)
-                        pilotId = event[0]
-                        pilot = pilots[pilotId]
-                        state = event[1]
-                        timestamp = event[2]
-                        if(state==PASS):
-                            pilot.addLap(0,timestamp)
-                            print(str(pilot.name)+": "+str(timestamp))
-                            logging.debug(str(pilot.name)+": "+str(timestamp))
-                        if(state==ENTER):
-                            sendAnimation(pilot.getAnimation())
-                        if(state==CALIBRATE):
-                            print("calibrating module "+str(pilotId))
-                        if(state==STANDBY):
-                            print("module "+str(pilotId)+" ready")
-                    except Exception as e:
-                        print(traceback.format_exc())
-                        print("bad data: "+str(line))
-                        ser.close()
-                        time.sleep(10)
-                        try:
-                            ser = serial.Serial(arduinoCom,115200)
-                        except:
-                            pass
-            except KeyboardInterrupt:
+                line = ser.readline()
+                event = eval(line)
+                #print(event)
+                pilotId = event[0]
+                pilot = pilots[pilotId]
+                state = event[1]
+                timestamp = event[2]
+                if(state==PASS):
+                    pilot.addLap(0,timestamp)
+                    print(str(pilot.name)+": "+str(timestamp))
+                    logging.debug(str(pilot.name)+": "+str(timestamp))
+                if(state==ENTER):
+                    sendAnimation(pilot.getAnimation())
+                if(state==CALIBRATE):
+                    print("calibrating module "+str(pilotId))
+                if(state==STANDBY):
+                    print("module "+str(pilotId)+" ready")
+            except Exception as e:
+                print(traceback.format_exc())
+                print("bad data: "+str(line))
                 ser.close()
-                raise
-                quit()
-        except Exception as e:
-            print(e)
-            print("arduino not found. Retrying...")
-            time.sleep(5)
-              # close port
+                time.sleep(10)
+                try:
+                    ser = serial.Serial(arduinoCom,115200)
+                except:
+                    pass
+    except KeyboardInterrupt:
+        ser.close()
+        raise
+        quit()
+
 main()
