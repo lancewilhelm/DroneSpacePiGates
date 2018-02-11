@@ -384,8 +384,10 @@ class element:
                     return False; #we gotta bail out
 
                 if(subject == "getLapList"):
+                    responseAddress = body['responseAddress']
+                    body['response'] = self.getSendableLaps()
                     logging.debug("we recieved a lap list request")
-                    self.sendData(sock,(self.serverAddress,self.port),"returnLapList",self.getSendableLaps(),"")
+                    self.sendData(sock,(self.serverAddress,self.port),"returnLapList",body,"")
                 if(subject == "clearLapList"):
                     logging.debug("we recieved a clear lap list request")
                     self.clearLaps()
