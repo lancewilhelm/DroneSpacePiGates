@@ -109,7 +109,7 @@ class element:
             #arduinoCom = "COM11"
             #print("arduino port: "+str(arduinoCom.device))
             #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-            self.serial = serial.Serial(arduinoCom,115200, timeout=0.1)
+            self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
             #print(ser.name)         # check which port was really used
             self.pilots = []
             self.pilots.append(Pilot.pilot("Sky",0,"bluebang"))
@@ -318,7 +318,6 @@ class element:
         if self.connectToServer(sock,(self.serverAddress,self.port),LED):
             self.connectArduino()
             while(True):
-                time.sleep(0.02)
                 self.readSerial()
                 newUpdate = False
                 if self.keepAlive(sock): #let's let the server know we're still there
