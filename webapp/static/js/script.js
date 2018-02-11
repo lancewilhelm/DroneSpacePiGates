@@ -136,7 +136,7 @@ function clearLapList(){
   addLapToTable("Pilot","Time","Lap #");
 }
 
-var lapListIntervalID = setInterval(getLapList();, 5000);
+var lapListIntervalID = setInterval(function(){getLapList();}, 5000);
 function getLapList(){
   origin = window.location.origin
   // gateColorURL = "{{ url_for('index') }}?color="+color
