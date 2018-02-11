@@ -333,6 +333,7 @@ class element:
                     break #something went wrong. let's start over
 
         logging.debug("disconnected")
+        self.disconnectArduino()
 
     def updateAnimations(self,LED):
         if(self.devMode==False):
