@@ -42,10 +42,6 @@ def getServerTiming():
         DSWebClient.clearLapList(gateMasterAddr,13246)
         return json.dumps([])
 
-@app.route("/api/server/sensors/timing/clear", methods=['POST','GET'])
-def clearServerTiming():
-
-
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
     program = request.form['color']
