@@ -6,7 +6,7 @@
 
 const int initLength = 100;
 
-const int deviceNumber = 4;
+const int deviceNumber = 3;
 const int pilotNumber = 4;
 const int averaging = 3;
 const int spiDataPin = 11;
@@ -67,7 +67,7 @@ int currentCommandParam = -1;     //this should be the data needed to complete t
 #define WRITE_FILTER_RATIO 0x69
 
 struct {
-  uint16_t channel[8] = {5658,5695,5732,5769,5843,5905,5880,5917};
+  uint16_t channel[8] = {5658,5843,5917,5800,5800,5800,5800,5800};
   uint16_t volatile rssi[8] = {0,0,0,0,0,0,0,0};
   uint16_t rssiMultiplier[8] = {1,1,1,1,1,1,1,1};
   // Subtracted from the peak rssi during a calibration pass to determine the trigger value
