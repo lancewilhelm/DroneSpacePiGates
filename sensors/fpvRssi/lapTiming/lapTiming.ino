@@ -27,15 +27,28 @@ const int racebandOdds[] = {5658,5732,5843,5880};
 const int racebandEvens[] = {5695,5769,5905,5917};
 
 //these are the states we'll use to let our loop know what a given RX is doing atm
-const int CALIBRATE = 0;    //the moments while a module is discovering its noise floor
-const int STANDBY = 1;      //the moments before a race starts
-const int START = 2;        //the moment when the race starts
-const int FAR = 3;          //the moments while a quad is out of the bubble
-const int ENTER = 4;        //the moments while quad passes through the bubble
-const int PASS = 5;         //the moment an rssi peaks inside the bubble
-const int EXIT = 6;         //the moment when a quad exits the bubble
-const int CHANNEL_HOP = 9;  //the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
-const int FINISHED = 10;    //the moment when the race is completed
+const int CALIBRATE = 0;          //the moments while a module is discovering its noise floor
+const int STANDBY = 1;            //the moments before a race starts
+const int START = 2;              //the moment when the race starts
+const int FAR = 3;                //the moments while a quad is out of the bubble
+const int ENTER = 4;              //the moments while quad passes through the bubble
+const int PASS = 5;               //the moment an rssi peaks inside the bubble
+const int EXIT = 6;               //the moment when a quad exits the bubble
+const int CHANNEL_HOP = 9;        //the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
+const int FINISHED = 10;          //the moment when the race is completed
+const int SET_ENTER_THRESH = 11;  //the moment we want to change the enter threshold
+const int SET_EXIT_THRESH = 12;   //the moment we want to change the exit threshold
+const int SET_MULTIPLIER = 13;    //the moment we want to change the rssi multiplier
+const int COMMAND_START = 96;     //the moment when we start listening for a command
+const int COMMAND_ID = 97;        //the moment when we start listening for a command
+const int COMMAND_PARAM = 98;     //the moments when we are listening for command parameter
+const int COMMAND_RX_ID = 99;     //the moments when we are listening for command module id
+
+//used for serial communication
+int currentCommandState = -1;     //this should only ever be set to one of our command states (COMMAND_START,COMMAND_ID,COMMAND_PARAM)
+int currentCommand = -1;          //this should only be set to one of our moduel states
+int currentCommandRx = -1;        //this should be the id of one of our modules
+int currentCommandParam = -1;     //this should be the data needed to complete the command
 
 #define READ_ADDRESS 0x00
 #define READ_FREQUENCY 0x03
@@ -230,6 +243,78 @@ void setRxModule(int frequency, int slaveSelectPin) {
   delay(2);
 }
 
+String readSerial(){
+  String readString;
+  while (Serial.available()) {
+    char c = Serial.read();  //gets one byte from serial buffer
+    readString += c; //makes the string readString
+    delay(2);  //slow looping to allow buffer to fill with next character
+  }
+  return readString;
+}
+
+void handleSerialData(String dataString){
+  if (dataString.length() >0){
+    int data = dataString.toInt();
+    //let's handle the data based on what state we are in
+    //serial data should be as follows
+    //1. indicate that we should handle a message by sending COMMAND_START
+    //2. send the id of the module we are refering to (-1 if all modules)
+    //3. send the command to be run on the module(s)
+    //4. send any parameter needed to run the command
+    switch (currentCommandState) {
+      case -1:
+        if(data==COMMAND_START){
+          currentCommandState = COMMAND_START;
+        }
+      case COMMAND_START:
+        currentCommandState = COMMAND_ID;
+        break;
+      case COMMAND_ID:
+        currentCommand = data;
+        currentCommandState = COMMAND_RX_ID;
+        break;
+      case COMMAND_RX_ID:
+        currentCommandRx = data;
+        currentCommandState = COMMAND_PARAM;
+        break;
+      case COMMAND_PARAM:
+        currentCommandParam = data;
+        //run the command
+        if(currentCommandRx == -1){
+          for(int i=0;i < deviceNumber;i++){
+            handleCommand(currentCommand,i,currentCommandParam);
+          }
+        }else{
+          handleCommand(currentCommand,currentCommandRx,currentCommandParam);
+        }
+        //reset everything
+        currentCommandState = -1;
+        currentCommand = -1;
+        currentCommandRx = -1;
+        currentCommandParam = -1;
+        break;
+      default:
+        break;
+    }
+
+  }
+}
+
+void handleCommand(int command, int rxId, int params){
+  switch (command) {
+    case SET_MULTIPLIER:
+      //Serial.print("setting module ");
+      //Serial.print(rxId);
+      //Serial.print(" rssi multiplier to ");
+      //Serial.println(params);
+      rxModules.rssiMultiplier[rxId] = params;
+      break;
+    default:
+      break;
+  }
+}
+
 unsigned long getTime(){
   return millis();
 }
@@ -394,8 +479,8 @@ void startRace(){
 
 void printRSSI(){
   for(int i=0;i<deviceNumber;i++){
-    Serial.print(refreshRx(i));
-    //Serial.print(rxModules.noiseFloor[i]);
+    //Serial.print(refreshRx(i));
+    Serial.print(rxModules.rssiMultiplier[i]);
     if(i!=deviceNumber-1){
       Serial.print(",");
     }else{
@@ -415,5 +500,5 @@ void loop() {
     scrollChannels();
     handleRxStates();
   }
-  delay(10);
+  handleSerialData(readSerial());
 }
