@@ -181,6 +181,11 @@ def runProgram(sock):
                 currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
+            if(subject == "getLapList"):
+                for gate in gates:
+                    gate.sendSystemCommand(body)
+            if(subject == "returnLapList"):
+                sendDataTo(sock,address,"getLapList",getGateAddresses(),"")
             if((subject == "keepalive")):
                 try:
                     try:
