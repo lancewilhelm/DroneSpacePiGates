@@ -76,7 +76,7 @@ def sendSensorCommand(ip,port,subject,body):
     data,address = recvData(sock)
     result = None
     if(data): #if we got something back
-        result = data['body'] #set the result to the body of the message
+        result = data['body']['response'] #set the result to the body of the message
 
     return result #this will return None if there was no response
 
