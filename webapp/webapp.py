@@ -31,16 +31,20 @@ def getServerGates():
     print(gates)
     return str(gates)
 
-@app.route("/api/server/sensors/timing", methods=['POST','GET'])
+@app.route("/api/server/sensors/timing/laps", methods=['POST','GET','DELETE'])
 def getServerTiming():
-    laps = DSWebClient.getLapList(gateMasterAddr,13246)
-    print(laps)
-    return json.dumps(laps)
+    if request.method == 'GET':
+        laps = DSWebClient.getLapList(gateMasterAddr,13246)
+        print(laps)
+        return json.dumps(laps)
+    if request.method == 'DELETE':
+        command = request.form['command']
+        DSWebClient.clearLapList(gateMasterAddr,13246)
+        return json.dumps([])
 
 @app.route("/api/server/sensors/timing/clear", methods=['POST','GET'])
 def clearServerTiming():
-    DSWebClient.clearLapList(gateMasterAddr,13246)
-    return json.dumps([])
+
 
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
