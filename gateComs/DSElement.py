@@ -383,6 +383,9 @@ class element:
                     logging.debug("we recieved a disconnect request")
                     return False; #we gotta bail out
 
+                if(subject == "getLapList"):
+                    logging.debug("we recieved a lap list request")
+                    self.sendData(sock,address,"returnLapList",self.getSendableLaps(),"")
                 if(subject == "clearLapList"):
                     logging.debug("we recieved a clear lap list request")
                     self.clearLaps()
@@ -408,9 +411,7 @@ class element:
                     if(command=="update"):
                         branch = arguments[0]
                         self.pullBranch(sock,branch,LED)
-                    if(command=="getLapList"):
-                        logging.debug("we recieved a lap list request")
-                        self.sendData(sock,address,"getLapList",self.getSendableLaps(),"")
+
             except Exception as e:
                 logging.debug(traceback.format_exc())
                 return False
