@@ -165,7 +165,7 @@ class element:
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(('',13248))
+        #sock.bind(('',13248))
         sock.setblocking(0)
         return sock
 
