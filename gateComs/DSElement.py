@@ -86,6 +86,7 @@ class element:
         self.connectionTimeout = 15000 #time in ms of not being able to send before we consider the network disconnected
         self.tempAnimationQueue = []
         self.serial = None
+        self.arduinoConnected = False
         self.pilots = []
 
     def getSendableLaps(self):
@@ -131,31 +132,33 @@ class element:
             self.serial.close()
         except Exception as e:
             print(e)
+        self.arduinoConnected = False
 
     def readSerial(self):
         try:
-            line = self.serial.readline()
-            try:
-                event = eval(line)
-            except:
-                event = None
-            if(event!=None):
-                #print(event)
-                pilotId = event[0]
-                pilot = self.pilots[pilotId]
-                state = event[1]
-                timestamp = event[2]
-                if(state==PASS):
-                    pilot.addLap(0,timestamp)
-                    print(str(pilot.name)+": "+str(timestamp))
-                    logging.debug(str(pilot.name)+": "+str(timestamp))
-                if(state==ENTER):
-                    self.tempAnimationQueue.append(pilot.animation)
-                if(state==CALIBRATE):
-                    print("calibrating module "+str(pilotId))
-                    self.tempAnimationQueue.append(pilot.animation)
-                if(state==STANDBY):
-                    print("module "+str(pilotId)+" ready")
+            if self.arduinoConnected:
+                line = self.serial.readline()
+                try:
+                    event = eval(line)
+                except:
+                    event = None
+                if(event!=None):
+                    #print(event)
+                    pilotId = event[0]
+                    pilot = self.pilots[pilotId]
+                    state = event[1]
+                    timestamp = event[2]
+                    if(state==PASS):
+                        pilot.addLap(0,timestamp)
+                        print(str(pilot.name)+": "+str(timestamp))
+                        logging.debug(str(pilot.name)+": "+str(timestamp))
+                    if(state==ENTER):
+                        self.tempAnimationQueue.append(pilot.animation)
+                    if(state==CALIBRATE):
+                        print("calibrating module "+str(pilotId))
+                        self.tempAnimationQueue.append(pilot.animation)
+                    if(state==STANDBY):
+                        print("module "+str(pilotId)+" ready")
         except Exception as e:
             print(traceback.format_exc())
             print("bad data: "+str(line))
@@ -317,7 +320,7 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
         if self.connectToServer(sock,(self.serverAddress,self.port),LED):
-            self.connectArduino()
+            self.arduinoConnected = self.connectArduino()
             while(True):
                 self.readSerial()
                 newUpdate = False
