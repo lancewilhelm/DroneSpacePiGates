@@ -163,7 +163,7 @@ function clearLapList(){
 
 var lapListIntervalID = setInterval(function(){getLapList();}, 5000);
 function getLapList(){
-  clearLapTable()
+
   origin = window.location.origin
   // gateColorURL = "{{ url_for('index') }}?color="+color
   // alert("sending POST call to "+gateColorUrl);
@@ -174,6 +174,7 @@ function getLapList(){
     if (this.readyState == 4 && this.status == 200) {
       console.log(this.responseText);
       responseTextArray = eval(this.responseText);
+      clearLapTable()
       for (i = 0; i < responseTextArray.length; i++){
           pilot = responseTextArray[i][0];
           time = responseTextArray[i][1];
