@@ -185,6 +185,7 @@ def runProgram(sock):
                 for gate in gates:
                     gate.sendData(subject,body,recipient)
             if(subject == "returnLapList"):
+                logging.debug("we got a returnLapList response "+str(data))
                 sendDataTo(sock,(serverAddress,port),"returnLapList",getGateAddresses(),"")
             if((subject == "keepalive")):
                 try:
