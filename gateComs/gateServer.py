@@ -188,8 +188,12 @@ def runProgram(sock):
                 body = {"responseAddress":address} #this is where we will send the response when we hear back
                 for gate in gates:
                     gate.sendData(subject,body,recipient)
-            if(subject == "returnLapList"):
-                logging.debug("we got a returnLapList response "+str(data))
+            if(subject == "clearLapList"):
+                body = {"responseAddress":address} #this is where we will send the response when we hear back
+                for gate in gates:
+                    gate.sendData(subject,body,recipient)
+            if(subject == "return"):
+                logging.debug("we got a request response: "+str(data))
                 sendDataTo(sock,body["responseAddress"],"returnLapList",body,"")
             if((subject == "keepalive")):
                 try:

@@ -387,9 +387,12 @@ class element:
                     responseAddress = body['responseAddress']
                     body['response'] = self.getSendableLaps()
                     logging.debug("we recieved a lap list request")
-                    self.sendData(sock,(self.serverAddress,self.port),"returnLapList",body,"")
-                if(subject == "clearLapList"):
-                    logging.debug("we recieved a clear lap list request")
+                    self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
+                if(subject == "getLapList"):
+                    responseAddress = body['responseAddress']
+                    body['response'] = self.getSendableLaps()
+                    logging.debug("we recieved a lap list request")
+                    self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
                     self.clearLaps()
 
                 if(subject == "updateColor"):
