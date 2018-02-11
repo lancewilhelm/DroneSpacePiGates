@@ -31,7 +31,6 @@ port = 13246
 
 #these are request which might take some time.
 #Let's keep track of the addresses which are awaiting a response
-pendingRequsts = {}
 
 gates = []
 gateStates = {}
@@ -186,9 +185,7 @@ def runProgram(sock):
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "getLapList"):
-                requestId = {address:subject}
-                pendingRequsts.append(requestId)
-                body["responseAddress"] = requestId #this is where we will send the response when we hear back
+                body["responseAddress"] = address #this is where we will send the response when we hear back
                 for gate in gates:
                     gate.sendData(subject,body,recipient)
             if(subject == "returnLapList"):
