@@ -150,7 +150,7 @@ class element:
                     print(str(pilot.name)+": "+str(timestamp))
                     logging.debug(str(pilot.name)+": "+str(timestamp))
                 if(state==ENTER):
-                    self.tempAnimationQueue.append(body)
+                    self.tempAnimationQueue.append(pilot.animation)
                 if(state==CALIBRATE):
                     print("calibrating module "+str(pilotId))
                 if(state==STANDBY):
