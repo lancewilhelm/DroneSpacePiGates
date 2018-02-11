@@ -213,12 +213,12 @@ def runProgram(sock):
             time.sleep(1.0/fps)
 
         else:
-            if(subject != "keepalive"):
-                logging.debug("respond quickly to "+str(data))
-                for gate in gates:
-                    addr = gate.address
-                    gate.sendMessage(lastStateUpdate)
-                #DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
+            #if(subject != "keepalive"):
+            #    logging.debug("respond quickly to "+str(data))
+            #    for gate in gates:
+            #        addr = gate.address
+            #        gate.sendMessage(lastStateUpdate)
+            #    #DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
             time.sleep(1.0/fps)
 
         loopEnd = getTime()
