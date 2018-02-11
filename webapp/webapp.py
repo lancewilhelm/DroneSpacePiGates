@@ -38,7 +38,7 @@ def getServerTiming():
     return json.dumps(laps)
 
 @app.route("/api/server/sensors/timing/clear", methods=['POST','GET'])
-def getServerTiming():
+def clearServerTiming():
     DSWebClient.clearLapList(gateMasterAddr,13246)
     return json.dumps([])
 
