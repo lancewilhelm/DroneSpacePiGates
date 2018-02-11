@@ -120,6 +120,10 @@ void setup() {
   pinMode (spiDataPin, OUTPUT);
   pinMode (spiClockPin, OUTPUT);
   for (int i = 0; i < deviceNumber; i++) {
+    Serial.print("setting channel for module on pin");
+    Serial.print(rxModules.slaveSelectPins[i]);
+    Serial.print(" to ");
+    Serial.println(rxModules.channel[i]);
     pinMode (rxModules.slaveSelectPins[i], OUTPUT); // RX5808 comms
     setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
     digitalWrite(rxModules.slaveSelectPins[i],HIGH);
@@ -349,7 +353,6 @@ void setupRace(uint16_t channels[]){
       }
     }
   }
-  //lockModuleChannels();
 }
 
 void sendStateUpdate(int rxId,int state,unsigned long timestamp){
@@ -479,8 +482,8 @@ void startRace(){
 
 void printRSSI(){
   for(int i=0;i<deviceNumber;i++){
-    //Serial.print(refreshRx(i));
-    Serial.print(rxModules.rssiMultiplier[i]);
+    Serial.print(refreshRx(i));
+    //Serial.print(rxModules.rssiMultiplier[i]);
     if(i!=deviceNumber-1){
       Serial.print(",");
     }else{

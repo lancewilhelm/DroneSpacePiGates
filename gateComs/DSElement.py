@@ -151,9 +151,10 @@ class element:
                     state = event[1]
                     timestamp = event[2]
                     if(state==PASS):
-                        pilot.addLap(0,timestamp)
-                        print(str(pilot.name)+": "+str(timestamp))
-                        logging.debug(str(pilot.name)+": "+str(timestamp))
+                        if(timestamp > 3):
+                            pilot.addLap(0,timestamp)
+                            print(str(pilot.name)+": "+str(timestamp))
+                            logging.debug(str(pilot.name)+": "+str(timestamp))
                     if(state==ENTER):
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==CALIBRATE):
