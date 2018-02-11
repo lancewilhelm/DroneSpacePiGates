@@ -320,7 +320,6 @@ class element:
     def runProgram(self,sock,LED):
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
         if self.connectToServer(sock,(self.serverAddress,self.port),LED):
-            self.arduinoConnected = self.connectArduino()
             while(True):
                 self.readSerial()
                 newUpdate = False
@@ -336,7 +335,6 @@ class element:
                     break #something went wrong. let's start over
 
         logging.debug("disconnected")
-        self.disconnectArduino()
 
     def updateAnimations(self,LED):
         if(self.devMode==False):
@@ -425,6 +423,7 @@ class element:
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
+        self.arduinoConnected = self.connectArduino()
         if(self.devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:
@@ -445,3 +444,4 @@ class element:
                     logging.debug("Unable to play initial color ")
                     logging.debug(traceback.format_exc())
                 logging.debug("no connection to server. Retrying...")
+        self.disconnectArduino()
