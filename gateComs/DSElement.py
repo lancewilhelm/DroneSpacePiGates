@@ -105,6 +105,7 @@ class element:
         self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
         self.pilots.append(Pilot.pilot("White",2,"flashbang"))
         self.pilots.append(Pilot.pilot("Red",3,"redbang"))
+
     def connectArduino(self):
         print("connecting arduino")
         try:
@@ -389,12 +390,12 @@ class element:
                     body['response'] = self.getSendableLaps()
                     logging.debug("we recieved a lap list request")
                     self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
-                if(subject == "getLapList"):
+                if(subject == "clearLapList"):
+                    self.clearLaps()
                     responseAddress = body['responseAddress']
                     body['response'] = self.getSendableLaps()
                     logging.debug("we recieved a lap list request")
                     self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
-                    self.clearLaps()
 
                 if(subject == "updateColor"):
                     self.currentColor = body
