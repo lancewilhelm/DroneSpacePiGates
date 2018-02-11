@@ -412,7 +412,7 @@ class element:
                     arguments = body['arguments']
                     logging.debug("performing command: "+command)
                     if(command=="shutdown"):
-                        self.shutdown(sock)
+                        self.shutdown(sock,LED)
                     if(command=="reboot"):
                         self.reboot(sock)
                     if(command=="update"):
