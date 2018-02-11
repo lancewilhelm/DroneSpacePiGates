@@ -97,9 +97,14 @@ class element:
         return laps
 
     def clearLaps(self):
-        self.disconnectArduino()
-        self.connectArduino
+        self.clearPilotData()
 
+    def clearPilotData(self):
+        self.pilots = []
+        self.pilots.append(Pilot.pilot("Blue",0,"bluebang"))
+        self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
+        self.pilots.append(Pilot.pilot("White",2,"flashbang"))
+        self.pilots.append(Pilot.pilot("Red",3,"redbang"))
     def connectArduino(self):
         print("connecting arduino")
         try:
@@ -112,11 +117,7 @@ class element:
             #ser = serial.Serial(str(arduinoCom.device))  # open serial port
             self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
             #print(ser.name)         # check which port was really used
-            self.pilots = []
-            self.pilots.append(Pilot.pilot("Sky",0,"bluebang"))
-            self.pilots.append(Pilot.pilot("ScraggleFPV",1,"greenbang"))
-            self.pilots.append(Pilot.pilot("RandoBando",2,"flashbang"))
-            self.pilots.append(Pilot.pilot("Ninja",3,"redbang"))
+            self.clearPilotData()
             print("arduino connected")
             return True
         except Exception as e:
