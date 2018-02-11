@@ -394,7 +394,7 @@ class element:
                     self.clearLaps()
                     responseAddress = body['responseAddress']
                     body['response'] = self.getSendableLaps()
-                    logging.debug("we recieved a lap list request")
+                    logging.debug("we recieved a clear lap list request")
                     self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
 
                 if(subject == "updateColor"):

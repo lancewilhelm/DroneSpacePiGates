@@ -33,12 +33,11 @@ def getServerGates():
 
 @app.route("/api/server/sensors/timing/laps", methods=['POST','GET','DELETE'])
 def getServerTiming():
-    if request.method == 'GET':
+    if request.method == "GET":
         laps = DSWebClient.getLapList(gateMasterAddr,13246)
         print(laps)
         return json.dumps(laps)
-    if request.method == 'DELETE':
-        command = request.form['command']
+    if request.method == "DELETE":
         DSWebClient.clearLapList(gateMasterAddr,13246)
         return json.dumps([])
 
