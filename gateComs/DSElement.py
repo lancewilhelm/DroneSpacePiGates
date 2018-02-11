@@ -153,6 +153,7 @@ class element:
                     self.tempAnimationQueue.append(pilot.animation)
                 if(state==CALIBRATE):
                     print("calibrating module "+str(pilotId))
+                    self.tempAnimationQueue.append(pilot.animation)
                 if(state==STANDBY):
                     print("module "+str(pilotId)+" ready")
         except Exception as e:
