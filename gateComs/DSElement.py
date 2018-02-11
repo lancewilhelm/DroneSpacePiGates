@@ -385,7 +385,7 @@ class element:
 
                 if(subject == "getLapList"):
                     logging.debug("we recieved a lap list request")
-                    self.sendData(sock,address,"returnLapList",self.getSendableLaps(),"")
+                    self.sendData(sock,(self.serverAddress,self.port),"returnLapList",self.getSendableLaps(),"")
                 if(subject == "clearLapList"):
                     logging.debug("we recieved a clear lap list request")
                     self.clearLaps()
