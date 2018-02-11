@@ -185,7 +185,7 @@ def runProgram(sock):
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
             if(subject == "getLapList"):
-                body["responseAddress"] = address #this is where we will send the response when we hear back
+                body = {"responseAddress":address} #this is where we will send the response when we hear back
                 for gate in gates:
                     gate.sendData(subject,body,recipient)
             if(subject == "returnLapList"):
