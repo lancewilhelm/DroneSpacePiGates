@@ -164,7 +164,6 @@ class element:
                         print("module "+str(pilotId)+" ready")
         except Exception as e:
             print(traceback.format_exc())
-            print("bad data: "+str(line))
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -415,7 +414,7 @@ class element:
                     if(command=="shutdown"):
                         self.shutdown(sock,LED)
                     if(command=="reboot"):
-                        self.reboot(sock)
+                        self.reboot(sock,LED)
                     if(command=="update"):
                         branch = arguments[0]
                         self.pullBranch(sock,branch,LED)
