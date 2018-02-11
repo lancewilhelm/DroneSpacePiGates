@@ -156,7 +156,7 @@ function clearLapList(){
       }
     }
   };
-  xhttp.open("GET", "/api/server/sensors/timing/clear", true);
+  xhttp.open("DELETE", "/api/server/sensors/timing/laps", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("");
 }
@@ -183,7 +183,7 @@ function getLapList(){
       }
     }
   };
-  xhttp.open("GET", "/api/server/sensors/timing", true);
+  xhttp.open("GET", "/api/server/sensors/timing/laps", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("");
 }
