@@ -214,8 +214,7 @@ def runProgram(sock):
 
         else:
             if(subject != "keepalive"):
-                logging.debug("respond quickly")
-                #let's not use multicast if the router doesn't support it
+                logging.debug("respond quickly to "+str(data))
                 for gate in gates:
                     addr = gate.address
                     gate.sendMessage(lastStateUpdate)
