@@ -386,9 +386,11 @@ void handleRxStart(int rxId){
 void handleRxFar(int rxId){
   int rssi = refreshRx(rxId);
   if(rssi>enterThreshold){ //quad is entering the gate
-    updateRxState(rxId,ENTER);
-    rxModules.maxRssiTime[rxId] = getTime()-rxModules.lapStartTime[rxId];
-    rxModules.maxRssi[rxId] = rssi;
+    if(getTime()-rxModules.lapStartTime[rxId] > 3){ //minimum lap time is greater than 3 seconds
+      updateRxState(rxId,ENTER);
+      rxModules.maxRssiTime[rxId] = getTime()-rxModules.lapStartTime[rxId];
+      rxModules.maxRssi[rxId] = rssi;
+    }
   }
 }
 

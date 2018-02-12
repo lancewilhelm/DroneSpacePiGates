@@ -104,7 +104,7 @@ class element:
         self.pilots.append(Pilot.pilot("Blue",0,"bluebang"))
         self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
         self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        self.pilots.append(Pilot.pilot("White",3,"flashbang"))
+        #self.pilots.append(Pilot.pilot("White",3,"flashbang"))
 
     def connectArduino(self):
         print("connecting arduino")
@@ -151,10 +151,9 @@ class element:
                     state = event[1]
                     timestamp = event[2]
                     if(state==PASS):
-                        if(timestamp > 3):
-                            pilot.addLap(0,timestamp)
-                            print(str(pilot.name)+": "+str(timestamp))
-                            logging.debug(str(pilot.name)+": "+str(timestamp))
+                        pilot.addLap(0,timestamp)
+                        print(str(pilot.name)+": "+str(timestamp))
+                        logging.debug(str(pilot.name)+": "+str(timestamp))
                     if(state==ENTER):
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==CALIBRATE):
