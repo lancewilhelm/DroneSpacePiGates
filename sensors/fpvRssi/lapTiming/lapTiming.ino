@@ -356,7 +356,8 @@ void setupRace(uint16_t channels[]){
 }
 
 void sendStateUpdate(int rxId,int state,unsigned long timestamp){
-  float seconds = (float)timestamp/1000.0f;
+  unsigned long msToSeconds = 1000.0;
+  unsigned long seconds = (unsigned long)timestamp/msToSeconds;
   Serial.print("[");
   Serial.print(rxId);
   Serial.print(",");
@@ -379,12 +380,11 @@ int refreshRx(int rxId){
   return rxModules.rssi[rxId];
 }
 
-void handleRxStart(int rxId){
+void handleRxStart(int rxId,int rssi){
   rxModules.state[rxId] = FAR;
 }
 
-void handleRxFar(int rxId){
-  int rssi = refreshRx(rxId);
+void handleRxFar(int rxId, int rssi){
   if(rssi>enterThreshold){ //quad is entering the gate
     if(getTime()-rxModules.lapStartTime[rxId] > 3){ //minimum lap time is greater than 3 seconds
       updateRxState(rxId,ENTER);
@@ -394,8 +394,7 @@ void handleRxFar(int rxId){
   }
 }
 
-void handleRxEnter(int rxId){
-  int rssi = refreshRx(rxId);
+void handleRxEnter(int rxId, int rssi){
   if(rssi<exitThreshold){
     updateRxState(rxId,EXIT);
   }else{
@@ -408,18 +407,14 @@ void handleRxEnter(int rxId){
 
 void handleRxExit(int rxId){
   sendStateUpdate(rxId,PASS,rxModules.maxRssiTime[rxId]);
-  float seconds = (float)rxModules.maxRssiTime[rxId]/1000.0f;
   rxModules.lapStartTime[rxId] = getTime();
   updateRxState(rxId,FAR);
 }
 
 void handleRxStates(){
   //Serial.print("[");
-  for(int i=0;i<pilotNumber;i++){
-    //Serial.print(refreshRx(i));
-    //if(i!=pilotNumber-1){
-    //  Serial.print(",");
-    //}
+  for(int i=0;i<deviceNumber;i++){
+    int rssi = refreshRx(i);
     int state = rxModules.state[i];
     switch (state) {
       case CALIBRATE:
@@ -429,16 +424,16 @@ void handleRxStates(){
         // statements
         break;
       case START:
-        handleRxStart(i);
+        handleRxStart(i,rssi);
         break;
       case FAR:
-        handleRxFar(i);
+        handleRxFar(i,rssi);
         break;
       case ENTER:
-        handleRxEnter(i);
+        handleRxEnter(i,rssi);
         break;
       case EXIT:
-        handleRxExit(i);
+        handleRxExit(i,rssi);
         break;
       case CHANNEL_HOP:
         // statements
