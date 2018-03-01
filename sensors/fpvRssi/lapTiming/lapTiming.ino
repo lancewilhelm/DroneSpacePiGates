@@ -396,19 +396,19 @@ void handleRxFar(int rxId, int rssi){
 
 void handleRxEnter(int rxId, int rssi){
   if(rssi<exitThreshold){
-    updateRxState(rxId,EXIT);
+    updateRxState(rxId,EXIT); //this puts us in the handleRxExit method on the next loop
   }else{
     if(rssi>rxModules.maxRssi[rxId]){ //we found a peak, let's note the timestamp
-      rxModules.maxRssiTime[rxId] = getTime()-rxModules.lapStartTime[rxId];
+      rxModules.maxRssiTime[rxId] = getTime();
       rxModules.maxRssi[rxId] = rssi;
     }
   }
 }
 
 void handleRxExit(int rxId){
-  sendStateUpdate(rxId,PASS,rxModules.maxRssiTime[rxId]);
-  rxModules.lapStartTime[rxId] = getTime();
-  updateRxState(rxId,FAR);
+  sendStateUpdate(rxId,PASS,rxModules.maxRssiTime[rxId]-rxModules.lapStartTime[rxId]);//this notifies the pi that a pass was made
+  rxModules.lapStartTime[rxId] = rxModules.maxRssiTime[rxId];
+  updateRxState(rxId,FAR);//this puts us in the handleRxFar method on the next loop
 }
 
 void handleRxStates(){
