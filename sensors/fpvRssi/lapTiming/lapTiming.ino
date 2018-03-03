@@ -4,9 +4,9 @@
 // Node 1 = 8, Node 2 = 10, Node 3 = 12, Node 4 = 14
 // Node 5 = 16, Node 6 = 18, Node 7 = 20, Node 8 = 22
 
-const int initLength = 100;
+const int16_t initLength = 100;
 
-const int deviceNumber = 3;
+const int deviceNumber = 4;
 const int pilotNumber = 4;
 const int averaging = 3;
 const int spiDataPin = 11;
@@ -18,56 +18,40 @@ const int enterThreshold = 125;
 const int exitThreshold = 90;
 unsigned long raceStart = millis();
 
-//let's define some popular channel maps
-//if you are using something other than these, reconsider your life choices
-const int imd5[] = {5685,5760,5800,5860,5905};
-const int imd6[] = {5645,5685,5760,5800,5860,5905};
-const int raceband[] = {5658,5695,5732,5769,5843,5905,5880,5917};
-const int racebandOdds[] = {5658,5732,5843,5880};
-const int racebandEvens[] = {5695,5769,5905,5917};
-
 //these are the states we'll use to let our loop know what a given RX is doing atm
-const int CALIBRATE = 0;          //the moments while a module is discovering its noise floor
-const int STANDBY = 1;            //the moments before a race starts
-const int START = 2;              //the moment when the race starts
-const int FAR = 3;                //the moments while a quad is out of the bubble
-const int ENTER = 4;              //the moments while quad passes through the bubble
-const int PASS = 5;               //the moment an rssi peaks inside the bubble
-const int EXIT = 6;               //the moment when a quad exits the bubble
-const int CHANNEL_HOP = 9;        //the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
-const int FINISHED = 10;          //the moment when the race is completed
-const int SET_ENTER_THRESH = 11;  //the moment we want to change the enter threshold
-const int SET_EXIT_THRESH = 12;   //the moment we want to change the exit threshold
-const int SET_MULTIPLIER = 13;    //the moment we want to change the rssi multiplier
-const int COMMAND_START = 96;     //the moment when we start listening for a command
-const int COMMAND_ID = 97;        //the moment when we start listening for a command
-const int COMMAND_PARAM = 98;     //the moments when we are listening for command parameter
-const int COMMAND_RX_ID = 99;     //the moments when we are listening for command module id
+#define CALIBRATE 0          //the moments while a module is discovering its noise floor
+#define STANDBY 1            //the moments before a race starts
+#define START 2              //the moment when the race starts
+#define FAR 3                //the moments while a quad is out of the bubble
+#define ENTER 4              //the moments while quad passes through the bubble
+#define PASS 5               //the moment an rssi peaks inside the bubble
+#define EXIT 6               //the moment when a quad exits the bubble
+#define CHANNEL_HOP 9        //the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
+#define FINISHED 10          //the moment when the race is completed
+#define SET_ENTER_THRESH 11  //the moment we want to change the enter threshold
+#define SET_EXIT_THRESH 12   //the moment we want to change the exit threshold
+#define SET_MULTIPLIER 13    //the moment we want to change the rssi multiplier
+#define COMMAND_START 96     //the moment when we start listening for a command
+#define COMMAND_ID 97        //the moment when we start listening for a command
+#define COMMAND_PARAM 98     //the moments when we are listening for command parameter
+#define COMMAND_RX_ID 99     //the moments when we are listening for command module id
 
 //used for serial communication
-int currentCommandState = -1;     //this should only ever be set to one of our command states (COMMAND_START,COMMAND_ID,COMMAND_PARAM)
-int currentCommand = -1;          //this should only be set to one of our moduel states
-int currentCommandRx = -1;        //this should be the id of one of our modules
-int currentCommandParam = -1;     //this should be the data needed to complete the command
+int8_t currentCommandState = -1;     //this should only ever be set to one of our command states (COMMAND_START,COMMAND_ID,COMMAND_PARAM)
+int8_t currentCommand = -1;          //this should only be set to one of our moduel states
+int8_t currentCommandRx = -1;        //this should be the id of one of our modules
+int8_t currentCommandParam = -1;     //this should be the data needed to complete the command
 
-#define READ_ADDRESS 0x00
-#define READ_FREQUENCY 0x03
-#define READ_LAP_STATS 0x05
-#define READ_CALIBRATION_THRESHOLD 0x15
-#define READ_CALIBRATION_MODE 0x16
-#define READ_CALIBRATION_OFFSET 0x17
-#define READ_TRIGGER_THRESHOLD 0x18
-#define READ_FILTER_RATIO 0x19
-
-#define WRITE_FREQUENCY 0x51
-#define WRITE_CALIBRATION_THRESHOLD 0x65
-#define WRITE_CALIBRATION_MODE 0x66
-#define WRITE_CALIBRATION_OFFSET 0x67
-#define WRITE_TRIGGER_THRESHOLD 0x68
-#define WRITE_FILTER_RATIO 0x69
+//let's define some popular channel maps
+//if you are using something other than these, reconsider your life choices
+#define IMD5 {5685,5760,5800,5860,5905}
+#define IMD6 {5645,5685,5760,5800,5860,5905}
+#define RACEBAND {5658,5695,5732,5769,5843,5905,5880,5917}
+#define RACEBAND_ODDS {5658,5732,5843,5880}
+#define RACEBAND_EVENS {5695,5769,5905,5917}
 
 struct {
-  uint16_t channel[8] = {5658,5843,5917,5800,5800,5800,5800,5800};
+  uint16_t channel[8] = raceband;
   uint16_t volatile rssi[8] = {0,0,0,0,0,0,0,0};
   uint16_t rssiMultiplier[8] = {1,1,1,1,1,1,1,1};
   // Subtracted from the peak rssi during a calibration pass to determine the trigger value
@@ -77,14 +61,14 @@ struct {
   uint16_t volatile maxRssi[8] = {0,0,0,0,0,0,0,0};
   // Setup data pins for rx5808 comms
   unsigned long lapStartTime[8] = {raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart};
-  uint16_t slaveSelectPins[8] = {10,9,8,7,6,5,4,3};
-  int rssiPins[8] = {0,1,2,3,4,5,6,7};
-  int state[8] = {START,START,START,START,START,START,START,START};
+  uint8_t slaveSelectPins[8] = {10,9,8,7,6,5,4,3};
+  uint8_t rssiPins[8] = {0,1,2,3,4,5,6,7};
+  uint8_t state[8] = {START,START,START,START,START,START,START,START};
 } rxModules;
 
 
 // Define vtx frequencies in mhz and their hex code for setting the rx5808 module
-int vtxFreqTable[] = {
+uint16_t vtxFreqTable[] = {
   5865, 5845, 5825, 5805, 5785, 5765, 5745, 5725, // Band A
   5733, 5752, 5771, 5790, 5809, 5828, 5847, 5866, // Band B
   5705, 5685, 5665, 5645, 5885, 5905, 5925, 5945, // Band E
@@ -113,12 +97,13 @@ void setup() {
 
   //setupRace(rxModules.channel);
 
-  // set ADC prescaler to 16 to speedup ADC readings
+  //set ADC prescaler to 16 to speedup ADC readings
   sbi(ADCSRA,ADPS2);
   cbi(ADCSRA,ADPS1);
   cbi(ADCSRA,ADPS0);
   pinMode (spiDataPin, OUTPUT);
   pinMode (spiClockPin, OUTPUT);
+
   for (int i = 0; i < deviceNumber; i++) {
     Serial.print("setting channel for module on pin");
     Serial.print(rxModules.slaveSelectPins[i]);
@@ -314,6 +299,13 @@ void handleCommand(int command, int rxId, int params){
       //Serial.println(params);
       rxModules.rssiMultiplier[rxId] = params;
       break;
+    case CALIBRATE:
+      //Serial.print("setting module ");
+      //Serial.print(rxId);
+      //Serial.print(" rssi multiplier to ");
+      //Serial.println(params);
+      setRxState(rxId,params);
+      break;
     default:
       break;
   }
@@ -376,7 +368,7 @@ int refreshRx(int rxId){
   int oldValue = rxModules.rssi[rxId];
   int newValue = (analogRead(rxModules.rssiPins[rxId])-rxModules.noiseFloor[rxId])*rxModules.rssiMultiplier[rxId];
   int dif = newValue-oldValue;
-  rxModules.rssi[rxId] = oldValue+(dif*0.1);
+  rxModules.rssi[rxId] = oldValue+(dif*0.1); //this works basica
   return rxModules.rssi[rxId];
 }
 
@@ -388,7 +380,7 @@ void handleRxFar(int rxId, int rssi){
   if(rssi>enterThreshold){ //quad is entering the gate
     if(getTime()-rxModules.lapStartTime[rxId] > 3){ //minimum lap time is greater than 3 seconds
       updateRxState(rxId,ENTER);
-      rxModules.maxRssiTime[rxId] = getTime()-rxModules.lapStartTime[rxId];
+      rxModules.maxRssiTime[rxId] = getTime();
       rxModules.maxRssi[rxId] = rssi;
     }
   }
@@ -433,7 +425,7 @@ void handleRxStates(){
         handleRxEnter(i,rssi);
         break;
       case EXIT:
-        handleRxExit(i,rssi);
+        handleRxExit(i);
         break;
       case CHANNEL_HOP:
         // statements
