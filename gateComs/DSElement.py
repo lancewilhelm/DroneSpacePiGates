@@ -104,7 +104,7 @@ class element:
         self.pilots.append(Pilot.pilot("Blue",0,"bluebang"))
         self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
         self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        #self.pilots.append(Pilot.pilot("White",3,"flashbang"))
+        self.pilots.append(Pilot.pilot("White",3,"flashbang"))
 
     def connectArduino(self):
         print("connecting arduino")
