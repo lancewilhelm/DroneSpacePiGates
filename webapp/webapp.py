@@ -64,9 +64,9 @@ def setGateColors():
 def index():
     return render_template('index.html')
 
-@app.route("/timing", methods=['GET'])
+@app.route("/pit", methods=['GET'])
 def timing():
-    return render_template('timing.html')
+    return render_template('pit.html')
 
 if __name__ == "__main__":
     # Create NeoPixel object with appropriate configuration.

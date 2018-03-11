@@ -51,7 +51,7 @@ int8_t currentCommandParam = -1;     //this should be the data needed to complet
 #define RACEBAND_EVENS {5695,5769,5905,5917}
 
 struct {
-  uint16_t channel[8] = raceband;
+  uint16_t channel[8] = RACEBAND_ODDS;
   uint16_t volatile rssi[8] = {0,0,0,0,0,0,0,0};
   uint16_t rssiMultiplier[8] = {1,1,1,1,1,1,1,1};
   // Subtracted from the peak rssi during a calibration pass to determine the trigger value
@@ -120,7 +120,7 @@ void setup() {
   digitalWrite(spiClockPin, LOW);
   digitalWrite(spiDataPin, LOW);
 
-  calibrateModules();
+  calibrateAllModules();
   startRace();
 }
 
@@ -156,19 +156,23 @@ void SERIAL_SLAVE_HIGH(int pin) {
   delayMicroseconds(100);
 }
 
-void calibrateModules(){
+void calibrateAllModules(){
 
   for(int y=0;y<deviceNumber;y++){
-    updateRxState(y,CALIBRATE);
-    for(int x=0;x<initLength;x++){
-      digitalWrite(LED_BUILTIN, HIGH);
-      rxModules.noiseFloor[y] += analogRead(rxModules.rssiPins[y]);
-      digitalWrite(LED_BUILTIN, LOW);
-      delay(10);
-    }
-    rxModules.noiseFloor[y] = rxModules.noiseFloor[y]/initLength;
-    updateRxState(y,STANDBY);
+    calibrateModule(y);
   }
+}
+
+void calibrateModule(uint8_t rxId){
+  updateRxState(rxId,CALIBRATE);
+  for(int x=0;x<initLength;x++){
+    digitalWrite(LED_BUILTIN, HIGH);
+    rxModules.noiseFloor[rxId] += analogRead(rxModules.rssiPins[rxId]);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(10);
+  }
+  rxModules.noiseFloor[rxId] = rxModules.noiseFloor[rxId]/initLength;
+  updateRxState(rxId,STANDBY);
 }
 
 // Set the frequency given on the rx5808 module
@@ -248,8 +252,8 @@ void handleSerialData(String dataString){
     //let's handle the data based on what state we are in
     //serial data should be as follows
     //1. indicate that we should handle a message by sending COMMAND_START
-    //2. send the id of the module we are refering to (-1 if all modules)
-    //3. send the command to be run on the module(s)
+    //2. send the command to be run on the module(s)
+    //3. send the id of the module we are refering to (-1 if all modules)
     //4. send any parameter needed to run the command
     switch (currentCommandState) {
       case -1:
@@ -284,6 +288,10 @@ void handleSerialData(String dataString){
         currentCommandParam = -1;
         break;
       default:
+        currentCommandState = -1;
+        currentCommand = -1;
+        currentCommandRx = -1;
+        currentCommandParam = -1;
         break;
     }
 
@@ -304,7 +312,7 @@ void handleCommand(int command, int rxId, int params){
       //Serial.print(rxId);
       //Serial.print(" rssi multiplier to ");
       //Serial.println(params);
-      setRxState(rxId,params);
+      calibrateModule(rxId);
       break;
     default:
       break;
