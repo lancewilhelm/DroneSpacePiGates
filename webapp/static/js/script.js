@@ -161,7 +161,8 @@ function clearLapList(){
   xhttp.send("");
 }
 
-var lapListIntervalID = setInterval(function(){getLapList();}, 5000);
+// var lapListIntervalID = setInterval(function(){getLapList();}, 5000);
+
 function getLapList(){
 
   origin = window.location.origin
