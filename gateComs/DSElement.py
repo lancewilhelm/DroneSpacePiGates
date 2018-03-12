@@ -226,6 +226,9 @@ class element:
         #sock.sendto(str(data).encode('utf-8'),address)
         sock.sendto(pickle.dumps(message),address)
 
+    def sendSenseCommand(self, command):
+        self.serial.write(command + "/r/n")
+
     def getTime(self):
         #return the current clock time in milliseconds
         return int(round(time.time() * 1000))
@@ -406,6 +409,9 @@ class element:
                 if(subject == "tempAnimation"):
                     self.tempAnimationQueue.append(body)
                     logging.debug("adding temp animation to queue: "+str(body))
+                if(subject == "sensingCommand"):
+                    self.sendSerialCommand(body)
+                    logging.debug("sending sense command "+body)
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']
