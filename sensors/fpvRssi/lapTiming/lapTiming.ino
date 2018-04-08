@@ -33,6 +33,9 @@ unsigned long raceStart = millis();
 #define SET_MULTIPLIER 13    //the moment we want to change the rssi multiplier
 #define SET_CHANNEL 14       //the moment we want to change one of our tracked channels
 #define COMMAND_START 96     //the moment when we start listening for a command
+#define COMMAND_ID 97
+#define COMMAND_RX_ID 98
+#define COMMAND_PARAM 99
 
 //used for serial communication
 int8_t currentCommandState = -1;     //this should only ever be set to one of our command states (COMMAND_START,COMMAND_ID,COMMAND_PARAM)
@@ -306,13 +309,6 @@ void handleCommand(int command, int rxId, int params){
       rxModules.rssiMultiplier[rxId] = params;
       break;
     case CALIBRATE:
-      //Serial.print("setting module ");
-      //Serial.print(rxId);
-      //Serial.print(" rssi multiplier to ");
-      //Serial.println(params);
-      calibrateModule(rxId);
-      break;
-    case SET_MULTIPLIER:
       //Serial.print("setting module ");
       //Serial.print(rxId);
       //Serial.print(" rssi multiplier to ");
