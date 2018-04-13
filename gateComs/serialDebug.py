@@ -12,22 +12,21 @@ class Arduino:
         try:
             #arduinoCom = next(list_ports.grep("rduino"))
 
-            arduinoCom = "/dev/ttyUSB0"
+            arduinoCom = /dev/ttyACM0#"/dev/ttyUSB0"
             #arduinoCom = "/dev/ttyACM0"
             #arduinoCom = "COM11"
             #print("arduino port: "+str(arduinoCom.device))
             #ser = serial.Serial(str(arduinoCom.device))  # open serial port
             self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
             #print(ser.name)         # check which port was really used
-            self.clearPilotData()
             print("arduino connected")
-            return True
+            self.connected True
         except Exception as e:
             print("failed to connect to arduino ")
             print(traceback.format_exc())
             print("failed to connect arduino")
             print(e)
-            return False
+            self.connected False
 
     def disconnect(self):
         print("disconnecting arduino")
