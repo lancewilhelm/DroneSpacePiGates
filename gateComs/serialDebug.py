@@ -28,8 +28,8 @@ class Arduino:
                 break
 
             except Exception as e:
-                logging.debug("failed to connect to arduino on port "+arduinoCom)
-                logging.debug(traceback.format_exc())
+                print("failed to connect to arduino on port "+arduinoCom)
+                print(traceback.format_exc())
                 print("failed to connect arduino")
                 print(e)
                 self.connected = False
