@@ -108,25 +108,31 @@ class element:
 
     def connectArduino(self):
         print("connecting arduino")
-        try:
-            #arduinoCom = next(list_ports.grep("rduino"))
+        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0"]
+        connected = False
+        for arduinoCom in arduinoPorts:
+            try:
+                #arduinoCom = next(list_ports.grep("rduino"))
 
-            arduinoCom = "/dev/ttyUSB0"
-            #arduinoCom = "/dev/ttyACM0"
-            #arduinoCom = "COM11"
-            #print("arduino port: "+str(arduinoCom.device))
-            #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-            self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
-            #print(ser.name)         # check which port was really used
-            self.clearPilotData()
-            print("arduino connected")
-            return True
-        except Exception as e:
-            logging.debug("failed to connect to arduino ")
-            logging.debug(traceback.format_exc())
-            print("failed to connect arduino")
-            print(e)
-            return False
+                arduinoCom = "/dev/ttyUSB0"
+                #arduinoCom = "/dev/ttyACM0"
+                #arduinoCom = "COM11"
+                #print("arduino port: "+str(arduinoCom.device))
+                #ser = serial.Serial(str(arduinoCom.device))  # open serial port
+                self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
+                #print(ser.name)         # check which port was really used
+                self.clearPilotData()
+                print("arduino connected")
+                connected = True
+                break
+
+            except Exception as e:
+                logging.debug("failed to connect to arduino on port "+arduinoCom)
+                logging.debug(traceback.format_exc())
+                print("failed to connect arduino")
+                print(e)
+                connected = False
+        return connected
 
     def disconnectArduino(self):
         print("disconnecting arduino")
