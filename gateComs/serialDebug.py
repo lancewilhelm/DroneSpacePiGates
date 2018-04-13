@@ -50,3 +50,5 @@ def main():
         arduino.printSerial()
     arduino.disconnect()
     print("program done")
+
+main()
