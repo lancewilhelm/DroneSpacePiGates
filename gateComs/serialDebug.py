@@ -7,7 +7,7 @@ class Arduino:
     def __init__(self):
         self.serial = None
         self.connected = False
-    def connectArduino(self):
+    def connect(self):
         print("connecting arduino")
         arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0"]
         connected = False
