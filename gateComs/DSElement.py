@@ -112,8 +112,15 @@ class element:
         connected = False
         for arduinoCom in arduinoPorts:
             try:
-                self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
+                #arduinoCom = next(list_ports.grep("rduino"))
 
+                #arduinoCom = "/dev/ttyACM0"
+                #arduinoCom = "COM11"
+                #print("arduino port: "+str(arduinoCom.device))
+                #ser = serial.Serial(str(arduinoCom.device))  # open serial port
+                self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
+                #print(ser.name)         # check which port was really used
+                self.clearPilotData()
                 print("arduino connected")
                 connected = True
                 break
