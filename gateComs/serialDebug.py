@@ -1,3 +1,6 @@
+import os
+import sys
+import traceback
 class Arduino:
     def __init__(self):
         self.serial = None
