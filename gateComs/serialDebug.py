@@ -1,6 +1,8 @@
 import os
 import sys
 import traceback
+import serial
+from serial.tools import list_ports
 class Arduino:
     def __init__(self):
         self.serial = None
