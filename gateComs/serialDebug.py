@@ -20,13 +20,13 @@ class Arduino:
             self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
             #print(ser.name)         # check which port was really used
             print("arduino connected")
-            self.connected True
+            self.connected = True
         except Exception as e:
             print("failed to connect to arduino ")
             print(traceback.format_exc())
             print("failed to connect arduino")
             print(e)
-            self.connected False
+            self.connected = False
 
     def disconnect(self):
         print("disconnecting arduino")
