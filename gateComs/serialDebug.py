@@ -40,7 +40,8 @@ class Arduino:
         try:
             if self.connected:
                 line = self.serial.readline()
-                print(line)
+                if(line!=""):
+                    print(line)
         except Exception as e:
             print(traceback.format_exc())
 
