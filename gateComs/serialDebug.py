@@ -15,7 +15,6 @@ class Arduino:
             try:
                 #arduinoCom = next(list_ports.grep("rduino"))
 
-                arduinoCom = "/dev/ttyUSB0"
                 #arduinoCom = "/dev/ttyACM0"
                 #arduinoCom = "COM11"
                 #print("arduino port: "+str(arduinoCom.device))
