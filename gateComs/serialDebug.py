@@ -18,8 +18,8 @@ class Arduino:
             print("arduino connected")
             return True
         except Exception as e:
-            logging.debug("failed to connect to arduino ")
-            logging.debug(traceback.format_exc())
+            print("failed to connect to arduino ")
+            print(traceback.format_exc())
             print("failed to connect arduino")
             print(e)
             return False
