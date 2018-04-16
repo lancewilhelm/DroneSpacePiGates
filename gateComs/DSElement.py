@@ -121,15 +121,15 @@ class element:
                 self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
                 #print(ser.name)         # check which port was really used
                 self.clearPilotData()
-                print("arduino connected")
+                logging.debug("arduino connected")
                 connected = True
                 break
 
             except Exception as e:
                 logging.debug("failed to connect to arduino on port "+arduinoCom)
                 logging.debug(traceback.format_exc())
-                print("failed to connect arduino")
-                print(e)
+                logging.debug("failed to connect arduino")
+                logging.debug(e)
                 connected = False
         return connected
 
@@ -138,19 +138,21 @@ class element:
         try:
             self.serial.close()
         except Exception as e:
-            print(e)
+            logging.debug(e)
         self.arduinoConnected = False
 
     def readSerial(self):
         try:
             if self.arduinoConnected:
                 line = self.serial.readline()
+                if(line!=""):
+                    logging.debug(event)
                 try:
                     event = eval(line)
                 except:
                     event = None
                 if(event!=None):
-                    #print(event)
+
                     pilotId = event[0]
                     pilot = self.pilots[pilotId]
                     state = event[1]
