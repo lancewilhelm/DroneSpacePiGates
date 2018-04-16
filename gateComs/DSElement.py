@@ -101,14 +101,14 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("Blue",0,"bluebang"))
+        self.pilots.append(Pilot.pilot("White",0,"flashbang"))
         self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
         self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        #self.pilots.append(Pilot.pilot("White",3,"flashbang"))
+        self.pilots.append(Pilot.pilot("Blue",3,"bluebang"))
 
     def connectArduino(self):
         print("connecting arduino")
-        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0"]
+        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/tty.wchusbserial1420"]
         connected = False
         for arduinoCom in arduinoPorts:
             try:
@@ -146,7 +146,7 @@ class element:
             if self.arduinoConnected:
                 line = self.serial.readline()
                 if(line!=""):
-                    logging.debug(event)
+                    logging.debug(line)
                 try:
                     event = eval(line)
                 except:
@@ -159,17 +159,17 @@ class element:
                     timestamp = event[2]
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
-                        print(str(pilot.name)+": "+str(timestamp))
+                        logging.debug(str(pilot.name)+": "+str(timestamp))
                         logging.debug(str(pilot.name)+": "+str(timestamp))
                     if(state==ENTER):
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==CALIBRATE):
-                        print("calibrating module "+str(pilotId))
+                        logging.debug("calibrating module "+str(pilotId))
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==STANDBY):
-                        print("module "+str(pilotId)+" ready")
+                        logging.debug("module "+str(pilotId)+" ready")
         except Exception as e:
-            print(traceback.format_exc())
+            logging.debug(traceback.format_exc())
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

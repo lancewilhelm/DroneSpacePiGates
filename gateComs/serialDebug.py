@@ -9,7 +9,7 @@ class Arduino:
         self.connected = False
     def connect(self):
         print("connecting arduino")
-        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0"]
+        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/tty.wchusbserial1420"]
         connected = False
         for arduinoCom in arduinoPorts:
             try:
