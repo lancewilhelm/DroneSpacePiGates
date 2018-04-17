@@ -12,14 +12,15 @@ const int averaging = 10;
 const int spiDataPin = 11;
 const int spiClockPin = 13;
 
-#define meterCalibration 100.0L
-#define moduleConstant 0.1L
-#define txPower 25.0L
+
+#define power 250
+#define maxRssiValue 255
+//#define minRssiValue 125
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
-const int enterThreshold = 125;
-const int exitThreshold = 90;
-float raceStart = millis();
+float enterThreshold = 1.5;
+float exitThreshold = 1.9;
+unsigned long raceStart = millis();
 
 //these are the states we'll use to let our loop know what a given RX is doing atm
 #define CALIBRATE 0          //the moments while a module is discovering its noise floor
@@ -35,6 +36,7 @@ float raceStart = millis();
 #define SET_EXIT_THRESH 12   //the moment we want to change the exit threshold
 #define SET_MULTIPLIER 13    //the moment we want to change the rssi multiplier
 #define SET_CHANNEL 14       //the moment we want to change one of our tracked channels
+#define RUN_TEST 15          //the moment we want to run the test program to trigger fake laps
 #define COMMAND_START 96     //the moment when we start listening for a command
 #define COMMAND_ID 95
 #define COMMAND_RX_ID 94
@@ -46,33 +48,6 @@ int8_t currentCommand = -1;          //this should only be set to one of our mod
 int8_t currentCommandRx = -1;        //this should be the id of one of our modules
 int8_t currentCommandParam = -1;     //this should be the data needed to complete the command
 
-//let's define some popular channel maps
-//if you are using something other than these, reconsider your life choices
-#define IMD5 {5685,5760,5800,5860,5905}
-#define IMD6 {5645,5685,5760,5800,5860,5905}
-#define RACEBAND {5658,5695,5732,5769,5843,5905,5880,5917}
-#define RACEBAND_ODDS {5658,5732,5843,5880}
-#define RACEBAND_EVENS {5695,5769,5905,5917}
-#define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5658,5732,5917,5880}
-
-struct {
-  uint16_t channel[8] = RACEBAND_ODDS;
-  float volatile rssi[8] = {0,0,0,0,0,0,0,0};
-  float rssiMultiplier[8] = {0.083,0.086,0.001,0.064};
-  // Subtracted from the peak rssi during a calibration pass to determine the trigger value
-  float volatile noiseFloor[8] = {0,0,0,0,0,0,0,0};
-  // Rssi must fall below trigger - settings.calibrationThreshold to end a calibration pass
-  float maxRssiTime[8] = {0,0,0,0,0,0,0,0};
-  float volatile maxRssi[8] = {0,0,0,0,0,0,0,0};
-  // Setup data pins for rx5808 comms
-  float lapStartTime[8] = {raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart};
-  uint8_t slaveSelectPins[8] = {10,9,8,7,6,5,4,3};
-  uint8_t rssiPins[8] = {0,1,2,3,4,5,6,7};
-  uint8_t state[8] = {START,START,START,START,START,START,START,START};
-} rxModules;
-
-
 // Define vtx frequencies in mhz and their hex code for setting the rx5808 module
 uint16_t vtxFreqTable[] = {
   5865, 5845, 5825, 5805, 5785, 5765, 5745, 5725, // Band A
@@ -81,6 +56,36 @@ uint16_t vtxFreqTable[] = {
   5740, 5760, 5780, 5800, 5820, 5840, 5860, 5880, // Band F
   5658, 5695, 5732, 5769, 5806, 5843, 5880, 5917  // Band C / Raceband
 };
+
+//let's define some popular channel maps
+//if you are using something other than these, reconsider your life choices
+#define IMD5 {5685,5760,5800,5860,5905}
+#define IMD6 {5645,5685,5760,5800,5860,5905}
+#define RACEBAND {5658,5695,5732,5769,5843,5905,5880,5917}
+#define RACEBAND_ODDS {5658,5732,5843,5880}
+#define RACEBAND_EVENS {5695,5769,5843,5917}
+#define APD {5658,5695,5760,5800,5880,5917}
+#define CUSTOM {5685,5685,5905,5905}
+#define DS {5685,5760,5860,5905}
+
+struct {
+  uint16_t channel[8] = RACEBAND_EVENS;
+  float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+  float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+  // Subtracted from the peak rssi during a calibration pass to determine the trigger value
+  float volatile maxDistance[8] = {0,0,0,0,0,0,0,0};
+  // Rssi must fall below trigger - settings.calibrationThreshold to end a calibration pass
+  unsigned long minDistanceTime[8] = {0,0,0,0,0,0,0,0};
+  float volatile minPassDistance[8] = {0,0,0,0,0,0,0,0};
+  // Setup data pins for rx5808 comms
+  unsigned long lapStartTime[8] = {raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart};
+  uint8_t slaveSelectPins[8] = {10,9,8,7,6,5,4,3};
+  uint8_t rssiPins[8] = {7,6,5,4,3,2,1,0};
+  uint8_t state[8] = {START,START,START,START,START,START,START,START};
+} rxModules;
+
+
+
 
 uint16_t vtxHexTable[] = {
   0x2A05, 0x299B, 0x2991, 0x2987, 0x291D, 0x2913, 0x2909, 0x289F, // Band A
@@ -111,10 +116,10 @@ void setup() {
   pinMode (spiClockPin, OUTPUT);
 
   for (int i = 0; i < deviceNumber; i++) {
-    Serial.print("setting channel for module on pin");
-    Serial.print(rxModules.slaveSelectPins[i]);
-    Serial.print(" to ");
-    Serial.println(rxModules.channel[i]);
+    //Serial.print("setting channel for module on pin");
+    //Serial.print(rxModules.slaveSelectPins[i]);
+    //Serial.print(" to ");
+    //Serial.println(rxModules.channel[i]);
     pinMode (rxModules.slaveSelectPins[i], OUTPUT); // RX5808 comms
     setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
     digitalWrite(rxModules.slaveSelectPins[i],HIGH);
@@ -126,7 +131,7 @@ void setup() {
   digitalWrite(spiClockPin, LOW);
   digitalWrite(spiDataPin, LOW);
 
-  calibrateAllModules();
+  //calibrateAllModules();
   startRace();
 }
 
@@ -173,11 +178,11 @@ void calibrateModule(uint8_t rxId){
   updateRxState(rxId,CALIBRATE);
   for(int x=0;x<initLength;x++){
     digitalWrite(LED_BUILTIN, HIGH);
-    rxModules.noiseFloor[rxId] += (float)analogRead(rxModules.rssiPins[rxId]);
+    rxModules.maxDistance[rxId] += refreshRx(rxId);
     digitalWrite(LED_BUILTIN, LOW);
-    delay(10);
+    delay(2);
   }
-  rxModules.noiseFloor[rxId] = rxModules.noiseFloor[rxId]/initLength;
+  rxModules.maxDistance[rxId] = rxModules.maxDistance[rxId]/initLength;
   updateRxState(rxId,STANDBY);
 }
 
@@ -311,7 +316,7 @@ void handleCommand(int command, int rxId, int params){
       //Serial.print(rxId);
       //Serial.print(" rssi multiplier to ");
       //Serial.println(params);
-      rxModules.rssiMultiplier[rxId] = params;
+      rxModules.distanceMultiplier[rxId] = params;
       break;
     case CALIBRATE:
       //Serial.print("setting module ");
@@ -327,6 +332,8 @@ void handleCommand(int command, int rxId, int params){
       //Serial.println(params);
       calibrateModule(rxId);
       break;
+    case RUN_TEST:
+      testProgram();
     default:
       break;
   }
@@ -386,20 +393,14 @@ void updateRxState(int rxId, int state){
 }
 
 float refreshRx(int rxId){
-  float oldDistance = rxModules.rssi[rxId];
-  float rssiValue = (analogRead(rxModules.rssiPins[rxId])-rxModules.noiseFloor[rxId])*rxModules.rssiMultiplier[rxId]/txPower;
-  //float newValue = analogRead(rxModules.rssiPins[rxId])*rxModules.rssiMultiplier[rxId];
-  float newDistance;
-  if(rssiValue<1){
-    newDistance = 1000.0;
-  }else{
-    newDistance = -log10(rssiValue/(meterCalibration*10));
-  }
+  float rssi = analogRead(rxModules.rssiPins[rxId]);//*rxModules.rssiMultiplier[rxId];
+  float mc = 23.3; //module constant
+  float scale = 23;
+  float newDistance = (-pow(rssi/scale,2.0)+scale+power)*.01*rxModules.distanceMultiplier[rxId];
   if(newDistance<0){
     newDistance = 0;
   }
-  float dif = newDistance-oldDistance;
-  rxModules.rssi[rxId] = (oldDistance*0.9)+(newDistance*0.1);
+  rxModules.rssi[rxId] = (newDistance*.01)+(rxModules.rssi[rxId]*.99);
   return rxModules.rssi[rxId];
 }
 
@@ -408,29 +409,29 @@ void handleRxStart(int rxId,float rssi){
 }
 
 void handleRxFar(int rxId, float rssi){
-  if(rssi>enterThreshold){ //quad is entering the gate
-    if(getTime()-rxModules.lapStartTime[rxId] > 3){ //minimum lap time is greater than 3 seconds
+  if(rssi<enterThreshold){ //quad is entering the gate
+    if((getTime()-rxModules.lapStartTime[rxId])/1000L > 3){ //minimum lap time is greater than 3 seconds
       updateRxState(rxId,ENTER);
-      rxModules.maxRssiTime[rxId] = getTime();
-      rxModules.maxRssi[rxId] = rssi;
+      rxModules.minDistanceTime[rxId] = getTime();
+      rxModules.minPassDistance[rxId] = rssi;
     }
   }
 }
 
 void handleRxEnter(int rxId, float rssi){
-  if(rssi<exitThreshold){
+  if(rssi>exitThreshold){
     updateRxState(rxId,EXIT); //this puts us in the handleRxExit method on the next loop
   }else{
-    if(rssi>rxModules.maxRssi[rxId]){ //we found a peak, let's note the timestamp
-      rxModules.maxRssiTime[rxId] = getTime();
-      rxModules.maxRssi[rxId] = rssi;
+    if(rssi<rxModules.minPassDistance[rxId]){ //we found a peak, let's note the timestamp
+      rxModules.minDistanceTime[rxId] = getTime();
+      rxModules.minPassDistance[rxId] = rssi;
     }
   }
 }
 
 void handleRxExit(int rxId){
-  sendStateUpdate(rxId,PASS,rxModules.maxRssiTime[rxId]-rxModules.lapStartTime[rxId]);//this notifies the pi that a pass was made
-  rxModules.lapStartTime[rxId] = rxModules.maxRssiTime[rxId];
+  sendStateUpdate(rxId,PASS,rxModules.minDistanceTime[rxId]-rxModules.lapStartTime[rxId]);//this notifies the pi that a pass was made
+  rxModules.lapStartTime[rxId] = rxModules.minDistanceTime[rxId];
   updateRxState(rxId,FAR);//this puts us in the handleRxFar method on the next loop
 }
 
@@ -501,9 +502,17 @@ void startRace(){
 }
 
 void printRSSI(){
+  Serial.print(enterThreshold);
+  Serial.print(",");
+  Serial.print(exitThreshold);
+  Serial.print(",");
+
   for(int i=0;i<deviceNumber;i++){
+    //analogRead(rxModules.rssiPins[i]);
+    //Serial.print(",");
+    //Serial.print(analogRead(rxModules.rssiPins[i]));
+    //Serial.print(",");
     Serial.print((float)refreshRx(i));
-    //Serial.print(rxModules.rssiMultiplier[i]);
     if(i!=deviceNumber-1){
       Serial.print(",");
     }else{
@@ -513,9 +522,29 @@ void printRSSI(){
 
 }
 
+void fakeRxNear(int rxId){
+  rxModules.rssi[rxId] = 0;
+  handleRxStates();
+}
+
+void fakeRxFar(int rxId){
+  rxModules.rssi[rxId] = 100;
+  handleRxStates();
+}
+
+void testProgram(){
+  for(int i=0;i<deviceNumber;i++){
+    delay(3000);
+    fakeRxNear(i);
+    delay(1000);
+    fakeRxFar(i);
+  }
+}
+
 // Main loop
 void loop() {
-  printRSSI();
+  //printRSSI();
+  //testProgram();
   raceStart = getTime();
   if(rxLoop == -1){  //we have enough modules for each channel
     handleRxStates();

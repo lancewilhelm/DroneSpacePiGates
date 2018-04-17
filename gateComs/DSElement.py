@@ -108,7 +108,7 @@ class element:
 
     def connectArduino(self):
         print("connecting arduino")
-        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/tty.wchusbserial1420","/dev/tty.wchusbserial1410"]
+        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/ttyAMA0","/dev/tty.wchusbserial1420","/dev/tty.wchusbserial1410"]
         connected = False
         for arduinoCom in arduinoPorts:
             try:
@@ -134,7 +134,7 @@ class element:
         return connected
 
     def disconnectArduino(self):
-        print("disconnecting arduino")
+        logging.debug("disconnecting arduino")
         try:
             self.serial.close()
         except Exception as e:
@@ -149,6 +149,7 @@ class element:
                     logging.debug(line)
                 try:
                     event = eval(line)
+                    logging.debug(event)
                 except:
                     event = None
                 if(event!=None):
@@ -169,6 +170,7 @@ class element:
                     if(state==STANDBY):
                         logging.debug("module "+str(pilotId)+" ready")
         except Exception as e:
+            logging.debug(e)
             logging.debug(traceback.format_exc())
 
     def createSocket(self,port):
