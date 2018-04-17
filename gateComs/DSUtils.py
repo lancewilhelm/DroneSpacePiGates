@@ -40,12 +40,16 @@ class Gate: #this is our representation of a gate
         self.sendData("tempAnimation",tempAnimation,"")
 
     def updateSolidColor(self,color):
-          self.color = color
-          self.sendData("updateColor",color,"")
+        self.color = color
+        self.sendData("updateColor",color,"")
 
     def sendSystemCommand(self,body):
-          self.body = body
-          self.sendData("systemCommand",body,"")
+        self.body = body
+        self.sendData("systemCommand",body,"")
+
+    def sendSensingCommand(self,body):
+        self.body = body
+        self.sendData("sensingCommand",body,"")
 
     def sendData(self,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}

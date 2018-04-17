@@ -140,7 +140,13 @@ class element:
         except Exception as e:
             logging.debug(e)
         self.arduinoConnected = False
-
+    def writeSerial(self, data):
+        if self.arduinoConnected:
+            logging.debug("sending '"+data+"' to arduino")
+            message = data + "/r/n"
+            self.serial.write(message.encode())
+        else:
+            logging.debug("no arduino connected. Command not sent")
     def readSerial(self):
         try:
             if self.arduinoConnected:
@@ -415,6 +421,9 @@ class element:
                 if(subject == "tempAnimation"):
                     self.tempAnimationQueue.append(body)
                     logging.debug("adding temp animation to queue: "+str(body))
+                if(subject == "sensingCommand"):
+                    self.writeSerial(body)
+                    logging.debug("sending sense command "+body)
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']
@@ -438,7 +447,9 @@ class element:
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
+
         self.arduinoConnected = self.connectArduino()
+
         if(self.devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:

@@ -113,6 +113,18 @@ function sendElementCommand(command){
   }
 }
 
+function sendSerialCommand(){
+  origin = window.location.origin
+  // gateColorURL = "{{ url_for('index') }}?color="+color
+  // alert("sending POST call to "+gateColorUrl);
+  var xhttp = new XMLHttpRequest();
+  var command = document.getElementById('commandInput').value;
+  // event.preventDefault();
+  xhttp.open("POST", "/api/server/sensors/timing/command", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("command="+command);
+}
+
 var responseTextArray = [];
 
 function addLapToTable(pilot, time, number){
