@@ -84,8 +84,8 @@ def sendSensorCommandQuickly(ip,port,subject,body):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),subject,body,"")
 
-def executeThetaCommand():
-    return sendSensorCommandQuickly(ip,port,"thetaCommand",{})
+def executeThetaCommand(ip,port,command):
+    return sendSensorCommandQuickly(ip,port,"thetaCommand",command)
 
 def getLapList(ip,port):
     return sendSensorCommandQuickly(ip,port,"getLapList",{})

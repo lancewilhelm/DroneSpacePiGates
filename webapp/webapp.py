@@ -45,7 +45,7 @@ def getServerTiming():
 def sendSensingCommand():
     if request.method == "POST":
         command = request.form['command']
-        DSWebClient.sendSensorCommandQuickly(gateMasterAddr,13246,command)
+        DSWebClient.executeThetaCommand(gateMasterAddr,13246,command)
         # print(command)
         return "sending command"
 
