@@ -88,7 +88,7 @@ def executeThetaCommand(ip,port,command):
     return sendSensorCommandQuickly(ip,port,"thetaCommand",command)
 
 def getLapList(ip,port):
-    return sendSensorCommandQuickly(ip,port,"getLapList",{})
+    return sendSensorCommand(ip,port,"getLapList",{})
 
 def clearLapList(ip,port):
     return sendSensorCommandQuickly(ip,port,"clearLapList",{})
