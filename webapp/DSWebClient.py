@@ -80,6 +80,10 @@ def sendSensorCommand(ip,port,body):
 
     return result #this will return None if there was no response
 
+def sendSensorCommandQuickly(ip,port,body):
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),"sensingCommand",body,"")
+
 def getLapList(ip,port):
     return sendSensorCommand(ip,port,"getLapList")
 

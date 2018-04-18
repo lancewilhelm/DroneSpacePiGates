@@ -45,7 +45,7 @@ def getServerTiming():
 def sendSensingCommand():
     if request.method == "POST":
         command = request.form['command']
-        DSWebClient.sendSensorCommand(gateMasterAddr,13246,command)
+        DSWebClient.sendSensorCommandQuickly(gateMasterAddr,13246,command)
         # print(command)
         return "sending command"
 
@@ -75,6 +75,10 @@ def index():
 @app.route("/timing", methods=['GET'])
 def timing():
     return render_template('timing.html')
+
+@app.route("/configure", methods=['GET'])
+def configure():
+    return render_template('configure.html')
 
 if __name__ == "__main__":
     # Create NeoPixel object with appropriate configuration.

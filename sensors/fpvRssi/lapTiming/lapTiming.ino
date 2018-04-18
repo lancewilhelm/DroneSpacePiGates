@@ -37,6 +37,7 @@ unsigned long raceStart = millis();
 #define SET_MULTIPLIER 13    //the moment we want to change the rssi multiplier
 #define SET_CHANNEL 14       //the moment we want to change one of our tracked channels
 #define RUN_TEST 15          //the moment we want to run the test program to trigger fake laps
+#define SET_BAND 16       //the moment we want to change one of our tracked channels
 #define COMMAND_START 96     //the moment when we start listening for a command
 #define COMMAND_ID 95
 #define COMMAND_RX_ID 94
@@ -326,6 +327,13 @@ void handleCommand(int command, int rxId, int params){
       calibrateModule(rxId);
       break;
     case SET_CHANNEL:
+      //Serial.print("setting module ");
+      //Serial.print(rxId);
+      //Serial.print(" rssi multiplier to ");
+      //Serial.println(params);
+      calibrateModule(rxId);
+      break;
+    case SET_BAND:
       //Serial.print("setting module ");
       //Serial.print(rxId);
       //Serial.print(" rssi multiplier to ");
