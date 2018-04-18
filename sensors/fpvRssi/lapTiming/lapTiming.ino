@@ -35,19 +35,18 @@ unsigned long raceStart = millis();
 #define SET_ENTER_THRESH 11  //the moment we want to change the enter threshold
 #define SET_EXIT_THRESH 12   //the moment we want to change the exit threshold
 #define SET_MULTIPLIER 13    //the moment we want to change the rssi multiplier
-#define SET_CHANNEL 14       //the moment we want to change one of our tracked channels
+#define SET_FREQUENCY 14       //the moment we want to change one of our tracked channels
 #define RUN_TEST 15          //the moment we want to run the test program to trigger fake laps
-#define SET_BAND 16       //the moment we want to change one of our tracked channels
 #define COMMAND_START 96     //the moment when we start listening for a command
 #define COMMAND_ID 95
 #define COMMAND_RX_ID 94
 #define COMMAND_PARAM 93
 
 //used for serial communication
-int8_t currentCommandState = -1;     //this should only ever be set to one of our command states (COMMAND_START,COMMAND_ID,COMMAND_PARAM)
+int8_t currentCommandState = COMMAND_START;     //this should only ever be set to one of our command states (COMMAND_START,COMMAND_ID,COMMAND_PARAM)
 int8_t currentCommand = -1;          //this should only be set to one of our moduel states
 int8_t currentCommandRx = -1;        //this should be the id of one of our modules
-int8_t currentCommandParam = -1;     //this should be the data needed to complete the command
+float currentCommandParam = -1;     //this should be the data needed to complete the command
 
 // Define vtx frequencies in mhz and their hex code for setting the rx5808 module
 uint16_t vtxFreqTable[] = {
@@ -62,15 +61,15 @@ uint16_t vtxFreqTable[] = {
 //if you are using something other than these, reconsider your life choices
 #define IMD5 {5685,5760,5800,5860,5905}
 #define IMD6 {5645,5685,5760,5800,5860,5905}
-#define RACEBAND {5658,5695,5732,5769,5843,5905,5880,5917}
+#define RACEBAND {5658,5695,5732,5769,5806,5843,5880,5917}
 #define RACEBAND_ODDS {5658,5732,5843,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5685,5685,5905,5905}
+#define CUSTOM {5658,5658,5658,5658}
 #define DS {5685,5760,5860,5905}
 
 struct {
-  uint16_t channel[8] = RACEBAND_EVENS;
+  uint16_t channel[8] = DS;
   float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
   // Subtracted from the peak rssi during a calibration pass to determine the trigger value
@@ -123,17 +122,17 @@ void setup() {
     //Serial.println(rxModules.channel[i]);
     pinMode (rxModules.slaveSelectPins[i], OUTPUT); // RX5808 comms
     setRxModule(rxModules.channel[i],rxModules.slaveSelectPins[i]);
-    digitalWrite(rxModules.slaveSelectPins[i],HIGH);
   }
 
-  for (int i = 0; i < deviceNumber; i++){ //we need to set all the pins low now
-    digitalWrite(rxModules.slaveSelectPins[i], LOW);
-  }
   digitalWrite(spiClockPin, LOW);
   digitalWrite(spiDataPin, LOW);
 
   //calibrateAllModules();
   startRace();
+}
+
+void setModuleChannel(int rxId, int frequency){
+  setRxModule(frequency,rxModules.slaveSelectPins[rxId]);
 }
 
 // Functions for the rx5808 module
@@ -246,6 +245,7 @@ void setRxModule(int frequency, int slaveSelectPin) {
 
   SERIAL_SLAVE_HIGH(slaveSelectPin); // Finished clocking data in
   delay(2);
+  digitalWrite(rxModules.slaveSelectPins[i], LOW);
 }
 
 String readSerial(){
@@ -260,7 +260,6 @@ String readSerial(){
 
 void handleSerialData(String dataString){
   if (dataString.length() >0){
-    int data = dataString.toInt();
     //let's handle the data based on what state we are in
     //serial data should be as follows
     //1. indicate that we should handle a message by sending COMMAND_START
@@ -268,23 +267,19 @@ void handleSerialData(String dataString){
     //3. send the id of the module we are refering to (-1 if all modules)
     //4. send any parameter needed to run the command
     switch (currentCommandState) {
-      case -1:
-        if(data==COMMAND_START){
-          currentCommandState = COMMAND_START;
-        }
       case COMMAND_START:
         currentCommandState = COMMAND_ID;
         break;
       case COMMAND_ID:
-        currentCommand = data;
+        currentCommand = dataString.toInt();
         currentCommandState = COMMAND_RX_ID;
         break;
       case COMMAND_RX_ID:
-        currentCommandRx = data;
+        currentCommandRx = dataString.toInt();
         currentCommandState = COMMAND_PARAM;
         break;
       case COMMAND_PARAM:
-        currentCommandParam = data;
+        currentCommandParam = dataString.toFloat();
         //run the command
         if(currentCommandRx == -1){
           for(int i=0;i < deviceNumber;i++){
@@ -294,13 +289,13 @@ void handleSerialData(String dataString){
           handleCommand(currentCommand,currentCommandRx,currentCommandParam);
         }
         //reset everything
-        currentCommandState = -1;
+        currentCommandState = COMMAND_START;
         currentCommand = -1;
         currentCommandRx = -1;
         currentCommandParam = -1;
         break;
       default:
-        currentCommandState = -1;
+        currentCommandState = COMMAND_START;
         currentCommand = -1;
         currentCommandRx = -1;
         currentCommandParam = -1;
@@ -310,7 +305,7 @@ void handleSerialData(String dataString){
   }
 }
 
-void handleCommand(int command, int rxId, int params){
+void handleCommand(int command, int rxId, float params){
   switch (command) {
     case SET_MULTIPLIER:
       //Serial.print("setting module ");
@@ -326,19 +321,8 @@ void handleCommand(int command, int rxId, int params){
       //Serial.println(params);
       calibrateModule(rxId);
       break;
-    case SET_CHANNEL:
-      //Serial.print("setting module ");
-      //Serial.print(rxId);
-      //Serial.print(" rssi multiplier to ");
-      //Serial.println(params);
-      calibrateModule(rxId);
-      break;
-    case SET_BAND:
-      //Serial.print("setting module ");
-      //Serial.print(rxId);
-      //Serial.print(" rssi multiplier to ");
-      //Serial.println(params);
-      calibrateModule(rxId);
+    case SET_FREQUENCY:
+      setModuleChannel(rxId,(int)params);
       break;
     case RUN_TEST:
       testProgram();
@@ -514,7 +498,7 @@ void printRSSI(){
   Serial.print(",");
   Serial.print(exitThreshold);
   Serial.print(",");
-
+  delay(100);
   for(int i=0;i<deviceNumber;i++){
     //analogRead(rxModules.rssiPins[i]);
     //Serial.print(",");
@@ -551,7 +535,7 @@ void testProgram(){
 
 // Main loop
 void loop() {
-  //printRSSI();
+  printRSSI();
   //testProgram();
   raceStart = getTime();
   if(rxLoop == -1){  //we have enough modules for each channel

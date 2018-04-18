@@ -19,8 +19,7 @@ function execute(){
   var enterBubbleElement = document.getElementById('enterBubble');
   var exitBubbleElement = document.getElementById('exitBubble');
   var distanceMultiplierElement = document.getElementById('distanceMultiplier');
-  var channelElement = document.getElementById('channel');
-  var bandElement = document.getElementById('band');
+  var frequencyElement = document.getElementById('frequency');
   var testProgramElement = document.getElementById('testProgram');
   if(enterBubbleElement.checked){
     command = 11;
@@ -31,14 +30,11 @@ function execute(){
   if(distanceMultiplierElement.checked){
     command = 13;
   }
-  if(channelElement.checked){
+  if(frequencyElement.checked){
     command = 14;
   }
   if(testProgramElement.checked){
     command = 15;
-  }
-  if(bandElement.checked){
-    command = 16;
   }
 
   //deal with value
