@@ -85,7 +85,15 @@ def sendSensorCommandQuickly(ip,port,body):
     sendDataToServer(sock,(ip,port),"sensingCommand",body,"")
 
 def getLapList(ip,port):
-    return sendSensorCommand(ip,port,"getLapList")
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),"getLapList",body,"")
+    sock.settimeout(10)
+    data,address = recvData(sock)
+    result = None
+    if(data): #if we got something back
+        result = data['body']['response'] #set the result to the body of the message
+
+    return result #this will return None if there was no response
 
 def clearLapList(ip,port):
     return sendSensorCommand(ip,port,"clearLapList")

@@ -144,7 +144,7 @@ class element:
         if self.arduinoConnected == False:
             logging.debug("no arduino connected. Attempting to reconnect")
             self.arduinoConnected = self.connectArduino()
-        else:
+        if self.arduinoConnected == True:
             logging.debug("sending '"+data+"' to arduino")
             message = data + "/r/n"
             self.serial.write(message.encode())
