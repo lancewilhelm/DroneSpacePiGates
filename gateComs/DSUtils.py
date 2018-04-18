@@ -47,9 +47,9 @@ class Gate: #this is our representation of a gate
         self.body = body
         self.sendData("systemCommand",body,"")
 
-    def sendSensingCommand(self,body):
+    def sendThetaCommand(self,body):
         self.body = body
-        self.sendData("sensingCommand",body,"")
+        self.sendData("thetaCommand",body,"")
 
     def sendData(self,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}

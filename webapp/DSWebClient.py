@@ -69,9 +69,9 @@ def getGateList(ip,port):
 
     return result #this will return None if there was no response
 
-def sendSensorCommand(ip,port,body):
+def sendSensorCommand(ip,port,subject,body):
     sock = createSocket(port)
-    sendDataToServer(sock,(ip,port),"sensingCommand",body,"")
+    sendDataToServer(sock,(ip,port),subject,body,"")
     sock.settimeout(10)
     data,address = recvData(sock)
     result = None
@@ -80,20 +80,15 @@ def sendSensorCommand(ip,port,body):
 
     return result #this will return None if there was no response
 
-def sendSensorCommandQuickly(ip,port,body):
+def sendSensorCommandQuickly(ip,port,subject,body):
     sock = createSocket(port)
-    sendDataToServer(sock,(ip,port),"sensingCommand",body,"")
+    sendDataToServer(sock,(ip,port),subject,body,"")
+
+def executeThetaCommand():
+    return sendSensorCommandQuickly(ip,port,"thetaCommand",{})
 
 def getLapList(ip,port):
-    sock = createSocket(port)
-    sendDataToServer(sock,(ip,port),"getLapList",{},"")
-    sock.settimeout(10)
-    data,address = recvData(sock)
-    result = None
-    if(data): #if we got something back
-        result = data['body']['response'] #set the result to the body of the message
-
-    return result #this will return None if there was no response
+    return sendSensorCommandQuickly(ip,port,"getLapList",{})
 
 def clearLapList(ip,port):
-    return sendSensorCommand(ip,port,"clearLapList")
+    return sendSensorCommandQuickly(ip,port,"clearLapList",{})

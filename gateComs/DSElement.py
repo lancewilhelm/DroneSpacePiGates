@@ -425,9 +425,9 @@ class element:
                 if(subject == "tempAnimation"):
                     self.tempAnimationQueue.append(body)
                     logging.debug("adding temp animation to queue: "+str(body))
-                if(subject == "sensingCommand"):
+                if(subject == "thetaCommand"):
                     self.writeSerial(body)
-                    logging.debug("sending sense command "+body)
+                    logging.debug("sending theta command "+body)
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']

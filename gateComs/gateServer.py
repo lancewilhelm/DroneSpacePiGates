@@ -172,10 +172,10 @@ def runProgram(sock):
                 currentSubject = subject
                 currentBody = body
 
-            if(subject == "sensingCommand"):
+            if(subject == "thetaCommand"):
                 try:
                     for gate in gates:
-                        gate.sendSensingCommand(body)
+                        gate.sendThetaCommand(body)
                     logging.debug("SENDING SENSING COMMAND")
                     logging.info(str(gates))
                 except Exception as e:
