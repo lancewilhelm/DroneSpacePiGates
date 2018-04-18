@@ -18,7 +18,7 @@ function execute(){
   //figure out which command we'd like to run
   var enterBubbleElement = document.getElementById('enterBubble');
   var exitBubbleElement = document.getElementById('exitBubble');
-  var rssiMultiplierElement = document.getElementById('rssiMultiplier');
+  var distanceMultiplierElement = document.getElementById('distanceMultiplier');
   var channelElement = document.getElementById('channel');
   var bandElement = document.getElementById('band');
   var testProgramElement = document.getElementById('testProgram');
@@ -28,7 +28,7 @@ function execute(){
   if(exitBubbleElement.checked){
     command = 12;
   }
-  if(rssiMultiplierElement.checked){
+  if(distanceMultiplierElement.checked){
     command = 13;
   }
   if(channelElement.checked){
