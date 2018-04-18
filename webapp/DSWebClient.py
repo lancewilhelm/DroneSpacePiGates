@@ -86,7 +86,7 @@ def sendSensorCommandQuickly(ip,port,body):
 
 def getLapList(ip,port):
     sock = createSocket(port)
-    sendDataToServer(sock,(ip,port),"getLapList",body,"")
+    sendDataToServer(sock,(ip,port),"getLapList",{},"")
     sock.settimeout(10)
     data,address = recvData(sock)
     result = None
