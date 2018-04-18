@@ -48,10 +48,7 @@ function execute(){
     var moduleElement = document.getElementById('module'+moduleId);
     console.log('module'+moduleId);
     if(moduleElement.checked){
-      sendSerialCommand("96");
-      sendSerialCommand(command);
-      sendSerialCommand(moduleId);
-      sendSerialCommand(commandValue);
+      sendSerialCommand(command+"|"+moduleId+"|"+commandValue);
     }
   }
 }

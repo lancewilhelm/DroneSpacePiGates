@@ -258,50 +258,33 @@ String readSerial(){
   return readString;
 }
 
+String splitString(String data, char separator, int index)
+{
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 void handleSerialData(String dataString){
   if (dataString.length() >0){
+    currentCommand = splitString(dataString,'|',0).toInt();
+    currentCommandRx = splitString(dataString,'|',1).toInt();
+    currentCommandParam = splitString(dataString,'|',2).toFloat();
+    handleCommand(currentCommand,currentCommandRx,currentCommandParam);
     //let's handle the data based on what state we are in
     //serial data should be as follows
-    //1. indicate that we should handle a message by sending COMMAND_START
-    //2. send the command to be run on the module(s)
-    //3. send the id of the module we are refering to (-1 if all modules)
-    //4. send any parameter needed to run the command
-    switch (currentCommandState) {
-      case COMMAND_START:
-        currentCommandState = COMMAND_ID;
-        break;
-      case COMMAND_ID:
-        currentCommand = dataString.toInt();
-        currentCommandState = COMMAND_RX_ID;
-        break;
-      case COMMAND_RX_ID:
-        currentCommandRx = dataString.toInt();
-        currentCommandState = COMMAND_PARAM;
-        break;
-      case COMMAND_PARAM:
-        currentCommandParam = dataString.toFloat();
-        //run the command
-        if(currentCommandRx == -1){
-          for(int i=0;i < deviceNumber;i++){
-            handleCommand(currentCommand,i,currentCommandParam);
-          }
-        }else{
-          handleCommand(currentCommand,currentCommandRx,currentCommandParam);
-        }
-        //reset everything
-        currentCommandState = COMMAND_START;
-        currentCommand = -1;
-        currentCommandRx = -1;
-        currentCommandParam = -1;
-        break;
-      default:
-        currentCommandState = COMMAND_START;
-        currentCommand = -1;
-        currentCommandRx = -1;
-        currentCommandParam = -1;
-        break;
-    }
-
+    //send the command to be run on the module, followed by the module to be run on, followed by any params the command needs.
+    //Each should be delimited by a "|" character
+    
   }
 }
 
@@ -535,7 +518,7 @@ void testProgram(){
 
 // Main loop
 void loop() {
-  printRSSI();
+  //printRSSI();
   //testProgram();
   raceStart = getTime();
   if(rxLoop == -1){  //we have enough modules for each channel
