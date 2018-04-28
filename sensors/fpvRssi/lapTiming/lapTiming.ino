@@ -352,7 +352,7 @@ void setupRace(uint16_t channels[]){
 
 void sendStateUpdate(int rxId,int state,unsigned long timestamp){
   unsigned long msToSeconds = 1000.0;
-  unsigned long seconds = (unsigned long)timestamp/msToSeconds;
+  float seconds = (float)timestamp/msToSeconds;
   Serial.print("[");
   Serial.print(rxId);
   Serial.print(",");
@@ -481,7 +481,7 @@ void printRSSI(){
   Serial.print(",");
   Serial.print(exitThreshold);
   Serial.print(",");
-  delay(100);
+  delay(20);
   for(int i=0;i<deviceNumber;i++){
     //analogRead(rxModules.rssiPins[i]);
     //Serial.print(",");
