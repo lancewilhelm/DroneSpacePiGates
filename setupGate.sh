@@ -1,9 +1,21 @@
 #!/bin/bash
 #let's get neopixel set up
 sudo apt-get update
-sudo apt-get install build-essential python-dev git scons swig
+sudo apt-get -y install build-essential python-dev git scons swig avrdude
+
+#install arduino stuff
+wget https://downloads.arduino.cc/arduino-1.8.5-linuxarm.tar.xz
+tar -xf arduino-1.8.5-linuxarm.tar.xz --verbose
+cd arduino-1.8.5
+./install.sh
+export PATH=$PATH:~/arduino-1.8.5
+cd ..
+sudo usermod -a -G dialout pi
+
+#install LED control code
 git clone https://github.com/jgarff/rpi_ws281x.git
 cd rpi_ws281x
+
 scons
 cd python
 sudo python setup.py install

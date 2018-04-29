@@ -9,9 +9,9 @@ def createSocket(port):
     #sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
     hostname = ""
     sock.setblocking(0)
-    print("binding to "+str(hostname)+" on port "+str(port))
+    #print("binding to "+str(hostname)+" on port "+str(port))
     #sock.bind((hostname,port))
-    print("bound")
+    #print("bound")
     return sock
 
 def recvData(sock): #this is where we handle all recieved data
@@ -38,12 +38,16 @@ def recvData(sock): #this is where we handle all recieved data
 def sendDataToServer(sock,address,subject,body,recipient):
     message = {"subject":subject,"body":body,"recipient":recipient}
     #sock.sendto(str(data).encode('utf-8'),address)
-    print(message)
+    #print(message)
     sock.sendto(pickle.dumps(message),address)
 
 def sendGateAnimation(ip,port,animation):
     sock = createSocket(port)
     sendDataToServer(sock,(ip,port),"updateAnimation",animation,"")
+
+def sendTempAnimation(ip,port,animation):
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),"tempAnimation",animation,"")
 
 def sendGateColor(ip,port,color):
     sock = createSocket(port)
@@ -64,3 +68,27 @@ def getGateList(ip,port):
         result = data['body'] #set the result to the body of the message
 
     return result #this will return None if there was no response
+
+def sendSensorCommand(ip,port,subject,body):
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),subject,body,"")
+    sock.settimeout(10)
+    data,address = recvData(sock)
+    result = None
+    if(data): #if we got something back
+        result = data['body']['response'] #set the result to the body of the message
+
+    return result #this will return None if there was no response
+
+def sendSensorCommandQuickly(ip,port,subject,body):
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),subject,body,"")
+
+def executeThetaCommand(ip,port,command):
+    return sendSensorCommandQuickly(ip,port,"thetaCommand",command)
+
+def getLapList(ip,port):
+    return sendSensorCommand(ip,port,"getLapList",{})
+
+def clearLapList(ip,port):
+    return sendSensorCommandQuickly(ip,port,"clearLapList",{})

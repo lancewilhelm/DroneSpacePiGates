@@ -36,13 +36,20 @@ class Gate: #this is our representation of a gate
           self.animation = animation
           self.sendData("updateAnimation",animation,"")
 
+    def tempAnimation(self,tempAnimation):
+        self.sendData("tempAnimation",tempAnimation,"")
+
     def updateSolidColor(self,color):
-          self.color = color
-          self.sendData("updateColor",color,"")
+        self.color = color
+        self.sendData("updateColor",color,"")
 
     def sendSystemCommand(self,body):
-          self.body = body
-          self.sendData("systemCommand",body,"")
+        self.body = body
+        self.sendData("systemCommand",body,"")
+
+    def sendThetaCommand(self,body):
+        self.body = body
+        self.sendData("thetaCommand",body,"")
 
     def sendData(self,subject,body,recipient):
         message = {"subject":subject,"body":body,"recipient":recipient}
@@ -53,11 +60,6 @@ class Gate: #this is our representation of a gate
         #sock.sendto(str(data).encode('utf-8'),address)
         self.socket.sendto(pickle.dumps(message),self.address)
 
-    def keepAlive(self):
-        currentTime = self.getTime()
-        if((currentTime-self.lastUpdate) > 2000):
-            self.sendData("keepalive","","")
-            self.lastUpdate = currentTime
     def setLastKeepalive(self):
         currentTime = self.getTime()
         self.lastUpdate = currentTime
