@@ -6,8 +6,8 @@
 
 const float initLength = 100L;
 
-const int deviceNumber = 4;
-const int pilotNumber = 4;
+const int deviceNumber = 3;
+const int pilotNumber = 3;
 const int averaging = 10;
 const int spiDataPin = 11;
 const int spiClockPin = 13;
@@ -18,8 +18,8 @@ const int spiClockPin = 13;
 //#define minRssiValue 125
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
-float enterThreshold = 1.5;
-float exitThreshold = 1.9;
+float enterThreshold = 1.4;
+float exitThreshold = 1.5;
 unsigned long raceStart = millis();
 
 //these are the states we'll use to let our loop know what a given RX is doing atm
@@ -65,7 +65,7 @@ uint16_t vtxFreqTable[] = {
 #define RACEBAND_ODDS {5658,5732,5843,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5658,5658,5658,5658}
+#define CUSTOM {5658,5732,5806,5880}
 #define DS {5685,5760,5860,5905}
 
 struct {
@@ -245,7 +245,8 @@ void setRxModule(int frequency, int slaveSelectPin) {
 
   SERIAL_SLAVE_HIGH(slaveSelectPin); // Finished clocking data in
   delay(2);
-  digitalWrite(rxModules.slaveSelectPins[i], LOW);
+  //digitalWrite(rxModules.slaveSelectPins[i], LOW);
+  //digitalWrite(rxModules.slaveSelectPins[i], HIGH);
 }
 
 String readSerial(){
@@ -370,7 +371,7 @@ void updateRxState(int rxId, int state){
 float refreshRx(int rxId){
   float rssi = analogRead(rxModules.rssiPins[rxId]);//*rxModules.rssiMultiplier[rxId];
   float mc = 23.3; //module constant
-  float scale = 23;
+  float scale = 21;
   float newDistance = (-pow(rssi/scale,2.0)+scale+power)*.01*rxModules.distanceMultiplier[rxId];
   if(newDistance<0){
     newDistance = 0;
@@ -481,7 +482,7 @@ void printRSSI(){
   Serial.print(",");
   Serial.print(exitThreshold);
   Serial.print(",");
-  delay(20);
+  //delay(20);
   for(int i=0;i<deviceNumber;i++){
     //analogRead(rxModules.rssiPins[i]);
     //Serial.print(",");
