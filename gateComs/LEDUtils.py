@@ -298,9 +298,8 @@ class LEDStrip:
         frameCount = 20
         x = self.updateTempFrame(frameCount)
         increment = int(self.strip.numPixels()/frameCount)
-        for j in range(0, self.strip.numPixels(),increment):
-            for k in range(j, j+increment, 1):
-                self.strip.setPixelColor(k, Color(100,100,100))
+        for i in range(0,increment*x):
+            self.strip.setPixelColor(i, Color(100,100,100))
         self.strip.show()
         if(x < frameCount-1):
             return True
