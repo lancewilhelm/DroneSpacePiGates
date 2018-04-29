@@ -101,10 +101,10 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("White",0,"quadpass"))
-        self.pilots.append(Pilot.pilot("Green",1,"quadpass"))
-        self.pilots.append(Pilot.pilot("Red",2,"quadpass"))
-        self.pilots.append(Pilot.pilot("Blue",3,"quadpass"))
+        self.pilots.append(Pilot.pilot("White",0,"quadpass22"))
+        self.pilots.append(Pilot.pilot("Green",1,"quadpass22"))
+        self.pilots.append(Pilot.pilot("Red",2,"quadpass2"))
+        self.pilots.append(Pilot.pilot("Blue",3,"quadpass2"))
 
     def connectArduino(self):
         print("connecting arduino")
@@ -387,8 +387,8 @@ class element:
                         animationInProgress = LED.tempFlashGreen()
                     if self.tempAnimationQueue[0] == "redbang":
                         animationInProgress = LED.tempFlashRed()
-                    if self.tempAnimationQueue[0] == "quadpass":
-                        animationInProgress = LED.quadpass()
+                    if self.tempAnimationQueue[0] == "quadpass2":
+                        animationInProgress = LED.quadpass2()
                     if animationInProgress == False:
                         del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
             except Exception as e:
