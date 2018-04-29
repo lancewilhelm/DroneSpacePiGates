@@ -101,8 +101,8 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("White",0,"quadpass22"))
-        self.pilots.append(Pilot.pilot("Green",1,"quadpass22"))
+        self.pilots.append(Pilot.pilot("White",0,"quadpass2"))
+        self.pilots.append(Pilot.pilot("Green",1,"quadpass2"))
         self.pilots.append(Pilot.pilot("Red",2,"quadpass2"))
         self.pilots.append(Pilot.pilot("Blue",3,"quadpass2"))
 
