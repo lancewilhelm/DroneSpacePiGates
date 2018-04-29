@@ -101,10 +101,10 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("White",0,"flashbang"))
-        self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
-        self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        self.pilots.append(Pilot.pilot("Blue",3,"bluebang"))
+        self.pilots.append(Pilot.pilot("White",0,"quadpass"))
+        self.pilots.append(Pilot.pilot("Green",1,"quadpass"))
+        self.pilots.append(Pilot.pilot("Red",2,"quadpass"))
+        self.pilots.append(Pilot.pilot("Blue",3,"quadpass"))
 
     def connectArduino(self):
         print("connecting arduino")
