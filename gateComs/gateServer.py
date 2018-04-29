@@ -29,9 +29,6 @@ printFPS = False
 serverAddress = ""
 port = 13246
 
-#these are request which might take some time.
-#Let's keep track of the addresses which are awaiting a response
-
 gates = []
 gateStates = {}
 
@@ -148,16 +145,6 @@ def runProgram(sock):
                     logging.warning(traceback.format_exc())
                 currentSubject = subject
                 currentBody = body
-            if(subject == "tempAnimation"):
-                try:
-                    animation = body
-                    for gate in gates:
-                        gate.tempAnimation(animation)
-                    logging.debug("sending temp animation")
-                    logging.info(str(gates))
-                except Exception as e:
-                    logging.debug(e)
-                    logging.warning(traceback.format_exc())
             if(subject == "updateAnimation"):
                 try:
                     animation = body
@@ -171,17 +158,6 @@ def runProgram(sock):
                     logging.warning(traceback.format_exc())
                 currentSubject = subject
                 currentBody = body
-
-            if(subject == "thetaCommand"):
-                try:
-                    for gate in gates:
-                        gate.sendThetaCommand(body)
-                    logging.debug("SENDING SENSING COMMAND")
-                    logging.info(str(gates))
-                except Exception as e:
-                    logging.debug(e)
-                    logging.warning(traceback.format_exc())
-
             if(subject == "systemCommand"):
                 try:
                     for gate in gates:
@@ -195,18 +171,7 @@ def runProgram(sock):
                 currentBody = body
             if(subject == "getGateList"):
                 sendDataTo(sock,address,"gateList",getGateAddresses(),"")
-            if(subject == "getLapList"):
-                body = {"responseAddress":address} #this is where we will send the response when we hear back
-                for gate in gates:
-                    gate.sendData(subject,body,recipient)
-            if(subject == "clearLapList"):
-                body = {"responseAddress":address} #this is where we will send the response when we hear back
-                for gate in gates:
-                    gate.sendData(subject,body,recipient)
-            if(subject == "return"):
-                logging.debug("we got a request response: "+str(data))
-                sendDataTo(sock,body["responseAddress"],"returnLapList",body,"")
-            if((subject == "keepalive")):
+            if(subject == "keepalive"):
                 try:
                     try:
                         getGateByAddress(address).setLastKeepalive()
@@ -233,12 +198,9 @@ def runProgram(sock):
             time.sleep(1.0/fps)
 
         else:
-            #if(subject != "keepalive"):
-            #    logging.debug("respond quickly to "+str(data))
-            #    for gate in gates:
-            #        addr = gate.address
-            #        gate.sendMessage(lastStateUpdate)
-            #    #DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
+            if(subject != "keepalive"):
+                logging.debug("respond quickly")
+                DSUtils.broadcastColor(sock, port,lastStateUpdate) #only update colors when we got some data that wasn't a keepalive
             time.sleep(1.0/fps)
 
         loopEnd = getTime()
