@@ -319,12 +319,11 @@ class LEDStrip:
     def quadpass2(self):
         frameCount= 50
         x = self.updateTempFrame(frameCount)
-        thickness = int(5) #numlit
+        thickness = int(10) #numlit
         length = int(self.strip.numPixels())
 
         for i in range(0+x, thickness+x, thickness):
-            for j in range(0,thickness,1):
-                self.strip.setPixelColor(j,Color(255,0,255))
+            self.strip.setPixelColor(i,Color(255,0,255))
 
         self.strip.show()
         if(x < frameCount-1):
