@@ -297,7 +297,7 @@ class LEDStrip:
     def quadpass(self):
         frameCount = 20
         x = self.updateTempFrame(frameCount)
-        increment = int(self.strip.numPixels/frameCount)
+        increment = int(self.strip.numPixels()/frameCount)
         for j in range(0, self.strip.numPixels(),increment):
             for k in range(j, j+increment, 1):
                 self.strip.setPixelColor(k, Color(100,100,100))
