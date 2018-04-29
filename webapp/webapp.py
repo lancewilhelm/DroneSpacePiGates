@@ -41,6 +41,14 @@ def getServerTiming():
         DSWebClient.clearLapList(gateMasterAddr,13246)
         return json.dumps([])
 
+@app.route("/api/server/sensors/timing/command", methods=['POST','GET'])
+def sendSensingCommand():
+    if request.method == "POST":
+        command = request.form['command']
+        DSWebClient.executeThetaCommand(gateMasterAddr,13246,command)
+        # print(command)
+        return "sending command"
+
 @app.route("/api/gates/color", methods=['POST'])
 def setGateColors():
     program = request.form['color']
@@ -67,6 +75,10 @@ def index():
 @app.route("/timing", methods=['GET'])
 def timing():
     return render_template('timing.html')
+
+@app.route("/configure", methods=['GET'])
+def configure():
+    return render_template('configure.html')
 
 if __name__ == "__main__":
     # Create NeoPixel object with appropriate configuration.

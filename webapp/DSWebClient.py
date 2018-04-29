@@ -80,8 +80,15 @@ def sendSensorCommand(ip,port,subject,body):
 
     return result #this will return None if there was no response
 
+def sendSensorCommandQuickly(ip,port,subject,body):
+    sock = createSocket(port)
+    sendDataToServer(sock,(ip,port),subject,body,"")
+
+def executeThetaCommand(ip,port,command):
+    return sendSensorCommandQuickly(ip,port,"thetaCommand",command)
+
 def getLapList(ip,port):
-    return sendSensorCommand(ip,port,"getLapList","")
+    return sendSensorCommand(ip,port,"getLapList",{})
 
 def clearLapList(ip,port):
-    return sendSensorCommand(ip,port,"clearLapList","")
+    return sendSensorCommandQuickly(ip,port,"clearLapList",{})

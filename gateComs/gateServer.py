@@ -171,6 +171,17 @@ def runProgram(sock):
                     logging.warning(traceback.format_exc())
                 currentSubject = subject
                 currentBody = body
+
+            if(subject == "thetaCommand"):
+                try:
+                    for gate in gates:
+                        gate.sendThetaCommand(body)
+                    logging.debug("SENDING SENSING COMMAND")
+                    logging.info(str(gates))
+                except Exception as e:
+                    logging.debug(e)
+                    logging.warning(traceback.format_exc())
+
             if(subject == "systemCommand"):
                 try:
                     for gate in gates:

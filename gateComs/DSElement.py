@@ -101,68 +101,87 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("Blue",0,"bluebang"))
+        self.pilots.append(Pilot.pilot("White",0,"flashbang"))
         self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
         self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        self.pilots.append(Pilot.pilot("White",3,"flashbang"))
+        self.pilots.append(Pilot.pilot("Blue",3,"bluebang"))
 
     def connectArduino(self):
         print("connecting arduino")
-        try:
-            #arduinoCom = next(list_ports.grep("rduino"))
+        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/ttyAMA0","/dev/tty.wchusbserial1420","/dev/tty.wchusbserial1410"]
+        connected = False
+        for arduinoCom in arduinoPorts:
+            try:
+                #arduinoCom = next(list_ports.grep("rduino"))
 
-            arduinoCom = "/dev/ttyUSB0"
-            #arduinoCom = "/dev/ttyACM0"
-            #arduinoCom = "COM11"
-            #print("arduino port: "+str(arduinoCom.device))
-            #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-            self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
-            #print(ser.name)         # check which port was really used
-            self.clearPilotData()
-            print("arduino connected")
-            return True
-        except Exception as e:
-            logging.debug("failed to connect to arduino ")
-            logging.debug(traceback.format_exc())
-            print("failed to connect arduino")
-            print(e)
-            return False
+                #arduinoCom = "/dev/ttyACM0"
+                #arduinoCom = "COM11"
+                #print("arduino port: "+str(arduinoCom.device))
+                #ser = serial.Serial(str(arduinoCom.device))  # open serial port
+                self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
+                #print(ser.name)         # check which port was really used
+                self.clearPilotData()
+                logging.debug("arduino connected")
+                connected = True
+                break
+
+            except Exception as e:
+                logging.debug("failed to connect to arduino on port "+arduinoCom)
+                logging.debug(traceback.format_exc())
+                logging.debug("failed to connect arduino")
+                logging.debug(e)
+                connected = False
+        return connected
 
     def disconnectArduino(self):
-        print("disconnecting arduino")
+        logging.debug("disconnecting arduino")
         try:
             self.serial.close()
         except Exception as e:
-            print(e)
+            logging.debug(e)
         self.arduinoConnected = False
+    def writeSerial(self, data):
+        if self.arduinoConnected == False:
+            logging.debug("no arduino connected. Attempting to reconnect")
+            self.arduinoConnected = self.connectArduino()
+        if self.arduinoConnected == True:
+            logging.debug("sending '"+data+"' to arduino")
+            message = data + "/r/n"
+            self.serial.write(message.encode())
+
 
     def readSerial(self):
         try:
             if self.arduinoConnected:
                 line = self.serial.readline()
+                if(line!=""):
+                    logging.debug(line)
                 try:
                     event = eval(line)
+                    logging.debug(event)
                 except:
                     event = None
                 if(event!=None):
-                    #print(event)
+
                     pilotId = event[0]
                     pilot = self.pilots[pilotId]
                     state = event[1]
                     timestamp = event[2]
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
-                        print(str(pilot.name)+": "+str(timestamp))
+                        logging.debug(str(pilot.name)+": "+str(timestamp))
                         logging.debug(str(pilot.name)+": "+str(timestamp))
                     if(state==ENTER):
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==CALIBRATE):
-                        print("calibrating module "+str(pilotId))
+                        logging.debug("calibrating module "+str(pilotId))
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==STANDBY):
-                        print("module "+str(pilotId)+" ready")
+                        logging.debug("module "+str(pilotId)+" ready")
         except Exception as e:
-            print(traceback.format_exc())
+            self.arduinoConnected = False
+            logging.debug(e)
+            logging.debug(traceback.format_exc())
 
     def createSocket(self,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -406,6 +425,9 @@ class element:
                 if(subject == "tempAnimation"):
                     self.tempAnimationQueue.append(body)
                     logging.debug("adding temp animation to queue: "+str(body))
+                if(subject == "thetaCommand"):
+                    self.writeSerial(body)
+                    logging.debug("sending theta command "+body)
                 if(subject == "systemCommand"):
                     command = body['command']
                     arguments = body['arguments']
@@ -429,7 +451,9 @@ class element:
         logging.debug("using server address "+str(self.serverAddress))
         logging.debug("using port "+str(self.port))
         logging.debug("starting with "+str(self.ledCount)+" LEDs")
+
         self.arduinoConnected = self.connectArduino()
+
         if(self.devMode==False):
             LED = LEDUtils.LEDStrip(self.ledCount)
         else:

@@ -56,6 +56,30 @@
           </tr>
           </table>
         </div>
+
+        <hr>
+
+        <div class="row">
+          <ul>
+          <li>start by sending COMMAND_START</li>
+          <li>send the command to be run on the module</li>
+          <li>send the id of the module we are refering to (-1 if all modules)</li>
+          <li>send any parameter needed to run the command</li>
+        </ul>
+        <ul>
+          <li>COMMAND_START 96</li>
+          <li>SET_ENTER_THRESH 11</li>
+          <li>SET_EXIT_THRESH 12</li>
+          <li>SET_MULTIPLIER 13</li>
+          <li>SET_CHANNEL 14</li>
+          <li>RUN_TEST 15</li>
+          </ul>
+            <div class="col">
+                <h3>Send Command</h3>
+                <input id="commandInput" class="form-control form-control-lg" type="text" placeholder="command">
+                <button id="sendBtn" type="button" class="btn btn-white" onclick="sendSerialCommand()">SEND</button>
+            </div>
+        </div>
     </div>
 
 
