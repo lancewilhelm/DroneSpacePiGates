@@ -314,3 +314,21 @@ class LEDStrip:
         else:
             self.resetTempAnimation()
             return False
+
+##Ths is a testcode for anyother animations
+    def quadpass2(self):
+        frameCount= 50
+        x = self.updateTempFrame(frameCount)
+        thickness = int(5) #numlit
+        length = int(self.strip.numPixels())
+
+        for i in range(0+x, thickness+x, thickness):
+            for j in range(0,thickness,1):
+                self.strip.setPixelColor(j,Color(255,0,255))
+
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
