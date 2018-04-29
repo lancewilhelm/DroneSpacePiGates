@@ -308,13 +308,6 @@ class LEDStrip:
             self.strip.setPixelColor(i+bl, Color(100,100,100))
             self.strip.setPixelColor(i+tl, Color(100,100,100))
             self.strip.setPixelColor(i+tr, Color(100,100,100))
-
-        if x>frameCount/2:
-            for i in range(0,increment*x):
-                self.strip.setPixelColor(i, Color(0,0,0))
-                self.strip.setPixelColor(i+bl, Color(0,0,0))
-                self.strip.setPixelColor(i+tl, Color(0,0,0))
-                self.strip.setPixelColor(i+tr, Color(0,0,0))
         self.strip.show()
         if(x < frameCount-1):
             return True
