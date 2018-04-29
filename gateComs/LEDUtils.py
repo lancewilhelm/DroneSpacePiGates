@@ -317,13 +317,14 @@ class LEDStrip:
 
 ##Ths is a testcode for anyother animations
     def quadpass2(self):
-        frameCount= 10
+        frameCount= 50
         x = self.updateTempFrame(frameCount)
         thickness = int(10) #numlit
         length = int(self.strip.numPixels())
 
-        for i in range(0+x, length, thickness):
-            self.strip.setPixelColor(i,Color(255,0,255))
+        if x % 5 = 0:
+            for i in range(0+x, length, thickness):
+                passself.strip.setPixelColor(i,Color(255,0,255))
 
         self.strip.show()
         if(x < frameCount-1):
