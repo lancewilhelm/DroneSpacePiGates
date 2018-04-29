@@ -322,7 +322,7 @@ class LEDStrip:
         thickness = int(10) #numlit
         length = int(self.strip.numPixels())
 
-        if(x % 5 = 0):
+        if(x % 5 == 0):
             for i in range(0+x, length, thickness):
                 passself.strip.setPixelColor(i,Color(255,0,255))
 
