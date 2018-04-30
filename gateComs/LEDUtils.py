@@ -293,7 +293,7 @@ class LEDStrip:
             self.resetTempAnimation()
             return False
 
-#ok this is my stuff######################################################
+#Tri#flash#animation
     def quadpass(self):
         frameCount = 50
         x = self.updateTempFrame(frameCount)
@@ -315,7 +315,7 @@ class LEDStrip:
             self.resetTempAnimation()
             return False
 
-##Ths is a testcode for anyother animations
+#Multigrow#animation
     def quadpass2(self):
         frameCount= 50
         x = self.updateTempFrame(frameCount)
