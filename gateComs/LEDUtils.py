@@ -228,6 +228,21 @@ class LEDStrip:
 
       self.strip.show()
 
+    def multislash(self): #The colors are (0,255,0) for green and (100,255,0) for purple
+        x = self.updateFrame(self.strip.numPixels()) #the amount of frames is the number of pixels x=frame number
+        length=int(self.strip.numPixels()) #the number of pixels in the strip
+        step=int(20) #step size, the distance between the slashes
+
+#      for i in range(0,self.strip.numPixels(),1): #set the entire strip green before animation
+#          if(x == 0):
+#              self.strip.setPixelColor(i, Color(0,255,0))
+
+        for j in range(0+x,length,step)
+            self.strip.setPixelColor(j, Color(0,255,0))
+
+      self.strip.show()
+
+#The following animations are temporary ie, they are used for quadpasses
     def tempFlash(self):
         frameCount = 20
         x = self.updateTempFrame(frameCount)
@@ -293,7 +308,7 @@ class LEDStrip:
             self.resetTempAnimation()
             return False
 
-#Tri#flash#animation
+#Triflash animation
     def quadpass(self):
         frameCount = 50
         x = self.updateTempFrame(frameCount)
@@ -315,7 +330,7 @@ class LEDStrip:
             self.resetTempAnimation()
             return False
 
-#Multigrow#animation
+#Multigrow animation
     def quadpass2(self):
         frameCount= 50
         x = self.updateTempFrame(frameCount)
