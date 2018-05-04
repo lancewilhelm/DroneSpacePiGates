@@ -240,7 +240,7 @@ class LEDStrip:
         for j in range(0+x,length,step):
             self.strip.setPixelColor(j, Color(0,255,0))
 
-      self.strip.show()
+        self.strip.show()
 
 #The following animations are temporary ie, they are used for quadpasses
     def tempFlash(self):
