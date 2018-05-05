@@ -369,8 +369,8 @@ class element:
                         LED.rainbow()
                     elif(self.currentColor=="pacman"):
                         LED.pacman()
-                    elif(self.currentColor=="multislash"):
-                        LED.multislash()
+                    elif(self.currentColor=="theaterChase"):
+                        LED.theaterChase()
                     else: #it must be a list of rgb values
                         try:
                             LED.customColor(self.currentColor)
