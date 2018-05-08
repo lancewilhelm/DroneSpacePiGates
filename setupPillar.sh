@@ -32,3 +32,4 @@ sudo chmod 600 /var/spool/cron/crontabs/root
 
 #lets install psutil so that we can restart our python process on update
 sudo pip install psutil
+sudo pip install flask-socketio
