@@ -6,10 +6,10 @@
 
 const float initLength = 100L;
 
-const int deviceNumber = 1;
-const int pilotNumber = 2;
-const float averaging = 2.0;
-float deviceRatio = (float)deviceNumber/((float)pilotNumber*averaging);
+const int deviceNumber = 4;
+const int pilotNumber = 4;
+const float averaging = 50;
+float deviceRatio = 1.0/averaging;
 
 const int spiDataPin = 11;
 const int spiClockPin = 13;
@@ -22,8 +22,8 @@ float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
 int counter = 0;
 int counterLimit = 10;
-float enterThreshold = 1.9;
-float exitThreshold = 2.0;
+float enterThreshold = 2;
+float exitThreshold = 2.2;
 unsigned long raceStart = millis();
 
 //these are the states we'll use to let our loop know what a given RX is doing atm
@@ -42,7 +42,8 @@ unsigned long raceStart = millis();
 #define SET_MULTIPLIER 13    //the moment we want to change the rssi multiplier
 #define SET_FREQUENCY 14       //the moment we want to change one of our tracked channels
 #define RUN_TEST 15          //the moment we want to run the test program to trigger fake laps
-#define REPORT_DISTANCE 30  //the moment we want to report the distances of the channels
+#define SET_PILOT_NUMBER 16  //the moment we want to set the pilot number
+#define REPORT_DISTANCE 30   //the moment we want to report the distances of the channels
 #define COMMAND_START 96     //the moment when we start listening for a command
 #define COMMAND_ID 95
 #define COMMAND_RX_ID 94
@@ -68,14 +69,14 @@ uint16_t vtxFreqTable[] = {
 #define IMD5 {5685,5760,5800,5860,5905}
 #define IMD6 {5645,5685,5760,5800,5860,5905}
 #define RACEBAND {5658,5695,5732,5769,5806,5843,5880,5917}
-#define RACEBAND_ODDS {5658,5732,5843,5880}
+#define RACEBAND_ODDS {5658,5732,5806,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
 #define CUSTOM {5658,5880,5769,5769}
 #define DS {5685,5760,5860,5905}
 
 struct {
-  uint16_t channel[8] = CUSTOM;
+  uint16_t channel[8] = DS;
   uint16_t moduleChannelIndex[8] = {0,1,2,3,4,5,6,7};
   float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
@@ -129,6 +130,10 @@ void setup() {
   //setRxModule(5800,10);
   digitalWrite(spiClockPin, LOW);
   digitalWrite(spiDataPin, LOW);
+
+  if(deviceNumber<pilotNumber){
+    deviceRatio = .75;
+  }
 
   //calibrateAllModules();
   startRace();
@@ -396,7 +401,6 @@ float refreshRx(int channelId){
     if(newDistance<0){
       newDistance = 0;
     }
-    
     rxModules.rssi[channelId] = (newDistance*deviceRatio)+(rxModules.rssi[channelId]*(1-deviceRatio));
   }
   
@@ -481,7 +485,7 @@ void scrollChannels(){
     rxModules.moduleChannelIndex[i] = nextChannelIndex;
     
   }
-  delay(26);
+  delay(27);
 }
 
 void startRace(){
@@ -490,8 +494,7 @@ void startRace(){
   }
 }
 
-void printRSSI(){
-  
+void reportRSSI(){
   for(int i=0;i<pilotNumber;i++){
     Serial.print("[");
     Serial.print(i);
@@ -501,6 +504,21 @@ void printRSSI(){
     Serial.print(rxModules.rssi[i]);
     Serial.println("]");
 
+  }
+}
+
+void debugRSSI(){
+  Serial.print(enterThreshold);
+  Serial.print(",");
+  Serial.print(exitThreshold);
+  Serial.print(",");
+  for(int i=0;i<pilotNumber;i++){
+    Serial.print(rxModules.rssi[i]);
+    if(i<pilotNumber-1){
+      Serial.print(",");
+    }else{
+      Serial.println("");
+    }
   }
   
 }
@@ -537,9 +555,8 @@ void loop() {
   }
   handleSerialData(readSerial());
 
-  //if(counter==0){
-    printRSSI();
-  //}
+  //debugRSSI(); //this lets us watch rssi on the arduino plotter
+  reportRSSI();
 
   if(counter>=counterLimit){
     counter = 0;
