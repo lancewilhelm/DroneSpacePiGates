@@ -32,6 +32,7 @@ FAR = 3;          #the moments while a quad is out of the bubble
 ENTER = 4;        #the moments while quad passes through the bubble
 PASS = 5;         #the moment an rssi peaks inside the bubble
 EXIT = 6;         #the moment when a quad exits the bubble
+RSSI_UPDATE = 7;
 CHANNEL_HOP = 9;  #the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
 FINISHED = 10;    #the moment when the race is completed
 
@@ -165,7 +166,7 @@ class element:
                     pilot = self.pilots[pilotId]
                     state = event[1]
                     timestamp = event[2]
-                    if(state==PASS):
+                    if(state==RSSI_UPDATE):
                         pilot.distance = timestamp
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
@@ -367,6 +368,7 @@ class element:
                         for i in range(0,len(self.pilots)):
                             pilot = self.pilots[i]
                             color = [0,0,0]
+                            logging.debug("pilot "+str(i)+" color is = "+str(color))
                             gain = 1-(pilot.distance-1.5)
                             if(gain >= 1):
                                 gain = 1
