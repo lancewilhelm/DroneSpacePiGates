@@ -362,7 +362,7 @@ class element:
                     if(self.currentColor=="breathing"):
                         #LED.breathing()
                         colors = []
-                        for(i in range(0,len(pilots))):
+                        for i in range(0,len(pilots)):
                             color = [0,0,0]
                             gain = (pilots[i].distance-1.5)
                             if(p >= 1):
@@ -374,13 +374,13 @@ class element:
 
                         #lets add all the colors together and normalize them
                         color = [0,0,0]
-                        for(i in range(0,len(colors))):
-                            for(j in range(0,len(color))):
+                        for i in range(0,len(colors)):
+                            for j in range(0,len(color)):
                                 color[j]+=colors[i][j]
 
                         brightestValue = max(color)
                         if(brightestValue>0): #let's not divide by 0
-                            for(j in range(0,len(color))):
+                            for j in range(0,len(color)):
                                 color[j]/=brightestValue #divide by the brightest color channel so that none are over 1
                         LED.customColor(color)
 
