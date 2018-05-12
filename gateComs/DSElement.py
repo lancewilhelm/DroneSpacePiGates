@@ -25,16 +25,16 @@ try:
 except:
     import pickle
 
-CALIBRATE = 0;    #the moments while a module is discovering its noise floor
-STANDBY = 1;      #the moments before a race starts
-START = 2;        #the moment when the race starts
-FAR = 3;          #the moments while a quad is out of the bubble
-ENTER = 4;        #the moments while quad passes through the bubble
-PASS = 5;         #the moment an rssi peaks inside the bubble
-EXIT = 6;         #the moment when a quad exits the bubble
-RSSI_UPDATE = 7;
-CHANNEL_HOP = 9;  #the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
-FINISHED = 10;    #the moment when the race is completed
+CALIBRATE = 0    #the moments while a module is discovering its noise floor
+STANDBY = 1      #the moments before a race starts
+START = 2        #the moment when the race starts
+FAR = 3          #the moments while a quad is out of the bubble
+ENTER = 4        #the moments while quad passes through the bubble
+PASS = 5         #the moment an rssi peaks inside the bubble
+EXIT = 6         #the moment when a quad exits the bubble
+RSSI_UPDATE = 7
+CHANNEL_HOP = 9  #the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
+FINISHED = 10    #the moment when the race is completed
 
 def sendAnimation(animation):
     port = 13247
@@ -155,7 +155,6 @@ class element:
                 line = self.serial.readline()
                 try:
                     event = eval(line)
-                    logging.debug(event)
                 except:
                     event = None
                 if(event!=None):
