@@ -6,7 +6,7 @@ class pilot:
         self.frequency = frequency
         self.animation = animation
         self.readyForLap = True
-        self.distance = 0
+        self.distance = 100
         self.color = color
 
     def addLap(self,start,end):
