@@ -365,10 +365,10 @@ class element:
                         for pilot in self.pilots:
                             color = [0,0,0]
                             gain = (pilot.distance-1.5)
-                            if(p >= 1):
-                                p = 1
-                            if(p <= 0):
-                                p = 0
+                            if(gain >= 1):
+                                gain = 1
+                            if(gain <= 0):
+                                gain = 0
                             color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
                             colors.append(color)
 
