@@ -372,14 +372,17 @@ class element:
                             if(gain <= 0):
                                 gain = 0
                             color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
+                            logging.debug("pilot color is = "+str(color))
+                            logging.debug("pilot gain is = "+str(gain))
                             colors.append(color)
 
+                        logging.debug("colors are = "+str(colors))
                         #lets add all the colors together and normalize them
                         color = [0,0,0]
                         for i in range(0,len(colors)):
                             for j in range(0,len(color)):
                                 color[j]=color[j]+colors[i][j]
-                        logging.debug("color = "+str(color))
+
                         brightestValue = max(color)
 
                         for j in range(0,len(color)):
