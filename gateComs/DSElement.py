@@ -379,19 +379,18 @@ class element:
                             logging.debug("pilot "+str(i)+" gain is = "+str(gain))
                             colors.append(color)
 
-                        logging.debug("colors are = "+str(colors))
+
                         #lets add all the colors together and normalize them
                         color = [0,0,0]
                         for i in range(0,len(colors)):
                             for j in range(0,len(color)):
                                 color[j]=color[j]+colors[i][j]
                         logging.debug("total color is = "+str(color))
-                        brightestValue = max(color)
 
-                        for j in range(0,len(color)):
-                            if(brightestValue>0): #let's not divide by 0
-                                color[j]/=brightestValue #divide by the brightest color channel so that none are over 255
-                            color[j]*=255
+                        lum = color[0]+color[1]+color[2]
+                        for i in range(0,len(color)):
+                            color[i]=(color[i]/lum)*255
+                        logging.debug("end color is = "+str(color))
                         LED.customColor(color)
 
                     elif(self.currentColor=="chasing"):
