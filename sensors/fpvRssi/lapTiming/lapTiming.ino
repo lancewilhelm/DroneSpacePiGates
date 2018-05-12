@@ -20,6 +20,8 @@ const int spiClockPin = 13;
 //#define minRssiValue 125
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
+int counter = 0;
+int counterLimit = 10;
 float enterThreshold = 1.9;
 float exitThreshold = 2.0;
 unsigned long raceStart = millis();
@@ -32,6 +34,7 @@ unsigned long raceStart = millis();
 #define ENTER 4              //the moments while quad passes through the bubble
 #define PASS 5               //the moment an rssi peaks inside the bubble
 #define EXIT 6               //the moment when a quad exits the bubble
+#define RSSI_UPDATE 7        //the moment we sent an rssi update
 #define CHANNEL_HOP 9        //the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
 #define FINISHED 10          //the moment when the race is completed
 #define SET_ENTER_THRESH 11  //the moment we want to change the enter threshold
@@ -68,7 +71,7 @@ uint16_t vtxFreqTable[] = {
 #define RACEBAND_ODDS {5658,5732,5843,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5769,5769,5769,5769}
+#define CUSTOM {5645,5917,5769,5769}
 #define DS {5685,5760,5860,5905}
 
 struct {
@@ -306,6 +309,11 @@ void handleCommand(int command, int rxId, float params){
       break;
     case RUN_TEST:
       testProgram();
+      break;
+    case SET_EXIT_THRESH:
+      exitThreshold = params;
+    case SET_ENTER_THRESH:
+      enterThreshold = params;
     default:
       break;
   }
@@ -313,10 +321,6 @@ void handleCommand(int command, int rxId, float params){
 
 unsigned long getTime(){
   return millis();
-}
-
-void setRxState(int rxId, int state){
-  rxModules.state[rxId] = state;
 }
 
 void setupRace(uint16_t channels[]){
@@ -359,6 +363,16 @@ void sendStateUpdate(int rxId,int state,unsigned long timestamp){
   Serial.println("]");
 }
 
+void sendRssiUpdate(int rxId,int state,unsigned long rssi){
+  Serial.print("[");
+  Serial.print(rxId);
+  Serial.print(",");
+  Serial.print(state);
+  Serial.print(",");
+  Serial.print(rssi);
+  Serial.println("]");
+}
+
 void updateRxState(int rxId, int state){
   sendStateUpdate(rxId,state,getTime());
   rxModules.state[rxId] = state;
@@ -378,7 +392,7 @@ float refreshRx(int channelId){
     float rssi = analogRead(rxModules.rssiPins[rxId]);//*rxModules.rssiMultiplier[rxId];
     float mc = 23.3; //module constant
     float scale = 21;
-    float newDistance = (-pow(rssi/scale,2.0)+scale+power)*.01*rxModules.distanceMultiplier[rxId];
+    float newDistance = (-pow(rssi/scale,2.0)+scale+power)*.01*rxModules.distanceMultiplier[channelId];
     if(newDistance<0){
       newDistance = 0;
     }
@@ -467,7 +481,7 @@ void scrollChannels(){
     rxModules.moduleChannelIndex[i] = nextChannelIndex;
     
   }
-  delay(25);
+  delay(26);
 }
 
 void startRace(){
@@ -477,17 +491,16 @@ void startRace(){
 }
 
 void printRSSI(){
-  Serial.print(enterThreshold);
-  Serial.print(",");
-  Serial.print(exitThreshold);
-  Serial.print(",");
+  
   for(int i=0;i<pilotNumber;i++){
+    Serial.print("[");
+    Serial.print(i);
+    Serial.print(",");
+    Serial.print("7,");
+    //sendRssiUpdate(i,RSSI_UPDATE,rxModules.rssi[i]);
     Serial.print(rxModules.rssi[i]);
-    if(i!=pilotNumber-1){
-      Serial.print(",");
-    }else{
-      Serial.println("");
-    }
+    Serial.println("]");
+
   }
   
 }
@@ -513,7 +526,7 @@ void testProgram(){
 
 // Main loop
 void loop() {
-  //printRSSI();
+  
   //testProgram();
   raceStart = getTime();
   if(deviceNumber>=pilotNumber){  //we have enough modules for each channel
@@ -523,4 +536,15 @@ void loop() {
     scrollChannels();
   }
   handleSerialData(readSerial());
+
+  //if(counter==0){
+    printRSSI();
+  //}
+
+  if(counter>=counterLimit){
+    counter = 0;
+  }else{
+    counter += 1;
+  }
 }
+

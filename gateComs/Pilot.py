@@ -6,6 +6,7 @@ class pilot:
         self.frequency = frequency
         self.animation = animation
         self.readyForLap = True
+        self.distance = 0
 
     def addLap(self,start,end):
         newLap = lap(start,end,len(self.laps))

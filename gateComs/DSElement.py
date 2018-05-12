@@ -74,8 +74,6 @@ class element:
         logFile = args.f
         logging.basicConfig(filename=logFile,level=logLevel)
 
-
-
         self.serverAddress = args.i
         self.port = args.p
         self.currentColor = args.c
@@ -362,7 +360,30 @@ class element:
                 if self.tempAnimationQueue == []: #if we don't have any temporary animations to get through
                     #lets figure out what animation/color we should be playing
                     if(self.currentColor=="breathing"):
-                        LED.breathing()
+                        #LED.breathing()
+                        colors = []
+                        for(i in range(0,len(pilots))):
+                            color = [0,0,0]
+                            gain = (pilots[i].distance-1.5)
+                            if(p >= 1):
+                                p = 1
+                            if(p <= 0):
+                                p = 0
+                            color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
+                            colors.append(color)
+
+                        #lets add all the colors together and normalize them
+                        color = [0,0,0]
+                        for(i in range(0,len(colors))):
+                            for(j in range(0,len(color))):
+                                color[j]+=colors[i][j]
+
+                        brightestValue = max(color)
+                        if(brightestValue>0): #let's not divide by 0
+                            for(j in range(0,len(color))):
+                                color[j]/=brightestValue #divide by the brightest color channel so that none are over 1
+                        LED.customColor(color)
+
                     elif(self.currentColor=="chasing"):
                         LED.chasing()
                     elif(self.currentColor=="rainbow"):
