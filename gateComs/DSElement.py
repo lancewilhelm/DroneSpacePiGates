@@ -99,10 +99,10 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("White",0,"flashbang"))
-        self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
-        self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        self.pilots.append(Pilot.pilot("Blue",3,"bluebang"))
+        self.pilots.append(Pilot.pilot("White",0,"flashbang",[0,0,1]))
+        self.pilots.append(Pilot.pilot("Green",1,"greenbang",[1,0,0]))
+        self.pilots.append(Pilot.pilot("Red",2,"redbang",[0,1,0]))
+        self.pilots.append(Pilot.pilot("Blue",3,"bluebang",[0.5,0.5,0]))
 
     def connectArduino(self):
         print("connecting arduino")
@@ -165,6 +165,8 @@ class element:
                     pilot = self.pilots[pilotId]
                     state = event[1]
                     timestamp = event[2]
+                    if(state==PASS):
+                        pilot.distance = timestamp
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
                         logging.debug(str(pilot.name)+": "+str(timestamp))
