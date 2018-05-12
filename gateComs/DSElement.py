@@ -383,7 +383,7 @@ class element:
                         for i in range(0,len(colors)):
                             for j in range(0,len(color)):
                                 color[j]=color[j]+colors[i][j]
-
+                        logging.debug("total color is = "+str(color))
                         brightestValue = max(color)
 
                         for j in range(0,len(color)):
