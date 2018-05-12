@@ -153,8 +153,6 @@ class element:
         try:
             if self.arduinoConnected:
                 line = self.serial.readline()
-                if(line!=""):
-                    logging.debug(line)
                 try:
                     event = eval(line)
                     logging.debug(event)
@@ -166,6 +164,8 @@ class element:
                     pilot = self.pilots[pilotId]
                     state = event[1]
                     timestamp = event[2]
+                    if(state!=RSSI_UPDATE):
+                        logging.debug(line)
                     if(state==RSSI_UPDATE):
                         pilot.distance = timestamp
                     if(state==PASS):
@@ -368,15 +368,12 @@ class element:
                         for i in range(0,len(self.pilots)):
                             pilot = self.pilots[i]
                             color = [0,0,0]
-                            logging.debug("pilot "+str(i)+" distance is = "+str(pilot.distance))
                             gain = 1-(pilot.distance-1.5)
                             if(gain >= 1):
                                 gain = 1
                             if(gain <= 0):
                                 gain = 0
                             color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
-                            logging.debug("pilot "+str(i)+" color is = "+str(color))
-                            logging.debug("pilot "+str(i)+" gain is = "+str(gain))
                             colors.append(color)
 
 
@@ -385,14 +382,12 @@ class element:
                         for i in range(0,len(colors)):
                             for j in range(0,len(color)):
                                 color[j]=color[j]+colors[i][j]
-                        logging.debug("total color is = "+str(color))
 
                         lum = color[0]+color[1]+color[2]
                         if(lum<=0.01):
                             lum = 0.01
                         for i in range(0,len(color)):
                             color[i]=(color[i]/lum)*255
-                        logging.debug("end color is = "+str(color))
                         LED.customColor(color)
 
                     elif(self.currentColor=="chasing"):
