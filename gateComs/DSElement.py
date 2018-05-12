@@ -379,14 +379,13 @@ class element:
                         for i in range(0,len(colors)):
                             for j in range(0,len(color)):
                                 color[j]+=colors[i][j]
-
+                        logging.debug("color = "+color)
                         brightestValue = max(color)
 
                         for j in range(0,len(color)):
                             if(brightestValue>0): #let's not divide by 0
                                 color[j]/=brightestValue #divide by the brightest color channel so that none are over 255
                             color[j]*=255
-                        logging.debug(color)
                         LED.customColor(color)
 
                     elif(self.currentColor=="chasing"):
