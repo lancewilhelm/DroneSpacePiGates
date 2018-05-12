@@ -366,7 +366,7 @@ class element:
                         colors = []
                         for pilot in self.pilots:
                             color = [0,0,0]
-                            gain = (pilot.distance-1.5)
+                            gain = 1-(pilot.distance-1.5)
                             if(gain >= 1):
                                 gain = 1
                             if(gain <= 0):
@@ -378,7 +378,7 @@ class element:
                         color = [0,0,0]
                         for i in range(0,len(colors)):
                             for j in range(0,len(color)):
-                                color[j]+=colors[i][j]
+                                color[j]=color[j]+colors[i][j]
                         logging.debug("color = "+str(color))
                         brightestValue = max(color)
 
