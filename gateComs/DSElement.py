@@ -362,9 +362,9 @@ class element:
                     if(self.currentColor=="breathing"):
                         #LED.breathing()
                         colors = []
-                        for i in range(0,len(pilots)):
+                        for pilot in self.pilots):
                             color = [0,0,0]
-                            gain = (pilots[i].distance-1.5)
+                            gain = (pilot.distance-1.5)
                             if(p >= 1):
                                 p = 1
                             if(p <= 0):
