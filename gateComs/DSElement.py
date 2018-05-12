@@ -364,7 +364,8 @@ class element:
                     if(self.currentColor=="breathing"):
                         #LED.breathing()
                         colors = []
-                        for pilot in self.pilots:
+                        for i in range(0,len(self.pilots)):
+                            pilot = self.pilots[i]
                             color = [0,0,0]
                             gain = 1-(pilot.distance-1.5)
                             if(gain >= 1):
@@ -372,8 +373,8 @@ class element:
                             if(gain <= 0):
                                 gain = 0
                             color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
-                            logging.debug("pilot color is = "+str(color))
-                            logging.debug("pilot gain is = "+str(gain))
+                            logging.debug("pilot "+str(i)+" color is = "+str(color))
+                            logging.debug("pilot "+str(i)+" gain is = "+str(gain))
                             colors.append(color)
 
                         logging.debug("colors are = "+str(colors))
