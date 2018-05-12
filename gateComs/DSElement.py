@@ -388,6 +388,8 @@ class element:
                         logging.debug("total color is = "+str(color))
 
                         lum = color[0]+color[1]+color[2]
+                        if(lum<0):
+                            lum = 0
                         for i in range(0,len(color)):
                             color[i]=(color[i]/lum)*255
                         logging.debug("end color is = "+str(color))
