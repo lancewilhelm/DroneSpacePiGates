@@ -368,7 +368,7 @@ class element:
                         for i in range(0,len(self.pilots)):
                             pilot = self.pilots[i]
                             color = [0,0,0]
-                            logging.debug("pilot "+str(i)+" color is = "+str(color))
+                            logging.debug("pilot "+str(i)+" distance is = "+str(pilot.distance))
                             gain = 1-(pilot.distance-1.5)
                             if(gain >= 1):
                                 gain = 1
