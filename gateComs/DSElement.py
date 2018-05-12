@@ -384,6 +384,7 @@ class element:
                         if(brightestValue>0): #let's not divide by 0
                             for j in range(0,len(color)):
                                 color[j]/=brightestValue #divide by the brightest color channel so that none are over 1
+                        logging.debug(color)
                         LED.customColor(color)
 
                     elif(self.currentColor=="chasing"):
