@@ -25,15 +25,16 @@ try:
 except:
     import pickle
 
-CALIBRATE = 0;    #the moments while a module is discovering its noise floor
-STANDBY = 1;      #the moments before a race starts
-START = 2;        #the moment when the race starts
-FAR = 3;          #the moments while a quad is out of the bubble
-ENTER = 4;        #the moments while quad passes through the bubble
-PASS = 5;         #the moment an rssi peaks inside the bubble
-EXIT = 6;         #the moment when a quad exits the bubble
-CHANNEL_HOP = 9;  #the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
-FINISHED = 10;    #the moment when the race is completed
+CALIBRATE = 0    #the moments while a module is discovering its noise floor
+STANDBY = 1      #the moments before a race starts
+START = 2        #the moment when the race starts
+FAR = 3          #the moments while a quad is out of the bubble
+ENTER = 4        #the moments while quad passes through the bubble
+PASS = 5         #the moment an rssi peaks inside the bubble
+EXIT = 6         #the moment when a quad exits the bubble
+RSSI_UPDATE = 7
+CHANNEL_HOP = 9  #the moments while a module stablizes after a channel change. this should only happen when a quad is out of the bubble
+FINISHED = 10    #the moment when the race is completed
 
 def sendAnimation(animation):
     port = 13247
@@ -74,8 +75,6 @@ class element:
         logFile = args.f
         logging.basicConfig(filename=logFile,level=logLevel)
 
-
-
         self.serverAddress = args.i
         self.port = args.p
         self.currentColor = args.c
@@ -101,10 +100,10 @@ class element:
 
     def clearPilotData(self):
         self.pilots = []
-        self.pilots.append(Pilot.pilot("White",0,"flashbang"))
-        self.pilots.append(Pilot.pilot("Green",1,"greenbang"))
-        self.pilots.append(Pilot.pilot("Red",2,"redbang"))
-        self.pilots.append(Pilot.pilot("Blue",3,"bluebang"))
+        self.pilots.append(Pilot.pilot("Blue",0,"bluebang",[0,0,1]))
+        self.pilots.append(Pilot.pilot("Red",1,"redbang",[1,0,0]))
+        self.pilots.append(Pilot.pilot("Green",2,"greenbang",[0,1,0]))
+        self.pilots.append(Pilot.pilot("Yellow",3,"yellowbang",[0.5,0.5,0]))
 
     def connectArduino(self):
         print("connecting arduino")
@@ -154,11 +153,8 @@ class element:
         try:
             if self.arduinoConnected:
                 line = self.serial.readline()
-                if(line!=""):
-                    logging.debug(line)
                 try:
                     event = eval(line)
-                    logging.debug(event)
                 except:
                     event = None
                 if(event!=None):
@@ -167,6 +163,10 @@ class element:
                     pilot = self.pilots[pilotId]
                     state = event[1]
                     timestamp = event[2]
+                    if(state!=RSSI_UPDATE):
+                        logging.debug(line)
+                    if(state==RSSI_UPDATE):
+                        pilot.distance = timestamp
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
                         logging.debug(str(pilot.name)+": "+str(timestamp))
@@ -362,7 +362,39 @@ class element:
                 if self.tempAnimationQueue == []: #if we don't have any temporary animations to get through
                     #lets figure out what animation/color we should be playing
                     if(self.currentColor=="breathing"):
-                        LED.breathing()
+                        #LED.breathing()
+                        colors = []
+                        totalGain = 0
+                        for i in range(0,len(self.pilots)):
+                            pilot = self.pilots[i]
+                            color = [0,0,0]
+                            gain = 1-(pilot.distance-1.5)
+                            if(gain >= 1):
+                                gain = 1
+                            if(gain <= 0):
+                                gain = 0
+                            totalGain += gain
+                            color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
+                            colors.append(color)
+
+                        if(totalGain > 1):
+                            totalGain = 1
+                        if(totalGain < 0.2):
+                            totalGain = 0.2
+
+                        #lets add all the colors together and normalize them
+                        color = [0,0,0]
+                        for i in range(0,len(colors)):
+                            for j in range(0,len(color)):
+                                color[j]=color[j]+colors[i][j]
+
+                        lum = color[0]+color[1]+color[2]
+                        if(lum<=0.01):
+                            lum = 0.01
+                        for i in range(0,len(color)):
+                            color[i]=(color[i]/lum)*255*totalGain
+                        LED.customColor(color)
+
                     elif(self.currentColor=="chasing"):
                         LED.chasing()
                     elif(self.currentColor=="rainbow"):
@@ -387,6 +419,8 @@ class element:
                         animationInProgress = LED.tempFlashGreen()
                     if self.tempAnimationQueue[0] == "redbang":
                         animationInProgress = LED.tempFlashRed()
+                    if self.tempAnimationQueue[0] == "yellowbang":
+                        animationInProgress = LED.tempFlashYellow()
                     if animationInProgress == False:
                         del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
             except Exception as e:

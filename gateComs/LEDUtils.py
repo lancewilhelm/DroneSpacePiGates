@@ -71,9 +71,9 @@ class LEDStrip:
         self.strip.show()
 
     def customColor(self,color):
-        red = color[0]
-        green = color[1]
-        blue = color[2]
+        red = int(color[0])
+        green = int(color[1])
+        blue = int(color[2])
         stripColor = Color(red,green,blue)
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i,stripColor)

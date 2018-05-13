@@ -1,11 +1,13 @@
 import time
 class pilot:
-    def __init__(self,name="unkown pilot",frequency=5800,animation="bluebang"):
+    def __init__(self,name="unkown pilot",frequency=5800,animation="bluebang",color=[0.33,0.33,0.33]):
         self.laps = []
         self.name = name
         self.frequency = frequency
         self.animation = animation
         self.readyForLap = True
+        self.distance = 100
+        self.color = color
 
     def addLap(self,start,end):
         newLap = lap(start,end,len(self.laps))
