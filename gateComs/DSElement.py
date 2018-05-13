@@ -364,6 +364,7 @@ class element:
                     if(self.currentColor=="breathing"):
                         #LED.breathing()
                         colors = []
+                        totalGain = 0
                         for i in range(0,len(self.pilots)):
                             pilot = self.pilots[i]
                             color = [0,0,0]
@@ -372,9 +373,12 @@ class element:
                                 gain = 1
                             if(gain <= 0):
                                 gain = 0
+                            totalGain += gain
                             color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
                             colors.append(color)
 
+                        if totalGain > 1:
+                            totalGain = 1
 
                         #lets add all the colors together and normalize them
                         color = [0,0,0]
@@ -386,7 +390,7 @@ class element:
                         if(lum<=0.01):
                             lum = 0.01
                         for i in range(0,len(color)):
-                            color[i]=(color[i]/lum)*255
+                            color[i]=(color[i]/lum)*255*totalGain
                         LED.customColor(color)
 
                     elif(self.currentColor=="chasing"):

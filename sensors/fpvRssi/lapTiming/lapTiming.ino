@@ -20,8 +20,8 @@ const int spiClockPin = 13;
 //#define minRssiValue 125
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
-int counter = 0;
-int counterLimit = 10;
+unsigned long lastUpdateTime = millis();
+unsigned long refreshDelay = 100;
 float enterThreshold = 2;
 float exitThreshold = 2.2;
 unsigned long raceStart = millis();
@@ -555,13 +555,13 @@ void loop() {
   }
   handleSerialData(readSerial());
 
-  //debugRSSI(); //this lets us watch rssi on the arduino plotter
-  reportRSSI();
-
-  if(counter>=counterLimit){
-    counter = 0;
-  }else{
-    counter += 1;
+  
+  
+  //lets send any periodic data if enough time has elapsed
+  if((millis()-lastUpdateTime)>refreshDelay){
+    lastUpdateTime = millis();
+    //debugRSSI(); //this lets us watch rssi on the arduino plotter
+    reportRSSI();
   }
 }
 
