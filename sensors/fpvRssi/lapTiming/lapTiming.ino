@@ -8,7 +8,7 @@ const float initLength = 100L;
 
 const int deviceNumber = 4;
 const int pilotNumber = 4;
-const float averaging = 50;
+const float averaging = 100;
 float deviceRatio = 1.0/averaging;
 
 const int spiDataPin = 11;
@@ -21,8 +21,8 @@ const int spiClockPin = 13;
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
 unsigned long lastUpdateTime = millis();
-unsigned long refreshDelay = 100;
-float enterThreshold = 2;
+unsigned long refreshDelay = 50;
+float enterThreshold = 1.9;
 float exitThreshold = 2.2;
 unsigned long raceStart = millis();
 

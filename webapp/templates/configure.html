@@ -57,11 +57,11 @@
         </div>
         <div class="col-sm">
           <h2>Command</h2>
-          <label class="container">Set Enter Bubble (default: 1.5)
+          <label class="container">Set Enter Bubble (default: 1.9)
             <input type="radio" checked="checked" name="radio" id="enterBubble">
             <span class="checkmark"></span>
           </label>
-          <label class="container">Set Exit Bubble (default: 1.9)
+          <label class="container">Set Exit Bubble (default: 2.2)
             <input type="radio" name="radio" id="exitBubble">
             <span class="checkmark"></span>
           </label>
@@ -88,8 +88,62 @@
           <button type="button" class="btn btn-block btn-neutral" onclick="execute()">Execute</button>
         </div>
       </div>
+      <div class="row">
+        <div class="col-sm">
+          <h2>Frequency Chart</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <h2>Fatshark (F)</h2>
+          <ol>
+            <li>5740</li>
+            <li>5760</li>
+            <li>5780</li>
+            <li>5800</li>
+            <li>5820</li>
+            <li>5840</li>
+            <li>5860</li>
+            <li>5880</li>
+          </ol>
+        </div>
+        <div class="col-sm">
+          <h2>Boscam (E)</h2>
+          <ol>
+            <li>5705</li>
+            <li>5685</li>
+            <li>5665</li>
+            <li>5645</li>
+            <li>5885</li>
+            <li>5905</li>
+            <li>5925</li>
+            <li>5945</li>
+          </ol>
+        </div>
+        <div class="col-sm">
+          <h2>Raceband (C)</h2>
+          <ol>
+            <li>5658</li>
+            <li>5695</li>
+            <li>5732</li>
+            <li>5769</li>
+            <li>5806</li>
+            <li>5843</li>
+            <li>5880</li>
+            <li>5917</li>
+          </ol>
+        </div>
+        <div class="col-sm">
+          <h2>DroneSpace (D)</h2>
+          <ol>
+            <li>5685</li>
+            <li>5760</li>
+            <li>5860</li>
+            <li>5905</li>
+          </ol>
+        </div>
+      </div>
     </div>
-
 
     <script src="{{ url_for('static',filename='js/configure.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
