@@ -109,7 +109,7 @@ def onLeave(data):
     leave_room(room)
     send("Goodbye!", room=room)
 
-def listenForGateUpdates(app,running):
+def listenForGateUpdates(app):
 
     print("Listen thread has started. Here we go baby!!!")
     sock = DSWebClient.createSocket(13248,1) #lets create a socket in blocking mode
@@ -125,13 +125,13 @@ def listenForGateUpdates(app,running):
                 print("bad message format")
 
 def startGateServerListener(app):
-    gslThread = Thread(target=listenForGateUpdates, args=[app,running])
+    gslThread = Thread(target=listenForGateUpdates, args=[app])
     gslThread.start()
 
 @app.before_first_request #we use this so that our thread is a sub process of the reloader
 def app_init():
     print("APP STARTING")
-    startGateServerListener(app,running)
+    startGateServerListener(app)
 
 if __name__ == "__main__":
     #app.run(host='0.0.0.0', port=80, debug=True)
