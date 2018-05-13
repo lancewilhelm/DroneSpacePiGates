@@ -171,6 +171,8 @@ class element:
                         pilot.addLap(0,timestamp)
                         logging.debug(str(pilot.name)+": "+str(timestamp))
                         logging.debug(str(pilot.name)+": "+str(timestamp))
+                        self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
+                        #asdf
                     if(state==ENTER):
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==CALIBRATE):

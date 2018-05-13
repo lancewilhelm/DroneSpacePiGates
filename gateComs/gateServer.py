@@ -15,6 +15,8 @@ parser.add_argument('-f', default="/home/pi/DSServer.log", help="location to sav
 parser.add_argument('-ledCount', default=337, help="the number of leds this device controls (integer)")
 parser.add_argument('-i', default="", help="the ip address of the gateServer")
 parser.add_argument('-p', default=13246, help="gateServer port")
+parser.add_argument('-webserver', default="gatemaster.local", help="the ip of the webserver")
+parser.add_argument('-webserverPort', default=13246, help="the ip of the webserver")
 args = parser.parse_args()
 DSUtils.startLogging(args.l,args.f) #lets use logging to pump our logs to a file instead of printing all over the place
 try:
@@ -111,7 +113,7 @@ def sendDataTo(sock,address,subject,body,recipient):
 def sendDisconnect(sock,address):
     sendDataTo(sock,address,"disconnect","","")
 
-def runProgram(sock):
+def runProgram(sock,webserverIP):
     global printFPS
     currentState= "rainbow"
     lastStateUpdate = {"subject":"","body":"","recipient":""}
@@ -206,6 +208,9 @@ def runProgram(sock):
             if(subject == "return"):
                 logging.debug("we got a request response: "+str(data))
                 sendDataTo(sock,body["responseAddress"],"returnLapList",body,"")
+            if(subject == "newLap"):
+                logging.debug("we got a request response: "+str(data))
+                sendDataTo(sock,body["responseAddress"],"returnLapList",body,"")
             if((subject == "keepalive")):
                 try:
                     try:
@@ -255,7 +260,8 @@ def main():
         #try:
         sock = createSocket(port)
 
-        runProgram(sock)
+        runProgram(sock, args.webserver)
+
         #except Exception as e:
         #    print(e)
 
