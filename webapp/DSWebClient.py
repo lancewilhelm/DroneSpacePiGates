@@ -3,12 +3,16 @@ try:
     import cPickle as pickle
 except:
     import pickle
-def createSocket(port):
+def createSocket(port,blocking=0):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     #sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
     hostname = ""
-    sock.setblocking(0)
+    sock.setblocking(blocking)
+    if(blocking):
+        sock.bind(('',port))
+        sock.settimeout(5)
+
     #print("binding to "+str(hostname)+" on port "+str(port))
     #sock.bind((hostname,port))
     #print("bound")

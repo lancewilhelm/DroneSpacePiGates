@@ -1,11 +1,18 @@
 from flask import Flask, request, render_template
+from flask_socketio import SocketIO
+import socket
 import DSWebClient
 import time
 import json
+import threading
+from threading import Thread
+from flask import appcontext_tearing_down
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 gateMasterAddr = ""
 
 @app.route("/api/gates/system", methods=['POST','GET'])
@@ -80,10 +87,53 @@ def timing():
 def configure():
     return render_template('configure.html')
 
-if __name__ == "__main__":
-    # Create NeoPixel object with appropriate configuration.
-    #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
-    # Intialize the library (must be called once before other functions).
-    #strip.begin()
+@app.route("/socket", methods=['GET'])
+def socket():
+    return render_template('socket.html')
 
-    app.run(host='0.0.0.0', port=80, debug=True)
+@socketio.on('join')
+def onJoin(data):
+    room = data['room']
+    join_room(room)
+    laps = DSWebClient.getLapList(gateMasterAddr,13246)
+    send(str(laps), room=room)
+
+def onNewData(lap):
+    room = data['room']
+    join_room(room)
+    send(str(laps), room=room)
+
+@socketio.on('leave')
+def onLeave(data):
+    room = data['room']
+    leave_room(room)
+    send("Goodbye!", room=room)
+
+def listenForGateUpdates(app,running):
+
+    print("Listen thread has started. Here we go baby!!!")
+    sock = DSWebClient.createSocket(13248,1) #lets create a socket in blocking mode
+    data,address = DSWebClient.recvData(sock)
+    while(True):
+        if(data!=None):
+            try:
+                subject = data['subject'] #the subject of the message
+                body = data['body'] #the body of the message
+                recipient = data['recipient']
+                onNewData(body)
+            except:
+                print("bad message format")
+
+def startGateServerListener(app):
+    gslThread = Thread(target=listenForGateUpdates, args=[app,running])
+    gslThread.start()
+
+@app.before_first_request #we use this so that our thread is a sub process of the reloader
+def app_init():
+    print("APP STARTING")
+    startGateServerListener(app,running)
+
+if __name__ == "__main__":
+    #app.run(host='0.0.0.0', port=80, debug=True)
+    #
+    socketio.run(app, host='0.0.0.0', port=80, debug=True)
