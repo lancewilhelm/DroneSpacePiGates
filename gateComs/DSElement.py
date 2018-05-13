@@ -377,8 +377,10 @@ class element:
                             color = [pilot.color[0]*gain,pilot.color[1]*gain,pilot.color[2]*gain]
                             colors.append(color)
 
-                        if totalGain > 1:
+                        if(totalGain > 1):
                             totalGain = 1
+                        if(totalGain < 0.2):
+                            totalGain = 0.2
 
                         #lets add all the colors together and normalize them
                         color = [0,0,0]
