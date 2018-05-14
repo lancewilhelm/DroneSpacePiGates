@@ -150,7 +150,7 @@ class element:
             self.serial.write(message.encode())
 
 
-    def readSerial(self):
+    def readSerial(self,sock):
         try:
             if self.arduinoConnected:
                 line = self.serial.readline()
@@ -346,7 +346,7 @@ class element:
         gate = DSUtils.Gate(sock,(self.serverAddress,self.port),self.defaultColor)
         if self.connectToServer(sock,(self.serverAddress,self.port),LED):
             while(True):
-                self.readSerial()
+                self.readSerial(sock)
                 newUpdate = False
                 if self.keepAlive(sock): #let's let the server know we're still there
                     data,address = self.recvData(sock)
