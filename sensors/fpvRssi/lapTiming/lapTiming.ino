@@ -6,9 +6,9 @@
 
 const float initLength = 100L;
 
-const int deviceNumber = 4;
+const int deviceNumber = 1;
 const int pilotNumber = 4;
-const float averaging = 100;
+const float averaging = 1000;
 float deviceRatio = 1.0/averaging;
 
 const int spiDataPin = 11;
@@ -76,7 +76,7 @@ uint16_t vtxFreqTable[] = {
 #define DS {5685,5760,5860,5905}
 
 struct {
-  uint16_t channel[8] = DS;
+  uint16_t channel[8] = RACEBAND_ODDS;
   uint16_t moduleChannelIndex[8] = {0,1,2,3,4,5,6,7};
   float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};

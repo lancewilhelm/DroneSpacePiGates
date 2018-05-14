@@ -170,14 +170,14 @@ class element:
                         pilot.distance = timestamp
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{pilot.name,timestamp,pilot.getNumberOfLaps()},"")
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",[pilot.name,timestamp,pilot.getNumberOfLaps()],"")
                         logging.debug(str(pilot.name)+": "+str(timestamp))
                         logging.debug(str(pilot.name)+": "+str(timestamp))
                     if(state==ENTER):
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{pilot.name,timestamp},"")
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",[pilot.name,timestamp],"")
                         self.tempAnimationQueue.append(pilot.animation)
                     if(state==EXIT):
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot exit",{pilot.name,timestamp},"")
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot exit",[pilot.name,timestamp],"")
                     if(state==CALIBRATE):
                         logging.debug("calibrating module "+str(pilotId))
                         self.tempAnimationQueue.append(pilot.animation)

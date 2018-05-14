@@ -35,7 +35,7 @@ port = 13246
 gates = []
 gateStates = {}
 
-fps = .3
+fps = 100
 
 #laps = 0
 
