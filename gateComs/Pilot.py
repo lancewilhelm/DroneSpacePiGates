@@ -10,8 +10,23 @@ class pilot:
         self.color = color
 
     def addLap(self,start,end):
-        newLap = lap(start,end,len(self.laps))
+        newLap = lap(start,end,len(self.laps),completed=True)
         self.laps.append(newLap)
+
+    def getLastPass(self):
+        if(len(laps)>0):
+            return laps[-1].getEndTime()
+        else:
+            return None
+
+    def getLastLap(self):
+        if(len(laps)>0):
+            return laps[-1]
+        else:
+            return None
+
+    def getNumberOfLaps(self):
+        return len(self.laps)
 
     def getCurrentLapDuration(self):
         duration = 0
@@ -26,7 +41,8 @@ class pilot:
         return self.animation
 
 class lap:
-    def __init__(self,start,end,number):
+    def __init__(self,start,end,number,completed=False):
+        self.completed = completed
         self.startTime = start
         self.endTime = end
         self.duration = end-start
@@ -34,6 +50,12 @@ class lap:
 
     def getTime(self):
         return int(round(time.time() * 1000))
+
+    def getEndime(self):
+        if(self.completed):
+            return endTime
+        else:
+            return int(round(time.time() * 1000))
 
     def setEndTime(self,end):
         self.endTime = end

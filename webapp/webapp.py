@@ -4,16 +4,28 @@ import socket
 import DSWebClient
 import time
 import json
-import threading
-from threading import Thread
-from flask import appcontext_tearing_down
+from celery import Celery
+import traceback
 #from blink import Blink
 #import leddimmer as l
 #from getButtonStatus import getButtonStatus
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+app.config['SECRET_KEY'] = 'top-secret!'
+
+# Celery configuration
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+# SocketIO
+socketio = SocketIO(app,message_queue='redis://localhost:6379/0')
+
+# Initialize Celery
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+
 gateMasterAddr = ""
+
+done = False
 
 @app.route("/api/gates/system", methods=['POST','GET'])
 def sendElementCommand():
@@ -41,7 +53,7 @@ def getServerGates():
 @app.route("/api/server/sensors/timing/laps", methods=['POST','GET','DELETE'])
 def getServerTiming():
     if request.method == "GET":
-        laps = DSWebClient.getLapList(gateMasterAddr,13246)
+        laps = DSWebClient.getLapList(gateMasterAddr,13246,{})
         print(laps)
         return json.dumps(laps)
     if request.method == "DELETE":
@@ -87,53 +99,58 @@ def timing():
 def configure():
     return render_template('configure.html')
 
+@socketio.on('getLapList', namespace="/timing")
+def timingConnected(data):
+    print("got request for lap list")
+    getLapsTask = getLapList.delay()
+
+def emitTimingMessage(subject,message,address):
+    print(str(subject)+" at gate "+str(address[0])+ " - "+str(message))
+    socketio.emit(subject,json.dumps({"message":message,"gate":address}),namespace="/timing")
+
+def handleNewData(data,address):
+    print("handling data "+str(data))
+    subject = data['subject'] #the subject of the message
+    body = data['body'] #the body of the message
+    namespace = body['namespace']
+    message = body['message']
+    if(namespace=="timing"):
+        emitTimingMessage(subject,message,address)
+
 @app.route("/socket", methods=['GET'])
-def socket():
+def testSocketStuff():
     return render_template('socket.html')
 
-@socketio.on('join')
-def onJoin(data):
-    room = data['room']
-    join_room(room)
-    laps = DSWebClient.getLapList(gateMasterAddr,13246)
-    send(str(laps), room=room)
+@celery.task
+def getLapList():
+    print("getting laps!")
+    #laps = DSWebClient.getLapList(gateMasterAddr,13249,{"namespace":"timing"})
+    laps = [["sky",10.0,1],["sky",10.0,2],["sky",10.0,3],["sky",10.0,4],["ninja",10.0,1],["ninja",10.0,2],["ninja",10.0,3],["ninja",10.0,4]]
+    print("we got some laps back!!!")
+    emitTimingMessage("lap list", laps, ("127.0.0.1",23453))
 
-def onNewData(lap):
-    room = data['room']
-    join_room(room)
-    send(str(laps), room=room)
-
-@socketio.on('leave')
-def onLeave(data):
-    room = data['room']
-    leave_room(room)
-    send("Goodbye!", room=room)
-
-def listenForGateUpdates(app):
-
+@celery.task
+def startGateEventListener():
     print("Listen thread has started. Here we go baby!!!")
-    sock = DSWebClient.createSocket(13248,1) #lets create a socket in blocking mode
-    data,address = DSWebClient.recvData(sock)
+    sock = DSWebClient.createSocket(13249,1) #lets create a socket in blocking mode
     while(True):
+        data,address = DSWebClient.recvData(sock)
         if(data!=None):
             try:
-                subject = data['subject'] #the subject of the message
-                body = data['body'] #the body of the message
-                recipient = data['recipient']
-                onNewData(body)
-            except:
-                print("bad message format")
+                handleNewData(data,address)
+            except Exception as e:
+                print("unable to handle data: "+str(data))
+                print(traceback.format_exc())
+    return data
 
-def startGateServerListener(app):
-    gslThread = Thread(target=listenForGateUpdates, args=[app])
-    gslThread.start()
-
-@app.before_first_request #we use this so that our thread is a sub process of the reloader
-def app_init():
+@app.before_first_request
+def initAndStuff():
     print("APP STARTING")
-    startGateServerListener(app)
+    task = startGateEventListener.delay()
+    print("APP STARTED")
 
 if __name__ == "__main__":
     #app.run(host='0.0.0.0', port=80, debug=True)
     #
     socketio.run(app, host='0.0.0.0', port=80, debug=True)
+    done = True

@@ -76,6 +76,7 @@ class element:
         logging.basicConfig(filename=logFile,level=logLevel)
 
         self.serverAddress = args.i
+        self.webPort = args.wsp
         self.port = args.p
         self.currentColor = args.c
         self.defaultColor = args.c
@@ -169,12 +170,14 @@ class element:
                         pilot.distance = timestamp
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{pilot,timestamp,pilot.getNumberOfLaps()},"")
                         logging.debug(str(pilot.name)+": "+str(timestamp))
                         logging.debug(str(pilot.name)+": "+str(timestamp))
-                        self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
-                        #asdf
                     if(state==ENTER):
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{pilot,timestamp},"")
                         self.tempAnimationQueue.append(pilot.animation)
+                    if(state==EXIT):
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot exit",{pilot,timestamp},"")
                     if(state==CALIBRATE):
                         logging.debug("calibrating module "+str(pilotId))
                         self.tempAnimationQueue.append(pilot.animation)

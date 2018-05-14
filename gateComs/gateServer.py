@@ -31,13 +31,13 @@ printFPS = False
 serverAddress = ""
 port = 13246
 
-#these are request which might take some time.
 #Let's keep track of the addresses which are awaiting a response
-
 gates = []
 gateStates = {}
 
-fps = 60
+fps = .3
+
+#laps = 0
 
 
 def createSocket(port):
@@ -115,6 +115,7 @@ def sendDisconnect(sock,address):
 
 def runProgram(sock,webserverIP):
     global printFPS
+    #global laps
     currentState= "rainbow"
     lastStateUpdate = {"subject":"","body":"","recipient":""}
     while(True):
@@ -208,7 +209,7 @@ def runProgram(sock,webserverIP):
             if(subject == "return"):
                 logging.debug("we got a request response: "+str(data))
                 sendDataTo(sock,body["responseAddress"],"returnLapList",body,"")
-            if(subject == "newLap"):
+            if(subject == "new lap"):
                 logging.debug("we got a request response: "+str(data))
                 sendDataTo(sock,body["responseAddress"],"returnLapList",body,"")
             if((subject == "keepalive")):
@@ -254,6 +255,10 @@ def runProgram(sock,webserverIP):
             actualFPS = round((1.0/0.0001)*1000,0)
         if(printFPS):
             logging.debug(actualFPS)
+
+        #send fake data
+        #sendDataTo(createSocket(13250),("",13249),"pilot lap",{"namespace":"timing","message":["fooFPV",loopDuration,laps]},None)
+        #laps+=1
 def main():
     global Gate
     while(True):

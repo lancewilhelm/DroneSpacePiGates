@@ -12,6 +12,8 @@ parser.add_argument('-e', type=int, default=520, help="the number of leds this d
 parser.add_argument('-i', type=str, default="gatemaster.local", help="the ip address of the gateServer")
 parser.add_argument('-p', type=int, default=13246, help="gateServer port")
 parser.add_argument('-c', type=str, default="rainbow", help="the color of the element before we connect to the server")
+parser.add_argument('-wsp', type=str, default=13249, help="the port of the datagram socket running on webapp.py")
+
 args = parser.parse_args()
 #all options have defaults, so we don't HAVE to provide them when calling the script
 
