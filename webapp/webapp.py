@@ -134,13 +134,14 @@ def startGateEventListener():
     print("Listen thread has started. Here we go baby!!!")
     sock = DSWebClient.createSocket(13249,1) #lets create a socket in blocking mode
     while(True):
-        data,address = DSWebClient.recvData(sock)
-        if(data!=None):
-            try:
+        try:
+            data,address = DSWebClient.recvData(sock)
+            if(data!=None):
+
                 handleNewData(data,address)
-            except Exception as e:
-                print("unable to handle data: "+str(data))
-                print(traceback.format_exc())
+        except Exception as e:
+            print("unable to handle data: "+str(data))
+            print(traceback.format_exc())
     return data
 
 @app.before_first_request
