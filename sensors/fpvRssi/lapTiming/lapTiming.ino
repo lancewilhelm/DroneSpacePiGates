@@ -21,7 +21,7 @@ const int spiClockPin = 13;
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
 unsigned long lastUpdateTime = millis();
-unsigned long refreshDelay = 500;
+unsigned long refreshDelay = 100;
 float enterThreshold = 1.9;
 float exitThreshold = 2.2;
 unsigned long raceStart = millis();
@@ -535,9 +535,7 @@ void fakeRxFar(int rxId){
 
 void testProgram(){
   for(int i=0;i<pilotNumber;i++){
-    fakeRxNear(i);
-    delay(3000);
-    fakeRxFar(i);
+    sendStateUpdate(i,PASS,10);//this notifies the pi that a pass was made
     delay(1000);
   }
 }

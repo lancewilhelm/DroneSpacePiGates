@@ -144,9 +144,13 @@ class element:
             logging.debug("no arduino connected. Attempting to reconnect")
             self.arduinoConnected = self.connectArduino()
         if self.arduinoConnected == True:
-            logging.debug("sending '"+data+"' to arduino")
             message = data + "/r/n"
+            logging.debug("encoding message")
+            encodedMessage = message.encode()
+            logging.debug("finished encoding message")
+            logging.debug("sending '"+data+"' to arduino")
             self.serial.write(message.encode())
+            logging.debug("finished sending")
 
 
     def readSerial(self,sock):
@@ -183,7 +187,7 @@ class element:
                     if(state==STANDBY):
                         logging.debug("module "+str(pilotId)+" ready")
         except Exception as e:
-            self.arduinoConnected = False
+            disconnectArduino()
             logging.debug(e)
             logging.debug(traceback.format_exc())
 
