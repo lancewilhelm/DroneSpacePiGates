@@ -8,7 +8,7 @@ const float initLength = 100L;
 
 const int deviceNumber = 1;
 const int pilotNumber = 4;
-const float averaging = 1000;
+const float averaging = 100;
 float deviceRatio = 1.0/averaging;
 
 const int spiDataPin = 11;
@@ -21,7 +21,7 @@ const int spiClockPin = 13;
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
 unsigned long lastUpdateTime = millis();
-unsigned long refreshDelay = 100;
+unsigned long refreshDelay = 500;
 float enterThreshold = 1.9;
 float exitThreshold = 2.2;
 unsigned long raceStart = millis();
@@ -534,11 +534,11 @@ void fakeRxFar(int rxId){
 }
 
 void testProgram(){
-  for(int i=0;i<deviceNumber;i++){
-    delay(3000);
+  for(int i=0;i<pilotNumber;i++){
     fakeRxNear(i);
-    delay(1000);
+    delay(3000);
     fakeRxFar(i);
+    delay(1000);
   }
 }
 

@@ -1,6 +1,5 @@
 import socket
 import time
-import select
 import time
 import DSUtils
 import os
@@ -118,7 +117,7 @@ class element:
                 #arduinoCom = "COM11"
                 #print("arduino port: "+str(arduinoCom.device))
                 #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-                self.serial = serial.Serial(arduinoCom,115200, timeout=0.02)
+                self.serial = serial.Serial(arduinoCom,115200, timeout=1)
                 #print(ser.name)         # check which port was really used
                 self.clearPilotData()
                 logging.debug("arduino connected")
@@ -170,12 +169,12 @@ class element:
                         pilot.distance = timestamp
                     if(state==PASS):
                         pilot.addLap(0,timestamp)
+                        logging.debug(str(pilot.name)+": "+str(timestamp))
+                        logging.debug(str(pilot.name)+": "+str(timestamp))
                         self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{"namespace":"timing","message":[pilot.name,timestamp,pilot.getNumberOfLaps()]},"")
-                        logging.debug(str(pilot.name)+": "+str(timestamp))
-                        logging.debug(str(pilot.name)+": "+str(timestamp))
                     if(state==ENTER):
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{"namespace":"timing","message":[pilot.name,timestamp]},"")
                         self.tempAnimationQueue.append(pilot.animation)
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{"namespace":"timing","message":[pilot.name,timestamp]},"")
                     if(state==EXIT):
                         self.sendData(sock,(self.serverAddress,self.webPort),"pilot exit",{"namespace":"timing","message":[pilot.name,timestamp]},"")
                     if(state==CALIBRATE):

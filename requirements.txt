@@ -1,0 +1,8 @@
+BeautifulSoup==3.2.0
+celery==4.1.0
+Flask==0.12.2
+Flask-SocketIO==3.0.0
+pyserial==3.4
+redis==2.10.6
+gevent-websocket==0.10.1
+psutil==5.4.3

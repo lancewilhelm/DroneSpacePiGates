@@ -22,8 +22,14 @@ socketio = SocketIO(app,message_queue='redis://localhost:6379/0')
 # Initialize Celery
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
+def getMyIp():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    myIp = s.getsockname()[0]
+    s.close()
+    return myIp
 
-gateMasterAddr = ""
+gateMasterAddr = getMyIp()
 
 done = False
 
@@ -124,9 +130,12 @@ def testSocketStuff():
 @celery.task
 def getLapList():
     print("getting laps!")
-    #laps = DSWebClient.getLapList(gateMasterAddr,13249,{"namespace":"timing"})
-    laps = [["sky",10.0,1],["sky",10.0,2],["sky",10.0,3],["sky",10.0,4],["ninja",10.0,1],["ninja",10.0,2],["ninja",10.0,3],["ninja",10.0,4]]
+    laps = DSWebClient.getLapList(gateMasterAddr,13246,{})
+    #laps = [["sky",10.0,1],["sky",10.0,2],["sky",10.0,3],["sky",10.0,4],["ninja",10.0,1],["ninja",10.0,2],["ninja",10.0,3],["ninja",10.0,4]]
     print("we got some laps back!!!")
+    print(laps)
+    if(laps==None):
+        laps = []
     emitTimingMessage("lap list", laps, ("127.0.0.1",23453))
 
 @celery.task
