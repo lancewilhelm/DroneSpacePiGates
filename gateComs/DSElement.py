@@ -187,7 +187,7 @@ class element:
                     if(state==STANDBY):
                         logging.debug("module "+str(pilotId)+" ready")
         except Exception as e:
-            disconnectArduino()
+            self.disconnectArduino()
             logging.debug(e)
             logging.debug(traceback.format_exc())
 
