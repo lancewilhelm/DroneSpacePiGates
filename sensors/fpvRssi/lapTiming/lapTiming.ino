@@ -6,8 +6,8 @@
 
 const float initLength = 100L;
 
-const int deviceNumber = 3;
-const int pilotNumber = 4;
+const int deviceNumber = 1;
+const int pilotNumber = 2;
 const float averaging = 100;
 float deviceRatio = 1.0/averaging;
 
@@ -72,11 +72,11 @@ uint16_t vtxFreqTable[] = {
 #define RACEBAND_ODDS {5658,5732,5806,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5658,5880,5769,5769}
+#define CUSTOM {5658,5760,5769,5769}
 #define DS {5685,5760,5860,5905}
 
 struct {
-  uint16_t channel[8] = DS;
+  uint16_t channel[8] = CUSTOM;
   uint16_t moduleChannelIndex[8] = {0,1,2,3,4,5,6,7};
   float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};

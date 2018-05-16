@@ -15,6 +15,7 @@ timingSocket.on('pilot lap', function(data){
     var gate = data.gate;
     var message = data.message;
     addLapToTable(message[0],message[1],message[2]);
+    blipAudio.play();
 });
 
 timingSocket.on('lap list', function(data){
@@ -24,7 +25,6 @@ timingSocket.on('lap list', function(data){
     var message = data.message;
     refreshTable(message);
 });
-
 
 function addLapToTable(pilot, time, number){
   // Create an empty <tr> element and add it to the 1st position of the table:
@@ -55,3 +55,67 @@ function refreshTable(laps){
       addLapToTable(pilot,time,number);
   }
 }
+
+var d = new Date();
+var audio = new Audio('static/sound/tone.mp3');
+var blipAudio = new Audio('static/sound/blip.mp3');
+var countdownTimer = 0;
+var raceDuration = 120;
+
+function resetCountdown(){
+  clearInterval(countdownTimer);
+  document.getElementById("timer").innerHTML = getMinutes(raceDuration*1000) + ":" + getSeconds(raceDuration*1000);
+  console.log("resetting");
+}
+
+function stopCountdown() {
+    clearInterval(countdownTimer);
+}
+
+function startCountdown(){
+  clearInterval(countdownTimer);
+  resetCountdown();
+  d = new Date();
+  d.setSeconds(new Date().getSeconds()+raceDuration+5);
+  countdownTimer = setInterval(countdownMethod, 1000);
+}
+
+function getDays(ms) {
+  return Math.floor(ms / (1000 * 60 * 60 * 24));
+}
+
+function getHours(ms) {
+  return Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+}
+
+function getMinutes(ms) {
+  return Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+}
+
+function getSeconds(ms) {
+  return Math.floor((ms % (1000 * 60)) / 1000);
+}
+
+var countdownMethod = function() {
+
+  // Get todays date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now an the count down date
+  var distance = d.getTime() - now;
+
+  // Display the result in the element with id="demo"
+  document.getElementById("timer").innerHTML = getMinutes(distance) + ":" + getSeconds(distance);
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(countdownTimer);
+    document.getElementById("timer").innerHTML = "EXPIRED";
+    audio.play();
+  }
+  if (distance <= (raceDuration+1)*1000) {
+    if (distance >= raceDuration*1000) {
+      audio.play();
+    }
+  }
+}
+resetCountdown();

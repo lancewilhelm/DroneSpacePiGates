@@ -106,7 +106,7 @@ class element:
         self.pilots.append(Pilot.pilot("Yellow",3,"yellowbang",[0.5,0.5,0]))
 
     def connectArduino(self):
-        print("connecting arduino")
+        logging.debug("connecting arduino")
         arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/ttyAMA0","/dev/tty.wchusbserial1420","/dev/tty.wchusbserial1410"]
         connected = False
         for arduinoCom in arduinoPorts:
@@ -115,7 +115,7 @@ class element:
 
                 #arduinoCom = "/dev/ttyACM0"
                 #arduinoCom = "COM11"
-                #print("arduino port: "+str(arduinoCom.device))
+                logging.debug("connecting arduino to port: "+arduinoCom)
                 #ser = serial.Serial(str(arduinoCom.device))  # open serial port
                 self.serial = serial.Serial(arduinoCom,115200, timeout=0,write_timeout=0)
                 #print(ser.name)         # check which port was really used
@@ -172,10 +172,9 @@ class element:
                     if(state==RSSI_UPDATE):
                         pilot.distance = timestamp
                     if(state==PASS):
+                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{"namespace":"timing","message":[pilot.name,timestamp,pilot.getNumberOfLaps()]},"")
                         pilot.addLap(0,timestamp)
                         logging.debug(str(pilot.name)+": "+str(timestamp))
-                        logging.debug(str(pilot.name)+": "+str(timestamp))
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{"namespace":"timing","message":[pilot.name,timestamp,pilot.getNumberOfLaps()]},"")
                     if(state==ENTER):
                         self.tempAnimationQueue.append(pilot.animation)
                         self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{"namespace":"timing","message":[pilot.name,timestamp]},"")
@@ -456,6 +455,7 @@ class element:
                     body['response'] = self.getSendableLaps()
                     logging.debug("we recieved a clear lap list request")
                     self.sendData(sock,(self.serverAddress,self.port),"return",body,"")
+                    self.sendData(sock,(self.serverAddress,self.webPort),"laps cleared",{"namespace":"timing","message":None},"")
 
                 if(subject == "updateColor"):
                     self.currentColor = body

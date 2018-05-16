@@ -6,15 +6,18 @@ import time
 import json
 from celery import Celery
 import traceback
-#from blink import Blink
-#import leddimmer as l
-#from getButtonStatus import getButtonStatus
+
+#from api.testPage import api
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top-secret!'
 
 # Celery configuration
 app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
 app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+#register routes
+#app.register_blueprint(api, url_prefix='/api')
 
 # SocketIO
 socketio = SocketIO(app,message_queue='redis://localhost:6379/0')
@@ -109,6 +112,8 @@ def configure():
 def timingConnected(data):
     print("got request for lap list")
     getLapsTask = getLapList.delay()
+
+    asdf = "laps cleared"
 
 def emitTimingMessage(subject,message,address):
     print(str(subject)+" at gate "+str(address[0])+ " - "+str(message))
