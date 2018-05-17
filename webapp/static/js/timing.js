@@ -1,4 +1,6 @@
 console.log('socket stuff is go!!!');
+var startFinishTone = new Audio('static/sound/finish-tone.mp3');
+var blipAudio = new Audio('static/sound/blip.mp3');
 
 var lapTable = document.getElementById("lapTable");
 var timingSocket = io('/timing').connect('http://' + document.domain + ':' + location.port);
@@ -57,8 +59,6 @@ function refreshTable(laps){
 }
 
 var d = new Date();
-var audio = new Audio('static/sound/tone.mp3');
-var blipAudio = new Audio('static/sound/blip.mp3');
 var countdownTimer = 0;
 var raceDuration = 120;
 
@@ -110,11 +110,11 @@ var countdownMethod = function() {
   if (distance < 0) {
     clearInterval(countdownTimer);
     document.getElementById("timer").innerHTML = "EXPIRED";
-    audio.play();
+    startFinishTone.play();
   }
   if (distance <= (raceDuration+1)*1000) {
     if (distance >= raceDuration*1000) {
-      audio.play();
+      startFinishTone.play();
     }
   }
 }
