@@ -34,11 +34,8 @@ def getMyIp():
     s.close()
     return myIp
 
-if(args.i==""):
-    serverAddress =getMyIp()
 
-else:
-    serverAddress = args.i
+serverAddress = args.i
 port = 13246
 print("gate server ip is ("+str(serverAddress)+","+str(port)+")")
 
