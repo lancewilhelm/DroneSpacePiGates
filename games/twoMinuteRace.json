@@ -1,0 +1,32 @@
+{
+  "Templates":{
+    "Player":{
+
+    },
+    "StartFinishGate":{
+      "variables":[
+        "gateID"
+      ],
+      "methods":{
+        "setGateId":{
+          "args":["id"],
+          "methods":[
+            {"foobar":"{gateID}={id}"}
+          ]
+        },
+        "updateColor":{
+          "args":["color","gate"],
+          "methods":[
+            {"GLOBAL.updateColor":["{color}","{gate}"]}
+          ]
+        }
+      }
+
+    },
+    "regularGate":{
+
+    }
+  },
+  "Main":{
+  }
+}
