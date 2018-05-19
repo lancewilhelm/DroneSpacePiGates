@@ -22,7 +22,7 @@ app.config['SECRET_KEY'] = 'top-secret!'
 app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
 app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 
-app.config['GATE_SERVER_IP'] = getMyIp()
+app.config['GATE_SERVER_IP'] = ""
 app.config["GATE_SERVER_PORT"] = 13246
 app.config["GATE_SERVER_WEB_PORT"] = 13249
 
