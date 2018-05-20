@@ -7,12 +7,12 @@
 const float initLength = 100L;
 
 const int deviceNumber = 1;
-const int pilotNumber = 2;
+const int pilotNumber = 4;
 const float averaging = 100;
 float deviceRatio = 1.0/averaging;
 
 const int spiDataPin = 11;
-const int spiClockPin = 13;
+const int spiClockPin = 13; //(15 for dfrobot beetle, 13 for arduino nano)
 
 
 #define power 250
@@ -76,7 +76,7 @@ uint16_t vtxFreqTable[] = {
 #define DS {5685,5760,5860,5905}
 
 struct {
-  uint16_t channel[8] = CUSTOM;
+  uint16_t channel[8] = DS;
   uint16_t moduleChannelIndex[8] = {0,1,2,3,4,5,6,7};
   float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
@@ -88,7 +88,7 @@ struct {
   // Setup data pins for rx5808 comms
   unsigned long lapStartTime[8] = {raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart,raceStart};
   uint8_t slaveSelectPins[8] = {10,9,8,7,6,5,4,3};
-  uint8_t rssiPins[8] = {7,6,5,4,3,2,1,0};
+  uint8_t rssiPins[8] = {7,6,5,4,3,2,1,0}; //({0,6,5,4,3,2,1,0} for DFrobot beetle, {7,6,5,4,3,2,1,0} for nano)
   uint8_t state[8] = {START,START,START,START,START,START,START,START};
 } rxModules;
 
@@ -113,7 +113,6 @@ void setup() {
 
   while (!Serial) {
   }; // Wait for the Serial port to initialise
-
   //setupRace(rxModules.channel);
 
   //set ADC prescaler to 16 to speedup ADC readings
@@ -137,6 +136,7 @@ void setup() {
 
   //calibrateAllModules();
   startRace();
+  
 }
 
 void setChannelFrequency(int channelNumber, int frequency){
@@ -563,5 +563,6 @@ void loop() {
     //debugRSSI(); //this lets us watch rssi on the arduino plotter
     reportRSSI();
   }
+  
 }
 
