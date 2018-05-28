@@ -300,7 +300,7 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
             self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
         self.strip.show()
         if(x < frameCount-1):
@@ -316,7 +316,7 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
             self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
         self.strip.show()
         if(x < frameCount-1):
@@ -332,7 +332,7 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
             self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
         self.strip.show()
         if(x < frameCount-1):
@@ -348,7 +348,7 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
             self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
         self.strip.show()
         if(x < frameCount-1):
