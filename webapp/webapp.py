@@ -8,12 +8,6 @@ import traceback
 from api import api
 from routes import pages
 
-def getMyIp():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    myIp = s.getsockname()[0]
-    s.close()
-    return myIp
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top-secret!'
@@ -22,7 +16,7 @@ app.config['SECRET_KEY'] = 'top-secret!'
 app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
 app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 
-app.config['GATE_SERVER_IP'] = getMyIp()
+app.config['GATE_SERVER_IP'] = ""
 app.config["GATE_SERVER_PORT"] = 13246
 app.config["GATE_SERVER_WEB_PORT"] = 13249
 
@@ -37,7 +31,7 @@ socketio = SocketIO(app,message_queue='redis://localhost:6379/0')
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
-gateMasterAddr = getMyIp()
+gateMasterAddr = ""
 done = False
 
 @socketio.on('getLapList', namespace="/timing")
