@@ -104,6 +104,10 @@ class element:
         self.pilots.append(Pilot.pilot("Red",1,"redbang",[1,0,0]))
         self.pilots.append(Pilot.pilot("Green",2,"greenbang",[0,1,0]))
         self.pilots.append(Pilot.pilot("Yellow",3,"yellowbang",[0.5,0.5,0]))
+        self.pilots.append(Pilot.pilot("Purple",0,"purplebang",[0.333,0,0.666]))
+        self.pilots.append(Pilot.pilot("Orange",1,"orangebang",[0.8,0.2,0]))
+        self.pilots.append(Pilot.pilot("Pink",2,"pinkbang",[0.4,0.2,0.4]))
+        self.pilots.append(Pilot.pilot("Cyan",3,"cyanbang",[0.5,0.5,0]))
 
     def connectArduino(self):
         logging.debug("connecting arduino")
@@ -428,6 +432,14 @@ class element:
                         animationInProgress = LED.tempFlashRed()
                     if self.tempAnimationQueue[0] == "yellowbang":
                         animationInProgress = LED.tempFlashYellow()
+                    if self.tempAnimationQueue[0] == "orangebang":
+                        animationInProgress = LED.tempFlashOrange()
+                    if self.tempAnimationQueue[0] == "purplebang":
+                        animationInProgress = LED.tempFlashPurple()
+                    if self.tempAnimationQueue[0] == "pinkbang":
+                        animationInProgress = LED.tempFlashPink()
+                    if self.tempAnimationQueue[0] == "cyanbang":
+                        animationInProgress = LED.tempFlashCyan()
                     if animationInProgress == False:
                         del self.tempAnimationQueue[0] #animation is finished, remove it from the queue
             except Exception as e:

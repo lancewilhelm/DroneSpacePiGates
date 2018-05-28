@@ -292,3 +292,67 @@ class LEDStrip:
         else:
             self.resetTempAnimation()
             return False
+
+    def tempFlashOrange(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        c = [2,0.25,0]
+        gain = t[0]+t[1]+t[2]
+        for j in range(self.strip.numPixels()):
+            v = round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75)
+            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
+
+    def tempFlashPink(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        c = [1,0.5,1]
+        gain = t[0]+t[1]+t[2]
+        for j in range(self.strip.numPixels()):
+            v = round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75)
+            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
+
+    def tempFlashPurple(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        c = [0.5,0,1]
+        gain = t[0]+t[1]+t[2]
+        for j in range(self.strip.numPixels()):
+            v = round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75)
+            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
+
+    def tempFlashCyan(self):
+        frameCount = 20
+        x = self.updateTempFrame(frameCount)
+        c = [0,1,0.75]
+        gain = t[0]+t[1]+t[2]
+        for j in range(self.strip.numPixels()):
+            v = round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75)
+            c = [c[0]*gain*v,c[1]*gain*v,c[2]*gain*v]
+            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+        self.strip.show()
+        if(x < frameCount-1):
+            return True
+        else:
+            self.resetTempAnimation()
+            return False
