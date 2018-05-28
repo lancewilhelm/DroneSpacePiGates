@@ -27,18 +27,9 @@ except:
 import sys
 
 printFPS = False
-def getMyIp():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    myIp = s.getsockname()[0]
-    s.close()
-    return myIp
 
-if(args.i==""):
-    serverAddress =getMyIp()
 
-else:
-    serverAddress = args.i
+serverAddress = args.i
 port = 13246
 print("gate server ip is ("+str(serverAddress)+","+str(port)+")")
 
