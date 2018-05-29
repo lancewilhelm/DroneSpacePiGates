@@ -300,14 +300,15 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
-            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+            mix = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
+            self.strip.setPixelColor(j, Color(int(mix[0]),int(mix[1]),int(mix[2])))
         self.strip.show()
         if(x < frameCount-1):
             return True
         else:
             self.resetTempAnimation()
             return False
+
 
     def tempFlashPink(self):
         frameCount = 20
@@ -316,14 +317,15 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
-            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+            mix = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
+            self.strip.setPixelColor(j, Color(int(mix[0]),int(mix[1]),int(mix[2])))
         self.strip.show()
         if(x < frameCount-1):
             return True
         else:
             self.resetTempAnimation()
             return False
+
 
     def tempFlashPurple(self):
         frameCount = 20
@@ -332,14 +334,15 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
-            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+            mix = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
+            self.strip.setPixelColor(j, Color(int(mix[0]),int(mix[1]),int(mix[2])))
         self.strip.show()
         if(x < frameCount-1):
             return True
         else:
             self.resetTempAnimation()
             return False
+
 
     def tempFlashCyan(self):
         frameCount = 20
@@ -348,8 +351,8 @@ class LEDStrip:
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
-            c = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
-            self.strip.setPixelColor(j, Color(int(c[0]),int(c[1]),int(c[2])))
+            mix = [(c[0]*v)/gain,(c[1]*v)/gain,(c[2]*v)/gain]
+            self.strip.setPixelColor(j, Color(int(mix[0]),int(mix[1]),int(mix[2])))
         self.strip.show()
         if(x < frameCount-1):
             return True
