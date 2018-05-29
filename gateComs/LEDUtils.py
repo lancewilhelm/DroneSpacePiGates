@@ -296,7 +296,7 @@ class LEDStrip:
     def tempFlashOrange(self):
         frameCount = 20
         x = self.updateTempFrame(frameCount)
-        c = [2,0.25,0]
+        c = [1,0.25,0]
         gain = c[0]+c[1]+c[2]
         for j in range(self.strip.numPixels()):
             v = int(round((math.sin((x*math.pi*(2.0/frameCount))-(math.pi*.5))+1)*127.5*.75))
