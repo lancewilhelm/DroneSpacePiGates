@@ -156,7 +156,6 @@ class element:
             self.serial.write(message.encode())
             logging.debug("finished sending")
 
-
     def readSerial(self,sock):
         try:
             if self.arduinoConnected:
@@ -171,8 +170,8 @@ class element:
                     pilot = self.pilots[pilotId]
                     state = event[1]
                     timestamp = event[2]
-                    if(state!=RSSI_UPDATE):
-                        logging.debug(line)
+                    #if(state!=RSSI_UPDATE):
+                    logging.debug(line)
                     if(state==RSSI_UPDATE):
                         pilot.distance = timestamp
                     if(state==PASS):
