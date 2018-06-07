@@ -7,7 +7,7 @@
 const float initLength = 100L;
 
 const int deviceNumber = 1;
-const int pilotNumber = 2;
+const int pilotNumber = 1;
 const float averaging = 100;
 float deviceRatio = 1.0/averaging;
 
@@ -21,9 +21,9 @@ const int spiClockPin = 13;
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
 unsigned long lastUpdateTime = millis();
-unsigned long refreshDelay = 100;
-float enterThreshold = 1.9;
-float exitThreshold = 2.2;
+unsigned long refreshDelay = 50;//500;
+float enterThreshold = 0.9;
+float exitThreshold = 1.5;
 unsigned long raceStart = millis();
 
 //these are the states we'll use to let our loop know what a given RX is doing atm
@@ -43,6 +43,7 @@ unsigned long raceStart = millis();
 #define SET_FREQUENCY 14       //the moment we want to change one of our tracked channels
 #define RUN_TEST 15          //the moment we want to run the test program to trigger fake laps
 #define SET_PILOT_NUMBER 16  //the moment we want to set the pilot number
+#define REPORT_STATE 17
 #define REPORT_DISTANCE 30   //the moment we want to report the distances of the channels
 #define COMMAND_START 96     //the moment when we start listening for a command
 #define COMMAND_ID 95
@@ -72,7 +73,7 @@ uint16_t vtxFreqTable[] = {
 #define RACEBAND_ODDS {5658,5732,5806,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5658,5760,5769,5769}
+#define CUSTOM {5880,5760,5769,5769}
 #define DS {5685,5760,5860,5905}
 
 struct {
@@ -110,6 +111,7 @@ uint16_t vtxHexTable[] = {
 // Initialize program
 void setup() {
   Serial.begin(115200);
+  analogReference(DEFAULT);
 
   while (!Serial) {
   }; // Wait for the Serial port to initialise
@@ -180,22 +182,9 @@ void SERIAL_SLAVE_HIGH(int pin) {
 }
 
 void calibrateAllModules(){
-
-  for(int y=0;y<deviceNumber;y++){
-    calibrateModule(y);
+  for(int channelId=0;channelId<deviceNumber;channelId++){
+    updateRxState(channelId,CALIBRATE);
   }
-}
-
-void calibrateModule(uint8_t rxId){
-  updateRxState(rxId,CALIBRATE);
-  for(int x=0;x<initLength;x++){
-    digitalWrite(LED_BUILTIN, HIGH);
-    rxModules.maxDistance[rxId] += refreshRx(rxId);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(2);
-  }
-  rxModules.maxDistance[rxId] = rxModules.maxDistance[rxId]/initLength;
-  updateRxState(rxId,STANDBY);
 }
 
 // Set the frequency given on the rx5808 module
@@ -307,7 +296,7 @@ void handleCommand(int command, int rxId, float params){
       rxModules.distanceMultiplier[rxId] = params;
       break;
     case CALIBRATE:
-      calibrateModule(rxId);
+      calibrateAllModules();
       break;
     case SET_FREQUENCY:
       setChannelFrequency(rxId,(int)params);
@@ -398,6 +387,7 @@ float refreshRx(int channelId){
     float mc = 23.3; //module constant
     float scale = 21;
     float newDistance = (-pow(rssi/scale,2.0)+scale+power)*.01*rxModules.distanceMultiplier[channelId];
+    
     if(newDistance<0){
       newDistance = 0;
     }
@@ -438,13 +428,67 @@ void handleRxExit(int rxId){
   updateRxState(rxId,FAR);//this puts us in the handleRxFar method on the next loop
 }
 
+void handleRxCalibrate(int channelId){
+  rxModules.distanceMultiplier[channelId] = 10;
+  while(true){
+    float rssi = rxModules.rssi[channelId];
+    if(rxModules.distanceMultiplier[channelId] < 0.1){
+      updateRxState(channelId,FAR);
+      break;
+    }
+    if(rssi<enterThreshold){
+      updateRxState(channelId,REPORT_STATE);
+      break;
+    }else{
+      rxModules.distanceMultiplier[channelId] = rxModules.distanceMultiplier[channelId]-0.01;
+    }
+  }
+}
+
+void printRxModuleElement(){
+  
+}
+
+void handleReportRxState(){
+  Serial.print("[");
+  Serial.print(-1);
+  Serial.print(",");
+  Serial.print("[");
+  for(int channelId=0;channelId<pilotNumber;channelId++){
+    Serial.print(rxModules.distanceMultiplier[channelId]);
+    if(channelId!=pilotNumber-1){
+      Serial.print(",");
+    }else{
+      Serial.print("]");
+    }
+  }
+  Serial.print(",");
+  Serial.print("[");
+  for(int channelId=0;channelId<pilotNumber;channelId++){
+    Serial.print(rxModules.distanceMultiplier[channelId]);
+    if(channelId!=pilotNumber-1){
+      Serial.print(",");
+    }else{
+      Serial.print("]");
+    }
+  }
+  Serial.print(",");
+  Serial.print(enterThreshold);
+  Serial.print(",");
+  Serial.print(exitThreshold);
+  Serial.println("]");
+}
+
 void handleRxStates(){
   for(int i=0;i<pilotNumber;i++){
     float rssi = refreshRx(i);
     int state = rxModules.state[i];
     switch (state) {
       case CALIBRATE:
-        // statements
+        handleRxCalibrate(i);
+        break;
+      case REPORT_STATE:
+        handleReportRxState();
         break;
       case STANDBY:
         // statements
@@ -513,6 +557,21 @@ void debugRSSI(){
   Serial.print(exitThreshold);
   Serial.print(",");
   for(int i=0;i<pilotNumber;i++){
+    Serial.print(analogRead(rxModules.rssiPins[i]));
+    if(i<pilotNumber-1){
+      Serial.print(",");
+    }else{
+      Serial.println("");
+    }
+  }
+}
+
+void debugDistance(){
+  Serial.print(enterThreshold);
+  Serial.print(",");
+  Serial.print(exitThreshold);
+  Serial.print(",");
+  for(int i=0;i<pilotNumber;i++){
     Serial.print(rxModules.rssi[i]);
     if(i<pilotNumber-1){
       Serial.print(",");
@@ -520,7 +579,6 @@ void debugRSSI(){
       Serial.println("");
     }
   }
-  
 }
 
 void fakeRxNear(int rxId){
@@ -554,13 +612,12 @@ void loop() {
     scrollChannels();
   }
   handleSerialData(readSerial());
-
-  
   
   //lets send any periodic data if enough time has elapsed
   if((millis()-lastUpdateTime)>refreshDelay){
     lastUpdateTime = millis();
     //debugRSSI(); //this lets us watch rssi on the arduino plotter
+    //debugDistance(); //this lets us watch rssi on the arduino plotter
     reportRSSI();
   }
 }
