@@ -159,35 +159,40 @@ class element:
     def readSerial(self,sock):
         try:
             if self.arduinoConnected:
-                line = self.serial.readline()
-                try:
-                    event = eval(line)
-                except:
-                    event = None
-                if(event!=None):
+                while(True):
+                    line = self.serial.readline()
+                    try:
+                        event = eval(line)
+                        logging.debug(line)
+                        if(event == ""):
+                            break;
+                    except:
+                        break;
 
-                    pilotId = event[0]
-                    pilot = self.pilots[pilotId]
-                    state = event[1]
-                    timestamp = event[2]
-                    #if(state!=RSSI_UPDATE):
-                    logging.debug(line)
-                    if(state==RSSI_UPDATE):
-                        pilot.distance = timestamp
-                    if(state==PASS):
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{"namespace":"timing","message":[pilot.name,timestamp,pilot.getNumberOfLaps()]},"")
-                        pilot.addLap(0,timestamp)
-                        logging.debug(str(pilot.name)+": "+str(timestamp))
-                    if(state==ENTER):
-                        self.tempAnimationQueue.append(pilot.animation)
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{"namespace":"timing","message":[pilot.name,timestamp]},"")
-                    if(state==EXIT):
-                        self.sendData(sock,(self.serverAddress,self.webPort),"pilot exit",{"namespace":"timing","message":[pilot.name,timestamp]},"")
-                    if(state==CALIBRATE):
-                        logging.debug("calibrating module "+str(pilotId))
-                        self.tempAnimationQueue.append(pilot.animation)
-                    if(state==STANDBY):
-                        logging.debug("module "+str(pilotId)+" ready")
+                    if(event!=None):
+
+                        pilotId = event[0]
+                        pilot = self.pilots[pilotId]
+                        state = event[1]
+                        timestamp = event[2]
+                        #if(state!=RSSI_UPDATE):
+
+                        if(state==RSSI_UPDATE):
+                            pilot.distance = timestamp
+                        if(state==PASS):
+                            self.sendData(sock,(self.serverAddress,self.webPort),"pilot lap",{"namespace":"timing","message":[pilot.name,timestamp,pilot.getNumberOfLaps()]},"")
+                            pilot.addLap(0,timestamp)
+                            logging.debug(str(pilot.name)+": "+str(timestamp))
+                        if(state==ENTER):
+                            self.tempAnimationQueue.append(pilot.animation)
+                            self.sendData(sock,(self.serverAddress,self.webPort),"pilot enter",{"namespace":"timing","message":[pilot.name,timestamp]},"")
+                        if(state==EXIT):
+                            self.sendData(sock,(self.serverAddress,self.webPort),"pilot exit",{"namespace":"timing","message":[pilot.name,timestamp]},"")
+                        if(state==CALIBRATE):
+                            logging.debug("calibrating module "+str(pilotId))
+                            self.tempAnimationQueue.append(pilot.animation)
+                        if(state==STANDBY):
+                            logging.debug("module "+str(pilotId)+" ready")
         except Exception as e:
             self.disconnectArduino()
             logging.debug(e)

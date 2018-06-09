@@ -7,7 +7,7 @@
 const float initLength = 100L;
 
 const int deviceNumber = 1;
-const int pilotNumber = 1;
+const int pilotNumber = 8;
 const float averaging = 100;
 float deviceRatio = 1.0/averaging;
 
@@ -21,9 +21,9 @@ const int spiClockPin = 13;
 float rssiOffsets[] = {0,0,0,0,0,0,0,0};
 int rxLoop = -1;
 unsigned long lastUpdateTime = millis();
-unsigned long refreshDelay = 50;//500;
-float enterThreshold = 0.9;
-float exitThreshold = 1.5;
+unsigned long refreshDelay = 1000;
+float enterThreshold = 1.51;
+float exitThreshold = 1.3;
 unsigned long raceStart = millis();
 
 //these are the states we'll use to let our loop know what a given RX is doing atm
@@ -73,11 +73,11 @@ uint16_t vtxFreqTable[] = {
 #define RACEBAND_ODDS {5658,5732,5806,5880}
 #define RACEBAND_EVENS {5695,5769,5843,5917}
 #define APD {5658,5695,5760,5800,5880,5917}
-#define CUSTOM {5880,5760,5769,5769}
+#define CUSTOM {5800,5760,5769,5769}
 #define DS {5685,5760,5860,5905}
 
 struct {
-  uint16_t channel[8] = CUSTOM;
+  uint16_t channel[8] = RACEBAND;
   uint16_t moduleChannelIndex[8] = {0,1,2,3,4,5,6,7};
   float volatile rssi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   float distanceMultiplier[8] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
@@ -111,7 +111,7 @@ uint16_t vtxHexTable[] = {
 // Initialize program
 void setup() {
   Serial.begin(115200);
-  analogReference(DEFAULT);
+  //analogReference(DEFAULT);
 
   while (!Serial) {
   }; // Wait for the Serial port to initialise
@@ -136,6 +136,7 @@ void setup() {
   if(deviceNumber<pilotNumber){
     deviceRatio = .75;
   }
+
 
   //calibrateAllModules();
   startRace();
@@ -552,10 +553,6 @@ void reportRSSI(){
 }
 
 void debugRSSI(){
-  Serial.print(enterThreshold);
-  Serial.print(",");
-  Serial.print(exitThreshold);
-  Serial.print(",");
   for(int i=0;i<pilotNumber;i++){
     Serial.print(analogRead(rxModules.rssiPins[i]));
     if(i<pilotNumber-1){
@@ -617,8 +614,8 @@ void loop() {
   if((millis()-lastUpdateTime)>refreshDelay){
     lastUpdateTime = millis();
     //debugRSSI(); //this lets us watch rssi on the arduino plotter
-    //debugDistance(); //this lets us watch rssi on the arduino plotter
-    reportRSSI();
+    debugDistance(); //this lets us watch rssi on the arduino plotter
+    //reportRSSI();
   }
 }
 
