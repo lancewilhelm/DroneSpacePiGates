@@ -110,7 +110,7 @@ uint16_t vtxHexTable[] = {
 
 // Initialize program
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   //analogReference(DEFAULT);
 
   while (!Serial) {
@@ -614,8 +614,8 @@ void loop() {
   if((millis()-lastUpdateTime)>refreshDelay){
     lastUpdateTime = millis();
     //debugRSSI(); //this lets us watch rssi on the arduino plotter
-    debugDistance(); //this lets us watch rssi on the arduino plotter
-    //reportRSSI();
+    //debugDistance(); //this lets us watch rssi on the arduino plotter
+    reportRSSI();
   }
 }
 
