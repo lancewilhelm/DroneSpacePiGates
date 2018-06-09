@@ -110,7 +110,7 @@ uint16_t vtxHexTable[] = {
 
 // Initialize program
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(300);
   //analogReference(DEFAULT);
 
   while (!Serial) {

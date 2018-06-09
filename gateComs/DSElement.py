@@ -121,7 +121,7 @@ class element:
                 #arduinoCom = "COM11"
                 logging.debug("connecting arduino to port: "+arduinoCom)
                 #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-                self.serial = serial.Serial(arduinoCom,9600, timeout=0,write_timeout=0)
+                self.serial = serial.Serial(arduinoCom,300, timeout=0,write_timeout=0)
                 #print(ser.name)         # check which port was really used
                 self.clearPilotData()
                 logging.debug("arduino connected")
