@@ -163,7 +163,7 @@ class element:
                     line = self.serial.readline()
                     try:
                         event = eval(line)
-                        logging.debug(line)
+                        #logging.debug(line)
                         if(event == ""):
                             break;
                     except:
@@ -175,8 +175,8 @@ class element:
                         pilot = self.pilots[pilotId]
                         state = event[1]
                         timestamp = event[2]
-                        #if(state!=RSSI_UPDATE):
-
+                        if(state!=RSSI_UPDATE):
+                            logging.debug(line)
                         if(state==RSSI_UPDATE):
                             pilot.distance = timestamp
                         if(state==PASS):
