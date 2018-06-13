@@ -448,10 +448,6 @@ void handleRxCalibrate(int channelId){
   }
 }
 
-void printRxModuleElement(){
-  
-}
-
 void handleReportRxState(){
   String stateString = "[-1,[";
   //print("[");
@@ -498,9 +494,6 @@ void handleRxStates(){
     switch (state) {
       case CALIBRATE:
         handleRxCalibrate(i);
-        break;
-      case REPORT_STATE:
-        handleReportRxState();
         break;
       case STANDBY:
         // statements
