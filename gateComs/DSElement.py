@@ -106,7 +106,7 @@ class element:
         self.pilots.append(Pilot.pilot("Yellow",3,"yellowbang",[0.5,0.5,0]))
         self.pilots.append(Pilot.pilot("Purple",0,"purplebang",[0.333,0,0.666]))
         self.pilots.append(Pilot.pilot("Orange",1,"orangebang",[0.8,0.2,0]))
-        self.pilots.append(Pilot.pilot("Pink",2,"pinkbang",[0.4,0.2,0.4]))
+        self.pilots.append(Pilot.pilot("Pink",2,"pinkbang",[0.666,0,0.333]))
         self.pilots.append(Pilot.pilot("Cyan",3,"cyanbang",[0.5,0.5,0]))
 
     def connectArduino(self):
