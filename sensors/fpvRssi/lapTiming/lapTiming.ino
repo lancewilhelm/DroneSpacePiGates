@@ -110,7 +110,7 @@ uint16_t vtxHexTable[] = {
 
 // Initialize program
 void setup() {
-  Serial.begin(300);
+  Serial.begin(115200);
   //analogReference(DEFAULT);
 
   while (!Serial) {
@@ -349,23 +349,25 @@ void setupRace(uint16_t channels[]){
 void sendStateUpdate(int rxId,int state,unsigned long timestamp){
   unsigned long msToSeconds = 1000.0;
   float seconds = (float)timestamp/msToSeconds;
-  Serial.print("[");
+    String stateString = "["+String(rxId)+","+String(state)+","+String(seconds)+"]";
+  /*Serial.print("[");
   Serial.print(rxId);
   Serial.print(",");
   Serial.print(state);
   Serial.print(",");
   Serial.print(seconds);
-  Serial.println("]");
+  Serial.println("]");*/
 }
 
 void sendRssiUpdate(int rxId,int state,unsigned long rssi){
-  Serial.print("[");
+  String stateString = "["+String(rxId)+","+String(state)+","+String(rssi)+"]";
+  /*Serial.print("[");
   Serial.print(rxId);
   Serial.print(",");
   Serial.print(state);
   Serial.print(",");
   Serial.print(rssi);
-  Serial.println("]");
+  Serial.println("]");*/
 }
 
 void updateRxState(int rxId, int state){
@@ -451,33 +453,42 @@ void printRxModuleElement(){
 }
 
 void handleReportRxState(){
-  Serial.print("[");
-  Serial.print(-1);
-  Serial.print(",");
-  Serial.print("[");
+  String stateString = "[-1,[";
+  //print("[");
+  //Serial.print(-1);
+  //Serial.print(",");
+  //Serial.print("[");
   for(int channelId=0;channelId<pilotNumber;channelId++){
-    Serial.print(rxModules.distanceMultiplier[channelId]);
+    stateString+=rxModules.distanceMultiplier[channelId];
+    //Serial.print(rxModules.distanceMultiplier[channelId]);
     if(channelId!=pilotNumber-1){
-      Serial.print(",");
+      stateString+=",";
+      //Serial.print(",");
     }else{
-      Serial.print("]");
+      stateString+="]";
+      //Serial.print("]");
     }
   }
-  Serial.print(",");
-  Serial.print("[");
+  stateString+=",[";
+  //Serial.print(",");
+  //Serial.print("[");
   for(int channelId=0;channelId<pilotNumber;channelId++){
-    Serial.print(rxModules.distanceMultiplier[channelId]);
+    stateString+=String(rxModules.distanceMultiplier[channelId]);
+    //Serial.print(rxModules.distanceMultiplier[channelId]);
     if(channelId!=pilotNumber-1){
-      Serial.print(",");
+      stateString+=",";
+      //Serial.print(",");
     }else{
-      Serial.print("]");
+      stateString+="]";
+      //Serial.print("]");
     }
   }
-  Serial.print(",");
+  stateString+=","+String(enterThreshold)+","+String(exitThreshold)+"]";
+  /*Serial.print(",");
   Serial.print(enterThreshold);
   Serial.print(",");
   Serial.print(exitThreshold);
-  Serial.println("]");
+  Serial.println("]");*/
 }
 
 void handleRxStates(){
@@ -539,16 +550,17 @@ void startRace(){
   }
 }
 
+void print(String data)
+{
+  Wire.beginTransmission(2);
+  Wire.write(data.c_str()); 
+  Wire.endTransmission();               
+}
+
 void reportRSSI(){
   for(int i=0;i<pilotNumber;i++){
-    Serial.print("[");
-    Serial.print(i);
-    Serial.print(",");
-    Serial.print("7,");
-    //sendRssiUpdate(i,RSSI_UPDATE,rxModules.rssi[i]);
-    Serial.print(rxModules.rssi[i]);
-    Serial.println("]");
-
+    String report = '['+String(i)+','+String(RSSI_UPDATE)+','+String(rxModules.rssi[i])+']';
+    print(report);
   }
 }
 

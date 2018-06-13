@@ -111,7 +111,7 @@ class element:
 
     def connectArduino(self):
         logging.debug("connecting arduino")
-        arduinoPorts = ["/dev/ttyUSB0","/dev/ttyACM0","/dev/serial0","/dev/ttyS0","/dev/ttyAMA0","/dev/tty.wchusbserial1420","/dev/tty.wchusbserial1410"]
+        arduinoPorts = ["/dev/ttyUSB0","/dev/serial0","/dev/ttyS0","/dev/ttyAMA0","/dev/tty.wchusbserial1420","/dev/tty.wchusbserial1410"]
         connected = False
         for arduinoCom in arduinoPorts:
             try:
@@ -121,7 +121,7 @@ class element:
                 #arduinoCom = "COM11"
                 logging.debug("connecting arduino to port: "+arduinoCom)
                 #ser = serial.Serial(str(arduinoCom.device))  # open serial port
-                self.serial = serial.Serial(arduinoCom,300, timeout=0,write_timeout=0)
+                self.serial = serial.Serial(arduinoCom,115200, timeout=0,write_timeout=0)
                 #print(ser.name)         # check which port was really used
                 self.clearPilotData()
                 logging.debug("arduino connected")
