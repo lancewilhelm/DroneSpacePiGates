@@ -543,17 +543,10 @@ void startRace(){
   }
 }
 
-void print(String data)
-{
-  Wire.beginTransmission(2);
-  Wire.write(data.c_str()); 
-  Wire.endTransmission();               
-}
-
 void reportRSSI(){
   for(int i=0;i<pilotNumber;i++){
     String report = '['+String(i)+','+String(RSSI_UPDATE)+','+String(rxModules.rssi[i])+']';
-    print(report);
+    Serial.println(report);
   }
 }
 

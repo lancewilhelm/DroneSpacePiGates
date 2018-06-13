@@ -161,10 +161,9 @@ class element:
             if self.arduinoConnected:
                 while(True):
                     line = self.serial.readline()
-                    logging.debug(line)
                     try:
                         event = eval(line)
-
+                        logging.debug(line)
                         if(event == ""):
                             break;
                     except:
