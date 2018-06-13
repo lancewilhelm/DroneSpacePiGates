@@ -106,8 +106,8 @@ class element:
         self.pilots.append(Pilot.pilot("Yellow",3,"yellowbang",[0.5,0.5,0]))
         self.pilots.append(Pilot.pilot("Purple",0,"purplebang",[0.333,0,0.666]))
         self.pilots.append(Pilot.pilot("Orange",1,"orangebang",[0.8,0.2,0]))
-        self.pilots.append(Pilot.pilot("Pink",2,"pinkbang",[0.666,0,0.333]))
-        self.pilots.append(Pilot.pilot("Cyan",3,"cyanbang",[0.5,0.5,0]))
+        self.pilots.append(Pilot.pilot("Pink",2,"magentabang",[0.666,0,0.333]))
+        self.pilots.append(Pilot.pilot("Cyan",3,"cyanbang",[0,1,0.75]))
 
     def connectArduino(self):
         logging.debug("connecting arduino")
@@ -440,8 +440,8 @@ class element:
                         animationInProgress = LED.tempFlashOrange()
                     if self.tempAnimationQueue[0] == "purplebang":
                         animationInProgress = LED.tempFlashPurple()
-                    if self.tempAnimationQueue[0] == "pinkbang":
-                        animationInProgress = LED.tempFlashPink()
+                    if self.tempAnimationQueue[0] == "magentabang":
+                        animationInProgress = LED.tempFlashMagenta()
                     if self.tempAnimationQueue[0] == "cyanbang":
                         animationInProgress = LED.tempFlashCyan()
                     if animationInProgress == False:
